@@ -1,10 +1,11 @@
 var expect = require('chai').expect;
+import Client from '../../src/client/client';
 
 describe('Client', function () {
 
     it('should extend config correctly when no paramaters are sent to the Client', function (done) {
 
-        var client = new lr360.Client();
+        var client = new Client();
 
         expect(client.config).to.eql({
             hostname: 'services.fidemapps.com',
@@ -18,7 +19,7 @@ describe('Client', function () {
 
     it('should extend config correctly', function (done) {
 
-        var client = new lr360.Client({
+        var client = new Client({
             secret: 'a',
             key: 'b'
         });
@@ -37,7 +38,7 @@ describe('Client', function () {
 
     it('should use 443 if protocol is https', function (done) {
 
-        var client = new lr360.Client({
+        var client = new Client({
             secret: 'a',
             key: 'b',
             protocol: 'https'

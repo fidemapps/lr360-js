@@ -1,24 +1,25 @@
-module.exports = function () {
+module.exports = function (config) {
     config.set({
+        basePath: '',
         frameworks: ['browserify', 'mocha', 'chai', 'sinon'],
-        singleRun: true,
+        singleRun: false,
         colors: true,
+        port: 9876,
         reporters: ['mocha'],
         browsers: ['Chrome'],
         files: [
-            'dist/lr360.js',
-            'test/client/client.js'
+            'src/**/*.js',
+            'test/**/*.js'
         ],
         preprocessors: {
-            'test/client/client.js': ['browserify']
+            'src/**/*.js': ['browserify'],
+            'test/**/*.js': ['browserify']
         },
-        plugins: [
-            'karma-chrome-launcher',
-            'karma-mocha',
-            'karma-mocha-reporter',
-            'karma-chai',
-            'karma-sinon',
-            'karma-browserify'
-        ]
+        browserify: {
+            debug: true,
+            transform: [
+                ['babelify', {presets: ['es2015']}]
+            ]
+        }
     });
 };

@@ -78831,9 +78831,13 @@ var _bluebird = require('bluebird');
 
 var _bluebird2 = _interopRequireDefault(_bluebird);
 
-var _request = require('request');
+var _request2 = require('request');
 
-var _request2 = _interopRequireDefault(_request);
+var _request3 = _interopRequireDefault(_request2);
+
+var _request4 = require('./request.error');
+
+var _request5 = _interopRequireDefault(_request4);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -78842,17 +78846,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var HOSTNAME = 'services.fidemapps.com';
 
 var Client = function () {
-
-    /**
-     *
-     * @param {object} config
-     * @param {string} config.key API key
-     * @param {string} config.secret API secret
-     * @param {string} [config.hostname="services.fidemapps.com"] Hostname
-     * @param {string} [config.protocol=http] Protocol (http or https)
-     * @param {string} [config.port=80|443] Port
-     */
-
     function Client(config) {
         _classCallCheck(this, Client);
 
@@ -78866,16 +78859,61 @@ var Client = function () {
 
     _createClass(Client, [{
         key: 'request',
-        value: function request(options, cb) {
+        value: function request(options, callback) {
 
-            options = getDefaultOptions(options);
+            if (!options.path) {
+                throw new Error('You must provide a path.');
+            }
 
-            // Check required options.
-            if (!options.path) throw new Error('You must provide a path.');
+            var requestOptions = this.getRequestOptions(options);
 
-            var req = getDefaultRequest(options, this.config);
+            // Make the request.
+            (0, _request3.default)(requestOptions, function (err, res, body) {
+                // Basic error.
+                if (err) {
+                    return callback(error);
+                }
 
-            return req;
+                // Status error.
+                if (res.statusCode >= 299) {
+                    return callback(new _request5.default(body, res.statusCode));
+                }
+
+                // No error.
+                return callback(null, JSON.parse(body));
+            });
+        }
+    }, {
+        key: 'getRequestOptions',
+        value: function getRequestOptions(options) {
+
+            options = options || {};
+
+            var request = {
+                url: formatUrl(_lodash2.default.assign({}, options, this.config)),
+                method: options.method || 'GET',
+                headers: {
+                    'X-Fidem-AccessApiKey': this.config.key || null,
+                    accept: 'application/json'
+                },
+                qs: options.qs || null
+            };
+
+            // add token to request.headers['X-Fidem-SessionToken'] if found
+            if (options.token) {
+                request = _lodash2.default.merge({}, request, { headers: { 'X-Fidem-SessionToken': options.token } });
+            }
+
+            // add request.body and request.headers['content-type'] iif method is PUT or POST
+            if (options.method && ['put', 'post'].indexOf(options.method.toLowerCase()) !== -1) {
+                request = _lodash2.default.merge({}, request, { headers: { 'content-type': 'application/json' } });
+                if (options.body) {
+                    // TODO: error might be thrown here
+                    request = _lodash2.default.merge({}, request, { body: JSON.stringify(options.body) });
+                }
+            }
+
+            return request;
         }
     }]);
 
@@ -78884,55 +78922,53 @@ var Client = function () {
 
 exports.default = Client;
 
-function getDefaultOptions(options) {
-
-    var DEFAULT_OPTIONS = {
-        token: null,
-        sign: true,
-        method: 'GET',
-        body: null,
-        headers: {},
-        requestOptions: {}
-    };
-
-    return assign(DEFAULT_OPTIONS, options);
-}
-
-function getDefaultRequest(options, config) {
-
-    var DEFAULT_REQUEST = {
-        method: options.method,
-        hostname: config.hostname,
-        path: options.path,
-        url: formatUrl(assign({}, options, config)),
-        headers: {
-            accept: 'application/json'
-        }
-    };
-
-    var req = assign(DEFAULT_REQUEST, options.requestOptions);
-
-    // Put a body for PUT and POST.
-    if (['put', 'post'].indexOf(options.method.toLowerCase()) !== -1) {
-        req.headers['content-type'] = 'application/json';
-        req.body = JSON.stringify(options.body);
-    }
-
-    // Use token.
-    if (options.token) {
-        req.headers['X-Fidem-SessionToken'] = options.token;
-    }
-
-    req.headers['X-Fidem-AccessApiKey'] = config.key;
-
-    return req;
-}
-
 function formatUrl(url) {
-    return url.protocol + '://' + url.hostname + ':' + url.port + url.path;
+    var path = url.path || '';
+    return url.protocol + '://' + url.hostname + ':' + url.port + path;
 }
 
-},{"bluebird":1,"lodash":253,"request":255}],382:[function(require,module,exports){
+},{"./request.error":382,"bluebird":1,"lodash":253,"request":255}],382:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var RequestError = function (_Error) {
+    _inherits(RequestError, _Error);
+
+    /**
+     *
+     * @param {object} body
+     * @param {number} statusCode
+     */
+
+    function RequestError(body, statusCode) {
+        _classCallCheck(this, RequestError);
+
+        try {
+            body = JSON.parse(body);
+        } catch (e) {}
+
+        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(RequestError).call(this, body.error));
+
+        _this.body = body;
+        _this.statusCode = statusCode;
+        return _this;
+    }
+
+    return RequestError;
+}(Error);
+
+exports.default = RequestError;
+
+},{}],383:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -78948,5 +78984,5 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 exports.Client = _client2.default;
 
-},{"./client/client":381}]},{},[382])(382)
+},{"./client/client":381}]},{},[383])(383)
 });

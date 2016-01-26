@@ -6,6 +6,9 @@ export default class RequestError extends Error {
      * @param {number} statusCode
      */
     constructor(body, statusCode) {
+        body = body || {};
+        statusCode = statusCode || '';
+
         try {
             body = JSON.parse(body);
         } catch (e) {

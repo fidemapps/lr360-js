@@ -5,20 +5,25 @@ module.exports = function (config) {
         singleRun: false,
         colors: true,
         port: 9876,
-        reporters: ['mocha'],
+        reporters: ['mocha', 'coverage'],
         browsers: ['Chrome'],
         files: [
-            'src/**/*.js',
-            'test/**/*.js'
+            'src/**/*.js'
         ],
         preprocessors: {
-            'src/**/*.js': ['browserify'],
-            'test/**/*.js': ['browserify']
+            'src/**/*.js': ['browserify']
         },
         browserify: {
             debug: true,
             transform: [
-                ['babelify', {presets: ['es2015']}]
+                ['babelify', {presets: ['es2015']}],
+                'istanbulify'
+            ],
+            extensions: ['.js']
+        },
+        coverageReporter: {
+            reporters: [
+                {'type': 'text'}
             ]
         }
     });

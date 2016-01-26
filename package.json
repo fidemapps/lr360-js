@@ -19,9 +19,9 @@
     "url": "https://github.com/fidemapps/lr360-js/issues"
   },
   "scripts": {
-    "test": "mocha && ./node_modules/karma/bin/karma start",
+    "test": "karma start",
     "build": "browserify --standalone lr360 src/index.js -t babelify -o dist/lr360.js",
-    "watch": "watchify --standalone lr360 src/index.js -t babelify -o dist/lr360.js"
+    "build-watch": "watchify --standalone lr360 src/index.js -t babelify -o dist/lr360.js"
   },
   "licence": "MIT",
   "dependencies": {
@@ -35,10 +35,12 @@
     "babelify": "^7.2.0",
     "browserify": "^13.0.0",
     "chai": "^3.4.1",
+    "istanbulify": "^0.1.0",
     "karma": "^0.13.19",
     "karma-browserify": "^4.4.2",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^0.2.2",
+    "karma-coverage": "^0.5.3",
     "karma-mocha": "^0.2.1",
     "karma-mocha-reporter": "^1.1.5",
     "karma-sinon": "^1.0.4",

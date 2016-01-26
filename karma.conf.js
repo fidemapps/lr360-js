@@ -1,8 +1,10 @@
+const istanbul = require('browserify-istanbul');
+
 module.exports = function (config) {
     config.set({
         basePath: '',
         frameworks: ['browserify', 'mocha', 'chai', 'sinon'],
-        singleRun: false,
+        singleRun: true,
         colors: true,
         port: 9876,
         reporters: ['mocha', 'coverage'],
@@ -16,14 +18,17 @@ module.exports = function (config) {
         browserify: {
             debug: true,
             transform: [
-                ['babelify', {presets: ['es2015']}],
-                'istanbulify'
-            ],
-            extensions: ['.js']
+                require('browserify-istanbul')({
+                    instrumenter: require('isparta'),
+                    defaultIgnore: true
+                }),
+                ['babelify']
+            ]
         },
         coverageReporter: {
             reporters: [
-                {'type': 'text'}
+                {type: 'text'},
+                {type: 'html', dir: 'coverage/'}
             ]
         }
     });

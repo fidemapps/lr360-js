@@ -1,4 +1,3 @@
-/* istanbulify ignore file */
 let expect = require('chai').expect;
 import Client from './client';
 

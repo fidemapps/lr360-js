@@ -19,6 +19,7 @@
     "url": "https://github.com/fidemapps/lr360-js/issues"
   },
   "scripts": {
+    "preinstall": "npm set progress=false",
     "test": "karma start",
     "build": "browserify --standalone lr360 src/index.js -t babelify -o dist/lr360.js",
     "build-watch": "watchify --standalone lr360 src/index.js -t babelify -o dist/lr360.js"
@@ -34,8 +35,9 @@
     "babel-preset-es2015": "^6.3.13",
     "babelify": "^7.2.0",
     "browserify": "^13.0.0",
+    "browserify-istanbul": "^0.2.1",
     "chai": "^3.4.1",
-    "istanbulify": "^0.1.0",
+    "isparta": "^4.0.0",
     "karma": "^0.13.19",
     "karma-browserify": "^4.4.2",
     "karma-chai": "^0.1.0",

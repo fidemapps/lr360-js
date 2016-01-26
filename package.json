@@ -21,8 +21,8 @@
   "scripts": {
     "preinstall": "npm set progress=false",
     "test": "karma start",
-    "build": "browserify --standalone lr360 src/index.js -t babelify -o dist/lr360.js",
-    "build-watch": "watchify --standalone lr360 src/index.js -t babelify -o dist/lr360.js"
+    "build": "browserify src/index.js -t babelify -o dist/lr360.js",
+    "build-watch": "watchify src/index.js -t babelify -o dist/lr360.js"
   },
   "licence": "MIT",
   "dependencies": {

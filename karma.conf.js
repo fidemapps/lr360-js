@@ -10,10 +10,12 @@ module.exports = function (config) {
         reporters: ['mocha', 'coverage'],
         browsers: ['Chrome'],
         files: [
-            'src/**/*.js'
+            'src/**/*.js',
+            'tests/**/*.js'
         ],
         preprocessors: {
-            'src/**/*.js': ['browserify']
+            'src/**/*.js': ['browserify'],
+            'tests/**/*.js': ['browserify']
         },
         browserify: {
             debug: true,

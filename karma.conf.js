@@ -4,7 +4,7 @@ module.exports = function (config) {
     config.set({
         basePath: '',
         frameworks: ['browserify', 'mocha', 'chai', 'sinon'],
-        singleRun: true,
+        singleRun: false,
         colors: true,
         port: 9876,
         reporters: ['mocha', 'coverage'],

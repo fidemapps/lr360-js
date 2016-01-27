@@ -1,7 +1,7 @@
 let expect = require('chai').expect;
 import Client from '../../src/client/client';
 
-describe('Client', () => {
+describe('client', () => {
 
     describe('new Client()', () => {
 

@@ -3,18 +3,22 @@ import RequestError from './request.error';
 
 export function baseRequest(options, callback) {
 
+    options = options || {};
+
     if (!options.path) {
-        throw new Error('You must provide a path.');
+        return callback(new Error('You must provide a path.'));
     }
 
     //let requestOptions = this.getRequestOptions(options);
     let requestOptions = getRequestOptions.call(this, options);
+    //call request.get, request.post, etc. to allow for stubbing on tests
+    let method = requestOptions.method.toLowerCase();
 
     // Make the request.
-    request(requestOptions, function (err, res, body) {
+    request[method](requestOptions, function (err, res, body) {
         // Basic error.
         if (err) {
-            return callback(error);
+            return callback(err);
         }
 
         // Status error.

@@ -1,28 +1,36 @@
 import Client from './client/client';
-let lr360 = window.lr360 || {};
-lr360.queue = lr360.queue || [];
 
-emptyQueue();
-replaceQueuePush();
+window.lr360 = window.lr360 || {};
+window.lr360.queue = window.lr360.queue || [];
+
+export let client = new Client();
+
+function applyCallOnClient(args) {
+
+    args = Array.prototype.slice.call(args); // arguments to array
+    let method = args.shift(); // first element should be client[method]
+
+    client[method].apply(client, args);
+
+}
 
 export function emptyQueue() {
-    while (lr360.queue && lr360.queue.length) {
-        let params = lr360.queue.shift(); // remove the first item from the queue
-        let method = params[0];
-        let data = params[1];
 
-        console.log(`Emptying queue, calling ${method}...`);
-        console.log(data);
+    while (window.lr360.queue && window.lr360.queue.length) {
+
+        let args = window.lr360.queue.shift(); // remove the first item from the queue
+
+        applyCallOnClient(args);
+
     }
+
 }
 
 export function replaceQueuePush() {
-    lr360.queue.push = function () {
-        let args = arguments[0];
-        let method = args[0];
-        let data = args[1];
 
-        console.log(`Calling ${method}...`);
-        console.log(data);
-    }
+    window.lr360.queue.push = applyCallOnClient;
+
 }
+
+emptyQueue();
+replaceQueuePush();

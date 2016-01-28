@@ -1,7 +1,7 @@
-export default function (action, callback) {
-    return this.request({
-        method: 'POST',
-        body: action,
-        path: '/api/gamification/actions'
-    }, callback);
+
+export default function (options, callback) {
+
+    console.log('trackAction');
+    console.log(arguments);
+
 }

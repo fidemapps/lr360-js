@@ -1,7 +1,7 @@
 let expect = require('chai').expect;
 import RequestError from '../../src/methods/request.error';
 
-describe('RequestError', () => {
+describe('request.error.js', () => {
 
     describe('new RequestError()', () => {
 

@@ -5917,11 +5917,11 @@ Zlib.prototype._writeCheck = function() {
     throw new Error("close is pending");
 };
 
-Zlib.prototype.write = function(flush, input, in_off, in_len, out, out_off, out_len) {
+  Zlib.prototype.write = function (flush, input, in_off, in_len, out, out_off, out_len) {
   this._writeCheck();
   this.write_in_progress = true;
 
-  var self = this;
+    var self = this;
   process.nextTick(function() {
     self.write_in_progress = false;
     var res = self._write(flush, input, in_off, in_len, out, out_off, out_len);
@@ -5931,7 +5931,7 @@ Zlib.prototype.write = function(flush, input, in_off, in_len, out, out_off, out_
       self.close();
   });
 
-  return this;
+    return this;
 };
 
 // set method for Node buffers, used by pako
@@ -28634,7 +28634,7 @@ IncomingMessage.prototype._onXHRProgress = function () {
 				self.push(new Buffer(response))
 				break
 			}
-			// Falls through in IE8
+      // Falls through in IE8
 		case 'text':
 			try { // This will fail when readyState = 3 in IE9. Switch mode and wait for readyState = 4
 				response = xhr.responseText
@@ -30420,13 +30420,13 @@ Script.prototype.runInContext = function (context) {
         throw new TypeError("needs a 'context' argument.");
     }
 
-    var iframe = document.createElement('iframe');
+  var iframe = document.createElement('iframe');
     if (!iframe.style) iframe.style = {};
     iframe.style.display = 'none';
 
-    document.body.appendChild(iframe);
+  document.body.appendChild(iframe);
 
-    var win = iframe.contentWindow;
+  var win = iframe.contentWindow;
     var wEval = win.eval, wExecScript = win.execScript;
 
     if (!wEval && wExecScript) {
@@ -30435,7 +30435,7 @@ Script.prototype.runInContext = function (context) {
         wEval = win.eval;
     }
 
-    forEach(Object_keys(context), function (key) {
+  forEach(Object_keys(context), function (key) {
         win[key] = context[key];
     });
     forEach(globals, function (key) {
@@ -30444,11 +30444,11 @@ Script.prototype.runInContext = function (context) {
         }
     });
 
-    var winKeys = Object_keys(win);
+  var winKeys = Object_keys(win);
 
     var res = wEval.call(win, this.code);
 
-    forEach(Object_keys(win), function (key) {
+  forEach(Object_keys(win), function (key) {
         // Avoid copying circular objects like `top` and `window` by only
         // updating existing context properties or new properties in the `win`
         // that was only introduced after the eval.
@@ -30463,9 +30463,9 @@ Script.prototype.runInContext = function (context) {
         }
     });
 
-    document.body.removeChild(iframe);
+  document.body.removeChild(iframe);
 
-    return res;
+  return res;
 };
 
 Script.prototype.runInThisContext = function () {
@@ -47467,7 +47467,7 @@ var util = require('util')
   , tls = require('tls')
   , AgentSSL = require('https').Agent
 
-function getConnectionName(host, port) {
+    function getConnectionName(host, port) {
   var name = ''
   if (typeof host === 'string') {
     name = host + ':' + port
@@ -47476,7 +47476,7 @@ function getConnectionName(host, port) {
     name = host.host + ':' + host.port + ':' + (host.localAddress ? (host.localAddress + ':') : ':')
   }
   return name
-}
+    }
 
 function ForeverAgent(options) {
   var self = this
@@ -52002,7 +52002,7 @@ var validate = exports._validate = function(/*Any*/instance,/*Object*/schema,/*O
 				errors.push({property:path,message:"an object is required"});
 			}
 
-			for(var i in objTypeDef){
+          for (var i in objTypeDef) {
 				if(objTypeDef.hasOwnProperty(i)){
 					var value = instance[i];
 					// skip _not_ specified properties
@@ -56498,7 +56498,7 @@ exports.ECKey = function(curve, key, isPublic)
       if(!key || !key.P) return false;
       var S = key.P.multiply(priv);
       return new Buffer(unstupid(S.getX().toBigInteger().toString(16),bytes*2),"hex");
-   }
+    }
   }
 }
 
@@ -56942,7 +56942,7 @@ ECFieldElementFp.prototype.modReduce = function(x)
             {
                 u = u.multiply(this.getR());
             }
-            x = u.add(v);
+          x = u.add(v);
         }
         while (x.compareTo(q) >= 0)
         {
@@ -74270,6 +74270,7 @@ var _lodash2 = _interopRequireDefault(_lodash);
     Object.defineProperty(exports, "__esModule", {
       value: true
     });
+    exports.client = undefined;
     exports.emptyQueue = emptyQueue;
     exports.replaceQueuePush = replaceQueuePush;
 
@@ -74279,33 +74280,36 @@ var _lodash2 = _interopRequireDefault(_lodash);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-    var lr360 = window.lr360 || {};
-    lr360.queue = lr360.queue || [];
+    window.lr360 = window.lr360 || {};
+    window.lr360.queue = window.lr360.queue || [];
 
-    emptyQueue();
-    replaceQueuePush();
+    var client = exports.client = new _client2.default();
+
+    function applyCallOnClient(args) {
+
+      args = Array.prototype.slice.call(args); // arguments to array
+      var method = args.shift(); // first element should be client[method]
+
+      client[method].apply(client, args);
+    }
 
     function emptyQueue() {
-      while (lr360.queue && lr360.queue.length) {
-        var params = lr360.queue.shift(); // remove the first item from the queue
-        var method = params[0];
-        var data = params[1];
 
-        console.log('Emptying queue, calling ' + method + '...');
-        console.log(data);
+      while (window.lr360.queue && window.lr360.queue.length) {
+
+        var args = window.lr360.queue.shift(); // remove the first item from the queue
+
+        applyCallOnClient(args);
     }
     }
 
     function replaceQueuePush() {
-      lr360.queue.push = function () {
-        var args = arguments[0];
-        var method = args[0];
-        var data = args[1];
 
-        console.log('Calling ' + method + '...');
-        console.log(data);
-      };
+      window.lr360.queue.push = applyCallOnClient;
     }
+
+    emptyQueue();
+    replaceQueuePush();
 
   }, {"./client/client": 378}],
   380: [function (require, module, exports) {
@@ -74331,18 +74335,22 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
     function baseRequest(options, callback) {
 
+      options = options || {};
+
       if (!options.path) {
-        throw new Error('You must provide a path.');
+        return callback(new Error('You must provide a path.'));
       }
 
       //let requestOptions = this.getRequestOptions(options);
       var requestOptions = getRequestOptions.call(this, options);
+      //call request.get, request.post, etc. to allow for stubbing on tests
+      var method = requestOptions.method.toLowerCase();
 
       // Make the request.
-      (0, _request2.default)(requestOptions, function (err, res, body) {
+      _request2.default[method](requestOptions, function (err, res, body) {
         // Basic error.
         if (err) {
-          return callback(error);
+          return callback(err);
         }
 
         // Status error.
@@ -74381,7 +74389,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
           // TODO: error might be thrown here
           request = _.merge({}, request, {body: JSON.stringify(options.body)});
         }
-      }
+    }
 
       return request;
     }
@@ -74402,14 +74410,25 @@ Object.defineProperty(exports, "__esModule", {
 
     var _track = require('./track.action');
 
+    var _track2 = _interopRequireDefault(_track);
+
+    var _setup = require('./setup');
+
+    var _setup2 = _interopRequireDefault(_setup);
+
     var _base = require('./base.request');
 
+    function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : {default: obj};
+    }
+
     var clientMethods = exports.clientMethods = {
-      trackAction: _track.trackAction,
+      setup: _setup2.default,
+      trackAction: _track2.default,
       request: _base.baseRequest
     };
 
-  }, {"./base.request": 380, "./track.action": 383}],
+  }, {"./base.request": 380, "./setup": 383, "./track.action": 384}],
   382: [function (require, module, exports) {
     'use strict';
 
@@ -74462,12 +74481,24 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-    exports.default = function (action, callback) {
-      return this.request({
-        method: 'POST',
-        body: action,
-        path: '/api/gamification/actions'
-      }, callback);
+    exports.default = function (config) {
+
+      console.log('setup');
+      console.log(arguments);
+    };
+
+  }, {}],
+  384: [function (require, module, exports) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+
+    exports.default = function (options, callback) {
+
+      console.log('trackAction');
+      console.log(arguments);
     };
 
   }, {}]

@@ -11,7 +11,8 @@ module.exports = function (config) {
         browsers: ['Chrome'],
         files: [
             'src/**/*.js',
-            'tests/**/*.js'
+            'tests/**/*.js',
+            'dist/lr360.js'
         ],
         preprocessors: {
             'src/**/*.js': ['browserify'],

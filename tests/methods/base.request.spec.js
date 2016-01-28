@@ -4,9 +4,9 @@ import request from 'request';
 import { getRequestOptions, baseRequest } from '../../src/methods/base.request';
 import Client from '../../src/client/client';
 
-describe('base.request', () => {
+describe('base.request.js', () => {
 
-    describe('getRequestOptions', () => {
+    describe('getRequestOptions()', () => {
 
         it('should return default options when no options are given', done => {
 
@@ -147,7 +147,7 @@ describe('base.request', () => {
 
     });
 
-    describe('baseRequest', () => {
+    describe('baseRequest()', () => {
 
         let stub;
 

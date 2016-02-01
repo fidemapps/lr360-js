@@ -137,7 +137,7 @@
                         Async.prototype.disableTrampolineIfNecessary = function () {
                             if (util.hasDevTools) {
                                 this._trampolineEnabled = false;
-    }
+                            }
                         };
 
                         Async.prototype.haveItemsQueued = function () {
@@ -151,7 +151,7 @@
                                 process.exit(2);
                             } else {
                                 this.throwLater(e);
-                            }
+    }
                         };
 
                         Async.prototype.throwLater = function (fn, arg) {
@@ -5318,7 +5318,7 @@
                                             for (var i = 0; i < excludedPrototypes.length; ++i) {
                                                 if (hasProp.call(excludedPrototypes[i], key)) {
                                                     continue enumeration;
-                                                }
+                        }
                                             }
                                             ret.push(key);
                                         }
@@ -79943,7 +79943,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
             if (!window.navigator || !window.navigator.geolocation) {
                 error();
             } else {
-                window.navigator.getCurrentPosition(success, error);
+                window.navigator.geolocation.getCurrentPosition(success, error);
             }
         }
 

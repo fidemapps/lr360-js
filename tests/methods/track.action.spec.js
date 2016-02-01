@@ -11,8 +11,9 @@ describe('track.action.js', () => {
 
             delete window.navigator;
             window.navigator = {
-                geolocation: {},
-                getCurrentPosition: (success, error) => success({coords: {latitude: 1234, longitude: 9876}})
+                geolocation: {
+                    getCurrentPosition: (success, error) => success({coords: {latitude: 1234, longitude: 9876}})
+                }
             };
             done();
 

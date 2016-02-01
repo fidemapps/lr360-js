@@ -153,8 +153,9 @@ describe('base.request.js', () => {
 
             delete window.navigator;
             window.navigator = {
-                geolocation: {},
-                getCurrentPosition: (success, error) => success({coords: {latitude: 1234, longitude: 9876}})
+                geolocation: {
+                    getCurrentPosition: (success, error) => success({coords: {latitude: 1234, longitude: 9876}})
+                }
             };
             requestGetStub = sinon.stub(request, 'get');
             done();
@@ -456,7 +457,9 @@ describe('base.request.js', () => {
         it('should return options with coordinates null when window.navigator.getCurrentPosition calls error callback', done => {
 
             window.navigator = {
-                getCurrentPosition: (success, error) => error()
+                geolocation: {
+                    getCurrentPosition: (success, error) => error()
+                }
             };
             let options = {};
             let expectedOptions = {coordinates: null};
@@ -473,8 +476,9 @@ describe('base.request.js', () => {
         it('should return options with coordinates when coordinates are found an sent to success callback', done => {
 
             window.navigator = {
-                geolocation: {},
-                getCurrentPosition: (success, error) => success({coords: {latitude: 1234, longitude: 9876}})
+                geolocation: {
+                    getCurrentPosition: (success, error) => success({coords: {latitude: 1234, longitude: 9876}})
+                }
             };
             let options = {};
             let expectedOptions = {coordinates: {lat: 1234, long: 9876}};

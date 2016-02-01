@@ -92,7 +92,7 @@ export function addGeolocation(options, callback) {
         error();
     }
     else {
-        window.navigator.getCurrentPosition(success, error);
+        window.navigator.geolocation.getCurrentPosition(success, error);
     }
 
 }

@@ -151,7 +151,7 @@
                                 process.exit(2);
                             } else {
                                 this.throwLater(e);
-    }
+                            }
                         };
 
                         Async.prototype.throwLater = function (fn, arg) {
@@ -160,7 +160,7 @@
                                 fn = function () {
                                     throw arg;
                                 };
-                            }
+    }
                             if (typeof setTimeout !== "undefined") {
                                 setTimeout(function () {
                                     fn(arg);
@@ -79919,7 +79919,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
             if (options.method && ['put', 'post'].indexOf(options.method.toLowerCase()) !== -1) {
                 request = _.merge({}, request, {headers: {'content-type': 'application/json'}});
         if (options.body) {
-            request = _.merge({}, request, {body: options.body});
+            request = _.merge({}, request, {body: JSON.stringify(options.body)});
         }
     }
 
@@ -80059,10 +80059,10 @@ Object.defineProperty(exports, "__esModule", {
             value: true
         });
 
-        exports.default = function (body, callback) {
+        exports.default = function (options, callback) {
 
-            body = body || {};
-            if (!body.type) {
+            options = options || {};
+            if (!options.type) {
                 if (callback && typeof callback === 'function') {
                     return callback(new Error(ERROR_MESSAGE));
                 }
@@ -80071,7 +80071,7 @@ Object.defineProperty(exports, "__esModule", {
 
             return this.baseRequest({
                 method: METHOD,
-                body: body,
+                body: options,
                 path: PATH
             }, callback);
         };

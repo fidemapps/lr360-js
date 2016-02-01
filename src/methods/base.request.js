@@ -67,7 +67,7 @@ export function getRequestOptions(options) {
     if (options.method && ['put', 'post'].indexOf(options.method.toLowerCase()) !== -1) {
         request = _.merge({}, request, {headers: {'content-type': 'application/json'}});
         if (options.body) {
-            request = _.merge({}, request, {body: options.body});
+            request = _.merge({}, request, {body: JSON.stringify(options.body)});
         }
     }
 

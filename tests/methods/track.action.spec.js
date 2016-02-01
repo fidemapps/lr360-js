@@ -68,7 +68,7 @@ describe('track.action.js', () => {
                     accept: 'application/json',
                     'content-type': 'application/json'
                 },
-                body: {type: 'TEST'},
+                body: JSON.stringify({type: 'TEST'}),
                 qs: null,
                 coordinates: {
                     lat: 1234,

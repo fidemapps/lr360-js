@@ -132,7 +132,7 @@ describe('base.request.js', () => {
                     accept: 'application/json',
                     'content-type': 'application/json'
                 },
-                body: options.body,
+                body: JSON.stringify(options.body),
                 qs: options.qs
             };
 

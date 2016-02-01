@@ -21,6 +21,7 @@
   "scripts": {
     "preinstall": "npm set progress=false",
     "test": "NODE_ENV=test karma start",
+    "test-coverage": "NODE_ENV=test karma start --coverage",
     "build": "browserify src/index.js -t babelify -o dist/lr360.js",
     "build-watch": "watchify src/index.js -t babelify -o dist/lr360.js"
   },
@@ -49,7 +50,6 @@
     "karma-sinon": "^1.0.4",
     "mocha": "^2.3.4",
     "sinon": "^1.17.2",
-    "uglifyify": "^3.0.1",
     "watchify": "^3.7.0"
   }
 }

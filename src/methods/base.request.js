@@ -1,12 +1,17 @@
 import request from 'request';
 import RequestError from './request.error';
+import Promise from 'bluebird';
 
 export function baseRequest(options, callback) {
 
     options = options || {};
+    let message;
 
-    if (!options.path) {
-        return callback(new Error('You must provide a path.'));
+    if (message = isMissingMandatoryFields(this.config, options)) {
+        if (callback && typeof callback === 'function') {
+            return callback(new Error(message))
+        }
+        throw new Error(message);
     }
 
     //let requestOptions = this.getRequestOptions(options);
@@ -14,21 +19,28 @@ export function baseRequest(options, callback) {
     //call request.get, request.post, etc. to allow for stubbing on tests
     let method = requestOptions.method.toLowerCase();
 
-    // Make the request.
-    request[method](requestOptions, function (err, res, body) {
-        // Basic error.
-        if (err) {
-            return callback(err);
-        }
+    return addGeolocation(requestOptions, (requestOptions) => {
 
-        // Status error.
-        if (res.statusCode >= 299) {
-            return callback(new RequestError(body, res.statusCode));
-        }
+        return request[method](requestOptions, (err, res, body) => {
 
-        // No error.
-        return callback(null, JSON.parse(body));
-    });
+            // Status error.
+            let requestError;
+            if (res && res.statusCode >= 299) {
+                requestError = new RequestError(body, res.statusCode);
+            }
+
+            if (callback && typeof callback === 'function') {
+                return callback(err || requestError || null, body && JSON.parse(body));
+            }
+            else {
+                if (err || requestError) {
+                    throw err || requestError;
+                }
+            }
+
+        });
+
+    })
 
 }
 
@@ -55,12 +67,44 @@ export function getRequestOptions(options) {
     if (options.method && ['put', 'post'].indexOf(options.method.toLowerCase()) !== -1) {
         request = _.merge({}, request, {headers: {'content-type': 'application/json'}});
         if (options.body) {
-            // TODO: error might be thrown here
-            request = _.merge({}, request, {body: JSON.stringify(options.body)});
+            request = _.merge({}, request, {body: options.body});
         }
     }
 
     return request;
+}
+
+export function addGeolocation(options, callback) {
+
+    function success(position) {
+        let coordinates = {
+            lat: position.coords.latitude,
+            long: position.coords.longitude
+        };
+        callback(_.assign({}, options, {coordinates: coordinates}));
+    }
+
+    function error() {
+        callback(_.assign({}, options, {coordinates: null}));
+    }
+
+    if (!window.navigator || !window.navigator.geolocation) {
+        error();
+    }
+    else {
+        window.navigator.getCurrentPosition(success, error);
+    }
+
+}
+
+function isMissingMandatoryFields(config, options) {
+    if (!config.key) {
+        return 'You must provide a key.';
+    }
+    if (!options.path) {
+        return "You must provide a path."
+    }
+    return false;
 }
 
 function formatUrl(url) {

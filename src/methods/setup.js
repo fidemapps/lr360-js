@@ -1,6 +1,7 @@
 export default function (config) {
 
-    console.log('setup');
-    console.log(arguments);
+    config = config || {};
+
+    this.config = _.assign({}, this.config, config);
 
 }

@@ -1,7 +1,7 @@
 let expect = require('chai').expect;
 import sinon from 'sinon';
 import request from 'request';
-import { getRequestOptions, baseRequest } from '../../src/methods/base.request';
+import { getRequestOptions, baseRequest, addGeolocation } from '../../src/methods/base.request';
 import Client from '../../src/client/client';
 
 describe('base.request.js', () => {
@@ -132,7 +132,7 @@ describe('base.request.js', () => {
                     accept: 'application/json',
                     'content-type': 'application/json'
                 },
-                body: JSON.stringify(options.body),
+                body: options.body,
                 qs: options.qs
             };
 
@@ -143,25 +143,30 @@ describe('base.request.js', () => {
 
         });
 
-        // TODO: handle case where body throws error when being parsed
-
     });
 
     describe('baseRequest()', () => {
 
-        let stub;
+        let requestGetStub;
 
         beforeEach(done => {
-            stub = sinon.stub(request, 'get');
+
+            delete window.navigator;
+            window.navigator = {
+                geolocation: {},
+                getCurrentPosition: (success, error) => success({coords: {latitude: 1234, longitude: 9876}})
+            };
+            requestGetStub = sinon.stub(request, 'get');
             done();
+
         });
 
         afterEach(done => {
-            stub.restore();
+            requestGetStub.restore();
             done();
         });
 
-        it('should call request with correct requestOptions', done => {
+        it('should call request with correct requestOptions and return body to given callback', done => {
 
             let response = {statusCode: 200};
             let body = {body: 'content'};
@@ -170,19 +175,23 @@ describe('base.request.js', () => {
                 url: `http://services.fidemapps.com:80${options.path}`,
                 method: 'GET',
                 headers: {
-                    'X-Fidem-AccessApiKey': null,
+                    'X-Fidem-AccessApiKey': 'ACCESS-KEY',
                     accept: 'application/json'
                 },
-                qs: null
+                qs: null,
+                coordinates: {
+                    lat: 1234,
+                    long: 9876
+                }
             };
 
-            stub.yields(null, JSON.stringify(response), JSON.stringify(body));
+            requestGetStub.yields(null, JSON.stringify(response), JSON.stringify(body));
 
-            let client = new Client();
+            let client = new Client({key: 'ACCESS-KEY'});
 
             baseRequest.call(client, options, (error, body) => {
 
-                expect(stub.calledWith(expectedRequestOptions)).to.be.true;
+                expect(requestGetStub.calledWith(expectedRequestOptions)).to.be.true;
                 expect(error).to.not.exist;
                 expect(body).to.eql(body);
 
@@ -190,22 +199,41 @@ describe('base.request.js', () => {
             });
         });
 
-        it('should send error to callback when no parameters are given', done => {
+        it('should throw error when key and callback are not given to function', done => {
 
             let client = new Client();
 
-            baseRequest.call(client, null, (error, body) => {
+            try {
+                baseRequest.call(client, {});
+            }
+            catch (error) {
 
                 expect(error).to.exist;
-                expect(body).to.not.exist;
-                expect(error.message).to.equal('You must provide a path.');
-
+                expect(error.message).to.equal('You must provide a key.')
                 done();
-            });
+
+            }
 
         });
 
-        it('should send error to callback when request call returns an error', done => {
+        it('should throw error when path and callback are not given to function', done => {
+
+            let client = new Client({key: 'ACCESS-KEY'});
+
+            try {
+                baseRequest.call(client, {});
+            }
+            catch (error) {
+
+                expect(error).to.exist;
+                expect(error.message).to.equal('You must provide a path.')
+                done();
+
+            }
+
+        });
+
+        it('should throw request error when no callback is given and request returns error', done => {
 
             let requestError = new Error('Error from request call');
             let options = {path: '/custom/path'};
@@ -213,28 +241,36 @@ describe('base.request.js', () => {
                 url: `http://services.fidemapps.com:80${options.path}`,
                 method: 'GET',
                 headers: {
-                    'X-Fidem-AccessApiKey': null,
+                    'X-Fidem-AccessApiKey': 'ACCESS-KEY',
                     accept: 'application/json'
                 },
-                qs: null
+                qs: null,
+                coordinates: {
+                    lat: 1234,
+                    long: 9876
+                }
             };
 
-            stub.yields(requestError);
+            requestGetStub.yields(requestError);
 
-            let client = new Client();
+            let client = new Client({key: 'ACCESS-KEY'});
 
-            baseRequest.call(client, options, (error, body) => {
+            try {
+                baseRequest.call(client, options);
+            }
+            catch (error) {
 
-                expect(stub.calledWith(expectedRequestOptions)).to.be.true;
+                expect(requestGetStub.calledWith(expectedRequestOptions)).to.be.true;
                 expect(error).to.exist;
-                expect(body).to.not.exist;
                 expect(error.message).to.equal(requestError.message);
 
                 done();
-            });
+
+            }
+
         });
 
-        it('should send error to callback when request call response with statusCode 299', done => {
+        it('should throw error when no callback is given and response returns statusCode 299', done => {
 
             let response = {statusCode: 299};
             let responseBody = {error: 'message'};
@@ -243,27 +279,213 @@ describe('base.request.js', () => {
                 url: `http://services.fidemapps.com:80${options.path}`,
                 method: 'GET',
                 headers: {
-                    'X-Fidem-AccessApiKey': null,
+                    'X-Fidem-AccessApiKey': 'ACCESS-KEY',
                     accept: 'application/json'
                 },
-                qs: null
+                qs: null,
+                coordinates: {
+                    lat: 1234,
+                    long: 9876
+                }
             };
 
-            stub.yields(null, response, responseBody);
+            requestGetStub.yields(null, response, JSON.stringify(responseBody));
 
-            let client = new Client();
+            let client = new Client({key: 'ACCESS-KEY'});
 
-            baseRequest.call(client, options, (error, body) => {
+            try {
+                baseRequest.call(client, options);
+            }
+            catch (error) {
 
-                expect(stub.calledWith(expectedRequestOptions)).to.be.true;
+                expect(requestGetStub.calledWith(expectedRequestOptions)).to.be.true;
                 expect(error).to.exist;
-                expect(body).to.not.exist;
                 expect(error.message).to.equal('message');
                 expect(error.statusCode).to.equal(299);
                 expect(error.body).to.eql(responseBody);
 
                 done();
+
+            }
+
+        });
+
+        describe('callback(error, body)', () => {
+
+            it('should send error to callback when no parameters are given (missing path)', done => {
+
+                let client = new Client({key: 'ACCESS-KEY'});
+
+                baseRequest.call(client, null, (error, body) => {
+
+                    expect(error).to.exist;
+                    expect(body).to.not.exist;
+                    expect(error.message).to.equal('You must provide a path.');
+
+                    done();
+                });
+
             });
+
+            it('should send error to callback when no key is configured in client (missing key)', done => {
+
+                let client = new Client();
+
+                baseRequest.call(client, null, (error, body) => {
+
+                    expect(error).to.exist;
+                    expect(body).to.not.exist;
+                    expect(error.message).to.equal('You must provide a key.');
+
+                    done();
+                });
+
+            });
+
+            it('should send error to callback when request call returns an error', done => {
+
+                let requestError = new Error('Error from request call');
+                let options = {path: '/custom/path'};
+                let expectedRequestOptions = {
+                    url: `http://services.fidemapps.com:80${options.path}`,
+                    method: 'GET',
+                    headers: {
+                        'X-Fidem-AccessApiKey': 'ACCESS-KEY',
+                        accept: 'application/json'
+                    },
+                    qs: null,
+                    coordinates: {
+                        lat: 1234,
+                        long: 9876
+                    }
+                };
+
+                requestGetStub.yields(requestError);
+
+                let client = new Client({key: 'ACCESS-KEY'});
+
+                baseRequest.call(client, options, (error, body) => {
+
+                    expect(requestGetStub.calledWith(expectedRequestOptions)).to.be.true;
+                    expect(error).to.exist;
+                    expect(body).to.not.exist;
+                    expect(error.message).to.equal(requestError.message);
+
+                    done();
+                });
+            });
+
+            it('should send error to callback when request call response with statusCode 299', done => {
+
+                let response = {statusCode: 299};
+                let responseBody = {error: 'message'};
+                let options = {path: '/custom/path'};
+                let expectedRequestOptions = {
+                    url: `http://services.fidemapps.com:80${options.path}`,
+                    method: 'GET',
+                    headers: {
+                        'X-Fidem-AccessApiKey': 'ACCESS-KEY',
+                        accept: 'application/json'
+                    },
+                    qs: null,
+                    coordinates: {
+                        lat: 1234,
+                        long: 9876
+                    }
+                };
+
+                requestGetStub.yields(null, response, JSON.stringify(responseBody));
+
+                let client = new Client({key: 'ACCESS-KEY'});
+
+                baseRequest.call(client, options, (error, body) => {
+
+                    expect(requestGetStub.calledWith(expectedRequestOptions)).to.be.true;
+                    expect(error).to.exist;
+                    expect(body).to.exist;
+                    expect(body).to.eql(responseBody);
+                    expect(error.message).to.equal('message');
+                    expect(error.statusCode).to.equal(299);
+                    expect(error.body).to.eql(responseBody);
+
+                    done();
+                });
+
+            });
+
+        });
+
+    });
+
+    describe('addGeolocation()', () => {
+
+        beforeEach(done => {
+            delete window.navigator;
+            done();
+        });
+
+        it('should return options with coordinates null when window.navigator is not present', done => {
+
+            let options = {};
+            let expectedOptions = {coordinates: null};
+
+            addGeolocation(options, augmentedOptions => {
+
+                expect(augmentedOptions).to.eql(expectedOptions);
+                done();
+
+            });
+
+        });
+
+        it('should return options with coordinates null when window.navigator.geolocation is not present', done => {
+
+            window.navigator = {};
+            let options = {};
+            let expectedOptions = {coordinates: null};
+
+            addGeolocation(options, augmentedOptions => {
+
+                expect(augmentedOptions).to.eql(expectedOptions);
+                done();
+
+            });
+
+        });
+
+        it('should return options with coordinates null when window.navigator.getCurrentPosition calls error callback', done => {
+
+            window.navigator = {
+                getCurrentPosition: (success, error) => error()
+            };
+            let options = {};
+            let expectedOptions = {coordinates: null};
+
+            addGeolocation(options, augmentedOptions => {
+
+                expect(augmentedOptions).to.eql(expectedOptions);
+                done();
+
+            });
+
+        });
+
+        it('should return options with coordinates when coordinates are found an sent to success callback', done => {
+
+            window.navigator = {
+                geolocation: {},
+                getCurrentPosition: (success, error) => success({coords: {latitude: 1234, longitude: 9876}})
+            };
+            let options = {};
+            let expectedOptions = {coordinates: {lat: 1234, long: 9876}};
+
+            addGeolocation(options, augmentedOptions => {
+
+                expect(augmentedOptions).to.eql(expectedOptions);
+                done();
+
+            });
+
         });
 
     });

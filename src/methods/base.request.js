@@ -9,21 +9,23 @@ export function baseRequest(options, callback) {
 
     if (message = isMissingMandatoryFields(this.config, options)) {
         if (callback && typeof callback === 'function') {
-            return callback(new Error(message))
+            return callback(new Error(message));
         }
         throw new Error(message);
     }
 
-    //let requestOptions = this.getRequestOptions(options);
     let requestOptions = getRequestOptions.call(this, options);
-    //call request.get, request.post, etc. to allow for stubbing on tests
-    let method = requestOptions.method.toLowerCase();
 
     return addGeolocation(requestOptions, (requestOptions) => {
 
+        // stringify final request body
+        if (requestOptions.body) {
+          requestOptions = _.assign({}, requestOptions, {body: JSON.stringify(requestOptions.body)});
+        }
+        let method = requestOptions.method.toLowerCase();
+
         return request[method](requestOptions, (err, res, body) => {
 
-            // Status error.
             let requestError;
             if (res && res.statusCode >= 299) {
                 requestError = new RequestError(body, res.statusCode);
@@ -40,7 +42,7 @@ export function baseRequest(options, callback) {
 
         });
 
-    })
+    });
 
 }
 
@@ -63,15 +65,19 @@ export function getRequestOptions(options) {
         request = _.merge({}, request, {headers: {'X-Fidem-SessionToken': options.token}});
     }
 
-    // add request.body and request.headers['content-type'] iif method is PUT or POST
+    // add request.body and request.headers['content-type'] if method is PUT or POST
     if (options.method && ['put', 'post'].indexOf(options.method.toLowerCase()) !== -1) {
+
         request = _.merge({}, request, {headers: {'content-type': 'application/json'}});
+
         if (options.body) {
-            request = _.merge({}, request, {body: JSON.stringify(options.body)});
+            request = _.merge({}, request, {body: options.body});
         }
+
     }
 
     return request;
+
 }
 
 export function addGeolocation(options, callback) {
@@ -81,11 +87,16 @@ export function addGeolocation(options, callback) {
             lat: position.coords.latitude,
             long: position.coords.longitude
         };
-        callback(_.assign({}, options, {coordinates: coordinates}));
+        callback(_.merge({}, options, {body: {coordinates: coordinates}}));
     }
 
     function error() {
-        callback(_.assign({}, options, {coordinates: null}));
+        callback(_.merge({}, options, {body: {coordinates: null}}));
+    }
+
+    // don't change anything if request method is not POST or PUT
+    if (!options.method || ['put', 'post'].indexOf(options.method.toLowerCase()) === -1) {
+      return callback(options);
     }
 
     if (!window.navigator || !window.navigator.geolocation) {

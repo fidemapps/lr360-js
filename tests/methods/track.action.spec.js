@@ -68,18 +68,49 @@ describe('track.action.js', () => {
                     accept: 'application/json',
                     'content-type': 'application/json'
                 },
-                body: JSON.stringify({type: 'TEST'}),
-                qs: null,
-                coordinates: {
-                    lat: 1234,
-                    long: 9876
-                }
+                body: JSON.stringify({
+                  type: 'TEST',
+                  coordinates: {
+                      lat: 1234,
+                      long: 9876
+                  }
+                }),
+                qs: null
             })).to.be.true;
 
             requestPostStub.restore();
             done();
 
         });
+
+        it('should call request.post() with correct requestOptions (when key and path are given) ' +
+            'with no coordinates found', done => {
+
+                delete window.navigator;
+                let requestPostStub = sinon.stub(request, 'post');
+                let client = new Client({key: 'ACCESS-KEY'});
+
+                trackAction.call(client, {type: 'TEST'});
+
+                expect(requestPostStub.calledWith({
+                    url: `http://services.fidemapps.com:80/api/gamification/actions`,
+                    method: 'POST',
+                    headers: {
+                        'X-Fidem-AccessApiKey': 'ACCESS-KEY',
+                        accept: 'application/json',
+                        'content-type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                      type: 'TEST',
+                      coordinates: null
+                    }),
+                    qs: null
+                })).to.be.true;
+
+                requestPostStub.restore();
+                done();
+
+            });
 
         describe('callback(error, data)', () => {
 

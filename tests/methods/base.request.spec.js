@@ -132,7 +132,7 @@ describe('base.request.js', () => {
                     accept: 'application/json',
                     'content-type': 'application/json'
                 },
-                body: JSON.stringify(options.body),
+                body: options.body,
                 qs: options.qs
             };
 
@@ -179,11 +179,7 @@ describe('base.request.js', () => {
                     'X-Fidem-AccessApiKey': 'ACCESS-KEY',
                     accept: 'application/json'
                 },
-                qs: null,
-                coordinates: {
-                    lat: 1234,
-                    long: 9876
-                }
+                qs: null
             };
 
             requestGetStub.yields(null, JSON.stringify(response), JSON.stringify(body));
@@ -245,11 +241,7 @@ describe('base.request.js', () => {
                     'X-Fidem-AccessApiKey': 'ACCESS-KEY',
                     accept: 'application/json'
                 },
-                qs: null,
-                coordinates: {
-                    lat: 1234,
-                    long: 9876
-                }
+                qs: null
             };
 
             requestGetStub.yields(requestError);
@@ -283,11 +275,7 @@ describe('base.request.js', () => {
                     'X-Fidem-AccessApiKey': 'ACCESS-KEY',
                     accept: 'application/json'
                 },
-                qs: null,
-                coordinates: {
-                    lat: 1234,
-                    long: 9876
-                }
+                qs: null
             };
 
             requestGetStub.yields(null, response, JSON.stringify(responseBody));
@@ -354,11 +342,7 @@ describe('base.request.js', () => {
                         'X-Fidem-AccessApiKey': 'ACCESS-KEY',
                         accept: 'application/json'
                     },
-                    qs: null,
-                    coordinates: {
-                        lat: 1234,
-                        long: 9876
-                    }
+                    qs: null
                 };
 
                 requestGetStub.yields(requestError);
@@ -388,11 +372,7 @@ describe('base.request.js', () => {
                         'X-Fidem-AccessApiKey': 'ACCESS-KEY',
                         accept: 'application/json'
                     },
-                    qs: null,
-                    coordinates: {
-                        lat: 1234,
-                        long: 9876
-                    }
+                    qs: null
                 };
 
                 requestGetStub.yields(null, response, JSON.stringify(responseBody));
@@ -427,8 +407,15 @@ describe('base.request.js', () => {
 
         it('should return options with coordinates null when window.navigator is not present', done => {
 
-            let options = {};
-            let expectedOptions = {coordinates: null};
+            let options = {
+                method: 'POST'
+            };
+            let expectedOptions = {
+                method: 'POST',
+                body: {
+                    coordinates: null
+                }
+            };
 
             addGeolocation(options, augmentedOptions => {
 
@@ -442,8 +429,15 @@ describe('base.request.js', () => {
         it('should return options with coordinates null when window.navigator.geolocation is not present', done => {
 
             window.navigator = {};
-            let options = {};
-            let expectedOptions = {coordinates: null};
+            let options = {
+                method: 'POST'
+            };
+            let expectedOptions = {
+                method: 'POST',
+                body: {
+                    coordinates: null
+                }
+            };
 
             addGeolocation(options, augmentedOptions => {
 
@@ -461,8 +455,15 @@ describe('base.request.js', () => {
                     getCurrentPosition: (success, error) => error()
                 }
             };
-            let options = {};
-            let expectedOptions = {coordinates: null};
+            let options = {
+                method: 'POST'
+            };
+            let expectedOptions = {
+                method: 'POST',
+                body: {
+                    coordinates: null
+                }
+            };
 
             addGeolocation(options, augmentedOptions => {
 
@@ -480,8 +481,15 @@ describe('base.request.js', () => {
                     getCurrentPosition: (success, error) => success({coords: {latitude: 1234, longitude: 9876}})
                 }
             };
-            let options = {};
-            let expectedOptions = {coordinates: {lat: 1234, long: 9876}};
+            let options = {
+                method: 'POST'
+            };
+            let expectedOptions = {
+                method: 'POST',
+                body: {
+                    coordinates: {lat: 1234, long: 9876}
+                }
+            };
 
             addGeolocation(options, augmentedOptions => {
 

@@ -1,6 +1,6 @@
 import request from 'request';
 import RequestError from './request.error';
-import Promise from 'bluebird';
+import { merge, assign } from 'lodash';
 
 export function baseRequest(options, callback) {
 
@@ -20,7 +20,7 @@ export function baseRequest(options, callback) {
 
         // stringify final request body
         if (requestOptions.body) {
-          requestOptions = _.assign({}, requestOptions, {body: JSON.stringify(requestOptions.body)});
+          requestOptions = assign({}, requestOptions, {body: JSON.stringify(requestOptions.body)});
         }
         let method = requestOptions.method.toLowerCase();
 
@@ -51,7 +51,7 @@ export function getRequestOptions(options) {
     options = options || {};
 
     let request = {
-        url: formatUrl(_.assign({}, options, this.config)),
+        url: formatUrl(assign({}, options, this.config)),
         method: options.method || 'GET',
         headers: {
             'X-Fidem-AccessApiKey': this.config.key || null,
@@ -62,16 +62,16 @@ export function getRequestOptions(options) {
 
     // add token to request.headers['X-Fidem-SessionToken'] if found
     if (options.token) {
-        request = _.merge({}, request, {headers: {'X-Fidem-SessionToken': options.token}});
+        request = merge({}, request, {headers: {'X-Fidem-SessionToken': options.token}});
     }
 
     // add request.body and request.headers['content-type'] if method is PUT or POST
     if (options.method && ['put', 'post'].indexOf(options.method.toLowerCase()) !== -1) {
 
-        request = _.merge({}, request, {headers: {'content-type': 'application/json'}});
+        request = merge({}, request, {headers: {'content-type': 'application/json'}});
 
         if (options.body) {
-            request = _.merge({}, request, {body: options.body});
+            request = merge({}, request, {body: options.body});
         }
 
     }
@@ -87,11 +87,11 @@ export function addGeolocation(options, callback) {
             lat: position.coords.latitude,
             long: position.coords.longitude
         };
-        callback(_.merge({}, options, {body: {coordinates: coordinates}}));
+        callback(merge({}, options, {body: {coordinates: coordinates}}));
     }
 
     function error() {
-        callback(_.merge({}, options, {body: {coordinates: null}}));
+        callback(merge({}, options, {body: {coordinates: null}}));
     }
 
     // don't change anything if request method is not POST or PUT

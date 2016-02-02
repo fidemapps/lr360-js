@@ -22,13 +22,11 @@
     "preinstall": "npm set progress=false",
     "test": "NODE_ENV=test karma start",
     "test-coverage": "NODE_ENV=test karma start --coverage",
-    "build": "browserify src/index.js -t babelify -o dist/lr360.js",
-    "build-watch": "watchify src/index.js -t babelify -o dist/lr360.js"
+    "build": "browserify -t babelify src/index.js | uglifyjs -cm > dist/lr360.js",
+    "build-watch": "watchify -t babelify src/index.js | uglifyjs -cm > dist/lr360.js"
   },
   "licence": "MIT",
   "dependencies": {
-    "bluebird": "^3.1.1",
-    "fidem-signer": "^0.1.1",
     "lodash": "^4.0.0",
     "request": "^2.67.0"
   },
@@ -50,6 +48,7 @@
     "karma-sinon": "^1.0.4",
     "mocha": "^2.3.4",
     "sinon": "^1.17.2",
+    "uglify-js": "^2.6.1",
     "watchify": "^3.7.0"
   }
 }

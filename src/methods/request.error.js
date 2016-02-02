@@ -1,10 +1,5 @@
 export default class RequestError extends Error {
 
-    /**
-     *
-     * @param {object} body
-     * @param {number} statusCode
-     */
     constructor(body, statusCode) {
         body = body || {};
         statusCode = statusCode || '';

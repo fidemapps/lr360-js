@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { assign } from 'lodash';
 import { clientMethods } from '../methods/index';
 
 const HOSTNAME = 'services.fidemapps.com';
@@ -7,7 +7,7 @@ export default class Client {
 
     constructor(config) {
         config = config || {};
-        this.config = _.assign({
+        this.config = assign({
             hostname: config.hostname || HOSTNAME,
             port: config.protocol === 'https' ? 443 : 80,
             protocol: 'http'
@@ -16,4 +16,4 @@ export default class Client {
 
 }
 
-_.assign(Client.prototype, clientMethods);
+assign(Client.prototype, clientMethods);

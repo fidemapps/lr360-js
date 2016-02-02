@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import Client from '../../src/client/client';
-import request from 'request';
+import request from 'browser-request';
 import trackAction from '../../src/methods/track.action';
 
 describe('track.action.js', () => {

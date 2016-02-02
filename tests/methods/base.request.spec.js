@@ -1,6 +1,6 @@
 let expect = require('chai').expect;
 import sinon from 'sinon';
-import request from 'request';
+import request from 'browser-request';
 import { getRequestOptions, baseRequest, addGeolocation } from '../../src/methods/base.request';
 import Client from '../../src/client/client';
 

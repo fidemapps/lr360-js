@@ -1,6 +1,7 @@
-import request from 'request';
+import request from 'browser-request';
 import RequestError from './request.error';
-import { merge, assign } from 'lodash';
+let assign = require('lodash.assign');
+let merge = require('lodash.merge');
 
 export function baseRequest(options, callback) {
 

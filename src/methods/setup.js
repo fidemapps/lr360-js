@@ -1,4 +1,4 @@
-import { assign } from 'lodash';
+let assign = require('lodash.assign');
 
 export default function (config) {
 

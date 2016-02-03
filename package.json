@@ -23,13 +23,14 @@
     "test": "NODE_ENV=test karma start",
     "test-coverage": "NODE_ENV=test karma start --coverage",
     "build": "browserify -t babelify src/index.js | uglifyjs -cm > dist/lr360.js",
-    "build-watch": "watchify -t babelify src/index.js | uglifyjs -cm > dist/lr360.js"
+    "watch": "watchify -t babelify src/index.js -o 'uglifyjs -cm > dist/lr360.js'"
   },
   "licence": "MIT",
   "dependencies": {
     "browser-request": "^0.3.3",
     "lodash": "^4.0.0",
     "lodash.assign": "^4.0.1",
+    "lodash.has": "^4.0.3",
     "lodash.merge": "^4.0.3"
   },
   "devDependencies": {

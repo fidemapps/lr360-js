@@ -146,64 +146,6 @@ describe('track.action.js', () => {
 
             });
 
-            it('should return an error if key is not configured on client', done => {
-
-                let client = new Client();
-
-                trackAction.call(client, {type: 'TEST'}, (error, data) => {
-
-                    expect(error).to.exist;
-                    expect(data).to.not.exist;
-                    expect(error.message).to.equal('You must provide a key.');
-
-                    done();
-
-                });
-
-            });
-
-            it('should return an error when request.post() yields error', done => {
-
-                let requestPostStub = sinon.stub(request, 'post');
-                let client = new Client({key: 'ACCESS-KEY'});
-
-                requestPostStub.yields(new Error('error'), null, null);
-
-                trackAction.call(client, {type: 'TEST'}, (error, body) => {
-
-                    expect(error).to.exist;
-                    expect(body).to.not.exist;
-                    expect(error.message).to.equal('error');
-
-                    requestPostStub.restore();
-                    done();
-
-                });
-
-            });
-
-            it('should return a RequestError when request.post() yields response with error code', done => {
-
-                let requestPostStub = sinon.stub(request, 'post');
-                let client = new Client({key: 'ACCESS-KEY'});
-
-                requestPostStub.yields(null, {statusCode: 299}, JSON.stringify({error: 'message'}));
-
-                trackAction.call(client, {type: 'TEST'}, (error, body) => {
-
-                    expect(error).to.exist;
-                    expect(body).to.exist;
-                    expect(error.message).to.equal('message');
-                    expect(error.statusCode).to.equal(299);
-                    expect(body).to.eql({error: 'message'});
-
-                    requestPostStub.restore();
-                    done();
-
-                });
-
-            });
-
         });
 
     });

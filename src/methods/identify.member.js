@@ -1,4 +1,3 @@
-let has = require('lodash.has');
 const METHOD = 'POST';
 const PATH = '/api/gamification/actions/identify-member';
 const ERROR_MESSAGE = 'You must provide either an ID, an external ID or an email.';
@@ -22,7 +21,5 @@ export default function (options, callback) {
 }
 
 function hasOneOfRequiredProperties(options) {
-    return  has(options, 'id') ||
-        has(options, 'email') ||
-        has(options, 'external_id');
+    return  !!options.id || !!options.email || !! options.external_id;
 }

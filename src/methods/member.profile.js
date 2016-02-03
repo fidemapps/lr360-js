@@ -1,6 +1,6 @@
-const METHOD = 'POST';
-const PATH = '/api/gamification/actions';
-const ERROR_MESSAGE = 'You must provide the type of action to be tracked.';
+const METHOD = 'GET';
+const PATH = '/api/members';
+const ERROR_MESSAGE = 'You must provide a member ID.';
 
 export default function (options, callback) {
 
@@ -15,11 +15,11 @@ export default function (options, callback) {
     return this.baseRequest({
         method: METHOD,
         body: options,
-        path: PATH
+        path: `${PATH}/${options.id}`
     }, callback);
 
 }
 
 function hasRequiredProperty(options) {
-    return  !!options.type;
+    return  !!options.id;
 }

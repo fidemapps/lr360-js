@@ -30,7 +30,8 @@
     "browser-request": "^0.3.3",
     "lodash": "^4.0.0",
     "lodash.assign": "^4.0.1",
-    "lodash.merge": "^4.0.3"
+    "lodash.merge": "^4.0.3",
+    "superagent": "^1.7.2"
   },
   "devDependencies": {
     "babel-core": "^6.4.5",

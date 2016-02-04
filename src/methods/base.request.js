@@ -1,4 +1,4 @@
-import request from 'browser-request';
+var superagent = require('superagent');
 import RequestError from './request.error';
 let assign = require('lodash.assign');
 let merge = require('lodash.merge');
@@ -15,69 +15,38 @@ export function baseRequest(options, callback) {
         throw new Error(message);
     }
 
-    let requestOptions = getRequestOptions.call(this, options);
+    return addGeolocation(options, (options) => {
 
-    return addGeolocation(requestOptions, (requestOptions) => {
+        let method = options.method.toLowerCase();
+        let url = formatUrl(assign({}, options, this.config));
 
-        // stringify final request body
-        if (requestOptions.body) {
-          requestOptions = assign({}, requestOptions, {body: JSON.stringify(requestOptions.body)});
-        }
-        let method = requestOptions.method.toLowerCase();
+        superagent[method](url)
+          .set('X-Fidem-AccessApiKey', this.config.key || null)
+          .set('Accept', 'application/json')
+          .set('Content-Type', 'application/json')
+          .withCredentials()
+          .send( (options && options.body && JSON.stringify(options.body)) || null)
+          .end((err, res) => {
 
-        return request[method](requestOptions, (err, res, body) => {
+              let requestError;
+              if (res && res.statusCode >= 299) {
+                  requestError = new RequestError(body, res.statusCode);
+              }
 
-            let requestError;
-            if (res && res.statusCode >= 299) {
-                requestError = new RequestError(body, res.statusCode);
-            }
+              if (callback && typeof callback === 'function') {
+                  let callbackError = err || requestError || null;
+                  let callbackBody = (res && res.body && JSON.parse(res.body)) || null;
+                  return callback(callbackError, callbackBody);
+              }
+              else {
+                  if (err || requestError) {
+                      throw err || requestError;
+                  }
+              }
 
-            if (callback && typeof callback === 'function') {
-                return callback(err || requestError || null, body && JSON.parse(body));
-            }
-            else {
-                if (err || requestError) {
-                    throw err || requestError;
-                }
-            }
-
-        });
+          });
 
     });
-
-}
-
-export function getRequestOptions(options) {
-
-    options = options || {};
-
-    let request = {
-        url: formatUrl(assign({}, options, this.config)),
-        method: options.method || 'GET',
-        headers: {
-            'X-Fidem-AccessApiKey': this.config.key || null,
-            accept: 'application/json'
-        },
-        qs: options.qs || null
-    };
-
-    // add token to request.headers['X-Fidem-SessionToken'] if found
-    if (options.token) {
-        request = merge({}, request, {headers: {'X-Fidem-SessionToken': options.token}});
-    }
-
-    // add request.body and request.headers['content-type'] if method is PUT or POST
-    if (options.method && ['put', 'post'].indexOf(options.method.toLowerCase()) !== -1) {
-
-        request = merge({}, request, {headers: {'content-type': 'application/json'}});
-
-        if (options.body) {
-            request = merge({}, request, {body: options.body});
-        }
-
-    }
-
-    return request;
 
 }
 

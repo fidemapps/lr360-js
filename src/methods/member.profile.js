@@ -14,7 +14,6 @@ export default function (options, callback) {
 
     return this.baseRequest({
         method: METHOD,
-        body: options,
         path: `${PATH}/${options.id}`
     }, callback);
 

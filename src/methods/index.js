@@ -3,6 +3,7 @@ import setup from './setup';
 import identifyMember from './identify.member';
 import getMemberProfile from './member.profile';
 import getDeviceProfile from './device.profile';
+import getCurrentDeviceProfile from './current.device.profile';
 import { baseRequest } from './base.request';
 
 export const clientMethods = {
@@ -11,5 +12,6 @@ export const clientMethods = {
     baseRequest: baseRequest,
     identifyMember: identifyMember,
     getMemberProfile: getMemberProfile,
-    getDeviceProfile: getDeviceProfile
+    getDeviceProfile: getDeviceProfile,
+    getCurrentDeviceProfile: getCurrentDeviceProfile
 };

@@ -46,7 +46,6 @@ describe('member.profile.js', () => {
             let baseRequestStub = sinon.stub(client, 'baseRequest', () => {});
             let expectedRequestOpions = {
                 method: 'GET',
-                body: {id: 1234},
                 path: '/api/members/1234'
             };
 

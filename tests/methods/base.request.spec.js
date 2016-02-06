@@ -1,153 +1,24 @@
 let expect = require('chai').expect;
 import sinon from 'sinon';
-import request from 'browser-request';
+let superagent = require('superagent');
 import { getRequestOptions, baseRequest, addGeolocation } from '../../src/methods/base.request';
 import Client from '../../src/client/client';
 
 describe('base.request.js', () => {
 
-    describe('getRequestOptions()', () => {
-
-        it('should return default options when no options are given', done => {
-
-            let expectedRequestOptions = {
-                url: 'http://services.fidemapps.com:80',
-                method: 'GET',
-                headers: {
-                    'X-Fidem-AccessApiKey': null,
-                    accept: 'application/json'
-                },
-                qs: null
-            };
-
-            let client = new Client();
-            let requestOptions = getRequestOptions.call(client);
-            expect(requestOptions).to.eql(expectedRequestOptions);
-            done();
-
-        });
-
-        it('should return default options when no options are given and client has different config', done => {
-
-            let config = {
-                key: 'my-key',
-                protocol: 'https',
-                hostname: 'modified.host.com'
-            };
-
-            let expectedRequestOptions = {
-                url: 'https://modified.host.com:443',
-                method: 'GET',
-                headers: {
-                    'X-Fidem-AccessApiKey': 'my-key',
-                    accept: 'application/json'
-                },
-                qs: null
-            };
-
-            let client = new Client(config);
-            let requestOptions = getRequestOptions.call(client);
-            expect(requestOptions).to.eql(expectedRequestOptions);
-            done();
-
-        });
-
-        it('should return request options with url, method and qs overwritten with values from given options', done => {
-
-            let options = {
-                path: '/my/path',
-                method: 'MODIFIED',
-                qs: {
-                    query: 'string'
-                }
-            };
-
-            let expectedRequestOptions = {
-                url: `http://services.fidemapps.com:80${options.path}`,
-                method: options.method,
-                headers: {
-                    'X-Fidem-AccessApiKey': null,
-                    accept: 'application/json'
-                },
-                qs: options.qs
-            };
-
-            let client = new Client();
-            let requestOptions = getRequestOptions.call(client, options);
-            expect(requestOptions).to.eql(expectedRequestOptions);
-            done();
-
-        });
-
-        it('should return request options with url, method, qs and token  overwritten with values from given options', done => {
-
-            let options = {
-                path: '/my/path',
-                method: 'MODIFIED',
-                qs: {
-                    query: 'string'
-                },
-                token: 'mytoken'
-            };
-
-            let expectedRequestOptions = {
-                url: `http://services.fidemapps.com:80${options.path}`,
-                method: options.method,
-                headers: {
-                    'X-Fidem-AccessApiKey': null,
-                    'X-Fidem-SessionToken': 'mytoken',
-                    accept: 'application/json'
-                },
-                qs: options.qs
-            };
-
-            let client = new Client();
-            let requestOptions = getRequestOptions.call(client, options);
-            expect(requestOptions).to.eql(expectedRequestOptions);
-            done();
-
-        });
-
-        it('should return request options with url, method, qs, token, content-type header and body ' +
-            'overwritten with values from given options', done => {
-
-            let options = {
-                path: '/my/path',
-                method: 'PUT',
-                qs: {
-                    query: 'string'
-                },
-                token: 'mytoken',
-                body: {
-                    body: 'value'
-                }
-            };
-
-            let expectedRequestOptions = {
-                url: `http://services.fidemapps.com:80${options.path}`,
-                method: options.method,
-                headers: {
-                    'X-Fidem-AccessApiKey': null,
-                    'X-Fidem-SessionToken': 'mytoken',
-                    accept: 'application/json',
-                    'content-type': 'application/json'
-                },
-                body: options.body,
-                qs: options.qs
-            };
-
-            let client = new Client();
-            let requestOptions = getRequestOptions.call(client, options);
-            expect(requestOptions).to.eql(expectedRequestOptions);
-            done();
-
-        });
-
-    });
-
     describe('baseRequest()', () => {
 
-        let requestGetStub;
+        let superagentGetStub;
+        let superagentRequest = {};
+        let setSpy;
+        let withCredentialsSpy;
+        let sendSpy;
+
+        superagentRequest.set = () => superagentRequest;
+        superagentRequest.withCredentials = () => superagentRequest;
+        superagentRequest.send = () => superagentRequest;
+        // superagentRequest.end() should be overwritten on specific tests
+        superagentRequest.end = (callback) => callback();
 
         beforeEach(done => {
 
@@ -157,43 +28,51 @@ describe('base.request.js', () => {
                     getCurrentPosition: (success, error) => success({coords: {latitude: 1234, longitude: 9876}})
                 }
             };
-            requestGetStub = sinon.stub(request, 'get');
+
+            setSpy = sinon.spy(superagentRequest, 'set');
+            withCredentialsSpy = sinon.spy(superagentRequest, 'withCredentials');
+            sendSpy = sinon.spy(superagentRequest, 'send');
+
+            superagentGetStub = sinon.stub(superagent, 'get', () => superagentRequest);
+
             done();
 
         });
 
         afterEach(done => {
-            requestGetStub.restore();
+
+            superagentGetStub.restore();
+            setSpy.restore();
+            withCredentialsSpy.restore();
+            sendSpy.restore();
+
             done();
+
         });
 
-        it('should call request with correct requestOptions and return body to given callback', done => {
+        it('should check basic calls to superagent and its methods', done => {
 
-            let response = {statusCode: 200};
-            let body = {body: 'content'};
-            let options = {path: '/custom/path'};
-            let expectedRequestOptions = {
-                url: `http://services.fidemapps.com:80${options.path}`,
+            let options = {
                 method: 'GET',
-                headers: {
-                    'X-Fidem-AccessApiKey': 'ACCESS-KEY',
-                    accept: 'application/json'
-                },
-                qs: null
+                path: '/custom/path'
             };
-
-            requestGetStub.yields(null, JSON.stringify(response), JSON.stringify(body));
+            let expectedURL = 'http://services.fidemapps.com:80/custom/path';
 
             let client = new Client({key: 'ACCESS-KEY'});
 
-            baseRequest.call(client, options, (error, body) => {
+            baseRequest.call(client, options, () => {
 
-                expect(requestGetStub.calledWith(expectedRequestOptions)).to.be.true;
-                expect(error).to.not.exist;
-                expect(body).to.eql(body);
+                expect(superagentGetStub.calledWith(expectedURL)).to.be.true;
+                expect(setSpy.withArgs('X-Fidem-AccessApiKey', 'ACCESS-KEY').calledOnce).to.be.true;
+                expect(setSpy.withArgs('Accept', 'application/json').calledOnce).to.be.true;
+                expect(setSpy.withArgs('Content-Type', 'application/json').calledOnce).to.be.true;
+                expect(withCredentialsSpy.calledOnce).to.be.true;
+                expect(sendSpy.withArgs(null).calledOnce).to.be.true;
 
                 done();
+
             });
+
         });
 
         it('should throw error when key and callback are not given to function', done => {
@@ -233,27 +112,22 @@ describe('base.request.js', () => {
         it('should throw request error when no callback is given and request returns error', done => {
 
             let requestError = new Error('Error from request call');
-            let options = {path: '/custom/path'};
-            let expectedRequestOptions = {
-                url: `http://services.fidemapps.com:80${options.path}`,
+            let options = {
                 method: 'GET',
-                headers: {
-                    'X-Fidem-AccessApiKey': 'ACCESS-KEY',
-                    accept: 'application/json'
-                },
-                qs: null
+                path: '/custom/path'
             };
-
-            requestGetStub.yields(requestError);
+            let expectedURL = 'http://services.fidemapps.com:80/custom/path';
 
             let client = new Client({key: 'ACCESS-KEY'});
+            // overwrite superagent.end() behavior
+            superagentRequest.end = callback => callback(requestError);
 
             try {
                 baseRequest.call(client, options);
             }
             catch (error) {
 
-                expect(requestGetStub.calledWith(expectedRequestOptions)).to.be.true;
+                expect(superagentGetStub.calledWith(expectedURL)).to.be.true;
                 expect(error).to.exist;
                 expect(error.message).to.equal(requestError.message);
 
@@ -265,33 +139,30 @@ describe('base.request.js', () => {
 
         it('should throw error when no callback is given and response returns statusCode 299', done => {
 
-            let response = {statusCode: 299};
-            let responseBody = {error: 'message'};
-            let options = {path: '/custom/path'};
-            let expectedRequestOptions = {
-                url: `http://services.fidemapps.com:80${options.path}`,
-                method: 'GET',
-                headers: {
-                    'X-Fidem-AccessApiKey': 'ACCESS-KEY',
-                    accept: 'application/json'
-                },
-                qs: null
+            let response = {
+                statusCode: 299,
+                body: {error: 'message'}
             };
-
-            requestGetStub.yields(null, response, JSON.stringify(responseBody));
+            let options = {
+                method: 'GET',
+                path: '/custom/path'
+            };
+            let expectedURL = 'http://services.fidemapps.com:80/custom/path';
 
             let client = new Client({key: 'ACCESS-KEY'});
+            // overwrite superagent.end() behavior
+            superagentRequest.end = callback => callback(null, response);
 
             try {
                 baseRequest.call(client, options);
             }
             catch (error) {
 
-                expect(requestGetStub.calledWith(expectedRequestOptions)).to.be.true;
+                expect(superagentGetStub.calledWith(expectedURL)).to.be.true;
                 expect(error).to.exist;
                 expect(error.message).to.equal('message');
                 expect(error.statusCode).to.equal(299);
-                expect(error.body).to.eql(responseBody);
+                expect(error.body).to.eql(response.body);
 
                 done();
 
@@ -334,24 +205,19 @@ describe('base.request.js', () => {
             it('should send error to callback when request call returns an error', done => {
 
                 let requestError = new Error('Error from request call');
-                let options = {path: '/custom/path'};
-                let expectedRequestOptions = {
-                    url: `http://services.fidemapps.com:80${options.path}`,
+                let options = {
                     method: 'GET',
-                    headers: {
-                        'X-Fidem-AccessApiKey': 'ACCESS-KEY',
-                        accept: 'application/json'
-                    },
-                    qs: null
+                    path: '/custom/path'
                 };
+                let expectedURL = `http://services.fidemapps.com:80${options.path}`;
 
-                requestGetStub.yields(requestError);
+                superagentRequest.end = callback => callback(requestError);
 
                 let client = new Client({key: 'ACCESS-KEY'});
 
                 baseRequest.call(client, options, (error, body) => {
 
-                    expect(requestGetStub.calledWith(expectedRequestOptions)).to.be.true;
+                    expect(superagentGetStub.calledWith(expectedURL)).to.be.true;
                     expect(error).to.exist;
                     expect(body).to.not.exist;
                     expect(error.message).to.equal(requestError.message);
@@ -362,32 +228,29 @@ describe('base.request.js', () => {
 
             it('should send error to callback when request call response with statusCode 299', done => {
 
-                let response = {statusCode: 299};
-                let responseBody = {error: 'message'};
-                let options = {path: '/custom/path'};
-                let expectedRequestOptions = {
-                    url: `http://services.fidemapps.com:80${options.path}`,
-                    method: 'GET',
-                    headers: {
-                        'X-Fidem-AccessApiKey': 'ACCESS-KEY',
-                        accept: 'application/json'
-                    },
-                    qs: null
+                let response = {
+                    statusCode: 299,
+                    body: JSON.stringify({error: 'message'})
                 };
+                let options = {
+                    method: 'GET',
+                    path: '/custom/path'
+                };
+                let expectedURL = `http://services.fidemapps.com:80${options.path}`;
 
-                requestGetStub.yields(null, response, JSON.stringify(responseBody));
+                superagentRequest.end = callback => callback(null, response);
 
                 let client = new Client({key: 'ACCESS-KEY'});
 
                 baseRequest.call(client, options, (error, body) => {
 
-                    expect(requestGetStub.calledWith(expectedRequestOptions)).to.be.true;
+                    expect(superagentGetStub.calledWith(expectedURL)).to.be.true;
                     expect(error).to.exist;
                     expect(body).to.exist;
-                    expect(body).to.eql(responseBody);
+                    expect(body).to.eql(JSON.parse(response.body));
                     expect(error.message).to.equal('message');
                     expect(error.statusCode).to.equal(299);
-                    expect(error.body).to.eql(responseBody);
+                    expect(error.body).to.eql(JSON.parse(response.body));
 
                     done();
                 });

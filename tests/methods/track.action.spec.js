@@ -1,11 +1,21 @@
 import { expect } from 'chai';
 import Client from '../../src/client/client';
-import request from 'browser-request';
+let superagent = require('superagent');
 import trackAction from '../../src/methods/track.action';
 
 describe('track.action.js', () => {
 
     describe('trackAction()', () => {
+
+        let superagentPostStub;
+        let superagentRequest = {};
+        let sendSpy;
+
+        superagentRequest.set = () => superagentRequest;
+        superagentRequest.withCredentials = () => superagentRequest;
+        superagentRequest.send = () => superagentRequest;
+        // superagentRequest.end() should be overwritten on specific tests
+        superagentRequest.end = (callback) => callback();
 
         beforeEach(done => {
 
@@ -15,6 +25,19 @@ describe('track.action.js', () => {
                     getCurrentPosition: (success, error) => success({coords: {latitude: 1234, longitude: 9876}})
                 }
             };
+
+            sendSpy = sinon.spy(superagentRequest, 'send');
+            superagentPostStub = sinon.stub(superagent, 'post', () => superagentRequest);
+
+            done();
+
+        });
+
+        afterEach(done => {
+
+            superagentPostStub.restore();
+            sendSpy.restore();
+
             done();
 
         });
@@ -55,30 +78,22 @@ describe('track.action.js', () => {
 
         it('should call request.post() with correct requestOptions (when key and path are given)', done => {
 
-            let requestPostStub = sinon.stub(request, 'post');
             let client = new Client({key: 'ACCESS-KEY'});
+            let expectedURL = `http://services.fidemapps.com:80/api/gamification/actions`;
+            let expectedBody = {
+                type: 'TEST',
+                coordinates: {
+                    lat: 1234,
+                    long: 9876
+                }
+            };
 
+            superagentRequest.end = callback => callback();
             trackAction.call(client, {type: 'TEST'});
 
-            expect(requestPostStub.calledWith({
-                url: `http://services.fidemapps.com:80/api/gamification/actions`,
-                method: 'POST',
-                headers: {
-                    'X-Fidem-AccessApiKey': 'ACCESS-KEY',
-                    accept: 'application/json',
-                    'content-type': 'application/json'
-                },
-                body: JSON.stringify({
-                  type: 'TEST',
-                  coordinates: {
-                      lat: 1234,
-                      long: 9876
-                  }
-                }),
-                qs: null
-            })).to.be.true;
+            expect(superagentPostStub.calledWith(expectedURL)).to.be.true;
+            expect(sendSpy.calledWith(JSON.stringify(expectedBody))).to.be.true;
 
-            requestPostStub.restore();
             done();
 
         });
@@ -87,27 +102,18 @@ describe('track.action.js', () => {
             'with no coordinates found', done => {
 
                 delete window.navigator;
-                let requestPostStub = sinon.stub(request, 'post');
+            let expectedURL = `http://services.fidemapps.com:80/api/gamification/actions`;
+            let expectedBody = {
+                type: 'TEST',
+                coordinates: null
+            };
                 let client = new Client({key: 'ACCESS-KEY'});
 
                 trackAction.call(client, {type: 'TEST'});
 
-                expect(requestPostStub.calledWith({
-                    url: `http://services.fidemapps.com:80/api/gamification/actions`,
-                    method: 'POST',
-                    headers: {
-                        'X-Fidem-AccessApiKey': 'ACCESS-KEY',
-                        accept: 'application/json',
-                        'content-type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                      type: 'TEST',
-                      coordinates: null
-                    }),
-                    qs: null
-                })).to.be.true;
+            expect(superagentPostStub.calledWith(expectedURL)).to.be.true;
+            expect(sendSpy.calledWith(JSON.stringify(expectedBody))).to.be.true;
 
-                requestPostStub.restore();
                 done();
 
             });

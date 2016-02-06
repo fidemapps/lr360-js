@@ -21,30 +21,30 @@ export function baseRequest(options, callback) {
         let url = formatUrl(assign({}, options, this.config));
 
         superagent[method](url)
-          .set('X-Fidem-AccessApiKey', this.config.key || null)
-          .set('Accept', 'application/json')
-          .set('Content-Type', 'application/json')
-          .withCredentials()
-          .send( (options && options.body && JSON.stringify(options.body)) || null)
-          .end((err, res) => {
+            .set('X-Fidem-AccessApiKey', this.config.key || null)
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json')
+            .withCredentials()
+            .send((options && options.body && JSON.stringify(options.body)) || null)
+            .end((err, res) => {
 
-              let requestError;
-              if (res && res.statusCode >= 299) {
-                  requestError = new RequestError(body, res.statusCode);
-              }
+                let requestError;
+                if (res && res.statusCode >= 299) {
+                    requestError = new RequestError(res.body, res.statusCode);
+                }
 
-              if (callback && typeof callback === 'function') {
-                  let callbackError = err || requestError || null;
-                  let callbackBody = (res && res.body && JSON.parse(res.body)) || null;
-                  return callback(callbackError, callbackBody);
-              }
-              else {
-                  if (err || requestError) {
-                      throw err || requestError;
-                  }
-              }
+                if (callback && typeof callback === 'function') {
+                    let callbackError = err || requestError || null;
+                    let callbackBody = (res && res.body && JSON.parse(res.body)) || null;
+                    return callback(callbackError, callbackBody);
+                }
+                else {
+                    if (err || requestError) {
+                        throw err || requestError;
+                    }
+                }
 
-          });
+            });
 
     });
 

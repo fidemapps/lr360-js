@@ -4,56 +4,56 @@ import setup from '../../src/methods/setup';
 
 describe('setup.js', () => {
 
-    it('should not change the default config when called with no parameters', done => {
+  it('should not change the default config when called with no parameters', done => {
 
-        let expectedDefaultConfig = {
-            hostname: 'services.fidemapps.com',
-            port: 80,
-            protocol: 'http'
-        };
+    let expectedDefaultConfig = {
+      hostname: 'services.fidemapps.com',
+      port: 80,
+      protocol: 'http',
+    };
 
-        let client = new Client();
+    let client = new Client();
 
-        expect(client.config).to.eql(expectedDefaultConfig);
+    expect(client.config).to.eql(expectedDefaultConfig);
 
-        setup.call(client);
+    setup.call(client);
 
-        expect(client.config).to.eql(expectedDefaultConfig);
+    expect(client.config).to.eql(expectedDefaultConfig);
 
-        done();
+    done();
 
+  });
+
+  it('should overwrite config settings for the client with given parameter', done => {
+
+    let expectedDefaultConfig = {
+      hostname: 'services.fidemapps.com',
+      port: 80,
+      protocol: 'http',
+    };
+
+    let expectedFinalConfig = {
+      hostname: 'modified.hostname.com',
+      port: 81,
+      protocol: 'https',
+      key: 'ACCESS-KEY',
+    };
+
+    let client = new Client();
+
+    expect(client.config).to.eql(expectedDefaultConfig);
+
+    setup.call(client, {
+      hostname: 'modified.hostname.com',
+      port: 81,
+      protocol: 'https',
+      key: 'ACCESS-KEY',
     });
 
-    it('should overwrite config settings for the client with given parameter', done => {
+    expect(client.config).to.eql(expectedFinalConfig);
 
-        let expectedDefaultConfig = {
-            hostname: 'services.fidemapps.com',
-            port: 80,
-            protocol: 'http'
-        };
+    done();
 
-        let expectedFinalConfig = {
-            hostname: 'modified.hostname.com',
-            port: 81,
-            protocol: 'https',
-            key: 'ACCESS-KEY'
-        };
-
-        let client = new Client();
-
-        expect(client.config).to.eql(expectedDefaultConfig);
-
-        setup.call(client, {
-            hostname: 'modified.hostname.com',
-            port: 81,
-            protocol: 'https',
-            key: 'ACCESS-KEY'
-        });
-
-        expect(client.config).to.eql(expectedFinalConfig);
-
-        done();
-
-    });
+  });
 
 });

@@ -2,8 +2,8 @@ let assign = require('lodash.assign');
 
 export default function (config) {
 
-    config = config || {};
+  config = config || {};
 
-    this.config = assign({}, this.config, config);
+  this.config = assign({}, this.config, config);
 
 }

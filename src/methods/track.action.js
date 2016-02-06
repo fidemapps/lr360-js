@@ -4,22 +4,23 @@ const ERROR_MESSAGE = 'You must provide the type of action to be tracked.';
 
 export default function (options, callback) {
 
-    options = options || {};
-    if (!hasRequiredProperty(options)) {
-        if (callback && typeof callback === 'function') {
-            return callback(new Error(ERROR_MESSAGE));
-        }
-        throw new Error(ERROR_MESSAGE);
+  options = options || {};
+  if (!hasRequiredProperty(options)) {
+    if (callback && typeof callback === 'function') {
+      return callback(new Error(ERROR_MESSAGE));
     }
 
-    return this.baseRequest({
-        method: METHOD,
-        body: options,
-        path: PATH
-    }, callback);
+    throw new Error(ERROR_MESSAGE);
+  }
+
+  return this.baseRequest({
+    method: METHOD,
+    body: options,
+    path: PATH,
+  }, callback);
 
 }
 
 function hasRequiredProperty(options) {
-    return  !!options.type;
+  return !!options.type;
 }

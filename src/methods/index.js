@@ -7,11 +7,11 @@ import getCurrentDeviceProfile from './current.device.profile';
 import { baseRequest } from './base.request';
 
 export const clientMethods = {
-    setup: setup,
-    trackAction: trackAction,
-    baseRequest: baseRequest,
-    identifyMember: identifyMember,
-    getMemberProfile: getMemberProfile,
-    getDeviceProfile: getDeviceProfile,
-    getCurrentDeviceProfile: getCurrentDeviceProfile
+  setup: setup,
+  trackAction: trackAction,
+  baseRequest: baseRequest,
+  identifyMember: identifyMember,
+  getMemberProfile: getMemberProfile,
+  getDeviceProfile: getDeviceProfile,
+  getCurrentDeviceProfile: getCurrentDeviceProfile,
 };

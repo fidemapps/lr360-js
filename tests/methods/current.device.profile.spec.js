@@ -5,25 +5,25 @@ import currentDeviceProfile from '../../src/methods/current.device.profile';
 
 describe('current.device.profile.js', () => {
 
-    describe('currentDeviceProfile()', () => {
+  describe('currentDeviceProfile()', () => {
 
-        it('should call baseRequest with expected values', done => {
+    it('should call baseRequest with expected values', done => {
 
-            let client = new Client();
-            let baseRequestStub = sinon.stub(client, 'baseRequest', () => {});
-            let expectedRequestOpions = {
-                method: 'GET',
-                path: '/api/device/me'
-            };
+      let client = new Client();
+      let baseRequestStub = sinon.stub(client, 'baseRequest', () => {});
+      let expectedRequestOpions = {
+        method: 'GET',
+        path: '/api/device/me',
+      };
 
-            currentDeviceProfile.call(client);
+      currentDeviceProfile.call(client);
 
-            expect(baseRequestStub.calledWith(expectedRequestOpions)).to.be.true;
+      expect(baseRequestStub.calledWith(expectedRequestOpions)).to.be.true;
 
-            done();
-
-        });
+      done();
 
     });
+
+  });
 
 });

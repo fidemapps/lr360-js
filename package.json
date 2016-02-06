@@ -20,7 +20,7 @@
   },
   "scripts": {
     "preinstall": "npm set progress=false",
-    "test": "NODE_ENV=test karma start",
+    "test": "jscs src/**/*.js && jscs tests/**/*.js && NODE_ENV=test karma start",
     "test-coverage": "NODE_ENV=test karma start --coverage",
     "build": "browserify -t babelify src/index.js | uglifyjs -cm > dist/lr360.js",
     "watch": "watchify -t babelify src/index.js -o 'uglifyjs -cm > dist/lr360.js'"
@@ -41,6 +41,7 @@
     "browserify-istanbul": "^0.2.1",
     "chai": "^3.4.1",
     "isparta": "^4.0.0",
+    "jscs": "^2.9.0",
     "karma": "^0.13.19",
     "karma-browserify": "^4.4.2",
     "karma-chai": "^0.1.0",

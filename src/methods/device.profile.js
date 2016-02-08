@@ -15,11 +15,11 @@ export default function (options, callback) {
 
   return this.baseRequest({
     method: METHOD,
-    path: `${PATH}/${options.id}`,
+    path: `${PATH}/${options.deviceId}`,
   }, callback);
 
 }
 
 function hasRequiredProperty(options) {
-  return !!options.id;
+  return !!options.deviceId;
 }

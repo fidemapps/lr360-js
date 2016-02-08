@@ -1,18 +1,18 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 import Client from '../../src/client/client';
-import memberProfile from '../../src/methods/member.profile';
+import challengesTodo from '../../src/methods/challenges.todo';
 
-describe('member.profile.js', () => {
+describe('challenges.done.js', () => {
 
-  describe('memberProfile()', () => {
+  describe('getMemberChallengesTodo()', () => {
 
     const EXPECTED_ERROR_MESSAGE = 'You must provide a member ID.';
 
     it('should throw an error when no options and callback are given', done => {
 
       try {
-        memberProfile();
+        challengesTodo();
       }
       catch (error) {
 
@@ -28,7 +28,7 @@ describe('member.profile.js', () => {
 
       try {
         let options = {};
-        memberProfile(options);
+        challengesTodo(options);
       }
       catch (error) {
 
@@ -46,10 +46,10 @@ describe('member.profile.js', () => {
       let baseRequestStub = sinon.stub(client, 'baseRequest', () => {});
       let expectedRequestOpions = {
         method: 'GET',
-        path: '/api/members/1234',
+        path: '/api/members/1234/challenges/todo',
       };
 
-      memberProfile.call(client, { memberId: 1234 });
+      challengesTodo.call(client, { memberId: 1234 });
 
       expect(baseRequestStub.calledWith(expectedRequestOpions)).to.be.true;
 
@@ -62,7 +62,7 @@ describe('member.profile.js', () => {
       it('should send an error to callback when no options are given', done => {
 
         let options = null;
-        memberProfile(options, (error, data) => {
+        challengesTodo(options, (error, data) => {
 
           expect(error).to.exist;
           expect(data).to.not.exist;
@@ -77,7 +77,7 @@ describe('member.profile.js', () => {
       it('should send an error to callback when options parameter doesn\'t have required property', done => {
 
         let options = {};
-        memberProfile(options, (error, data) => {
+        challengesTodo(options, (error, data) => {
 
           expect(error).to.exist;
           expect(data).to.not.exist;

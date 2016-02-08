@@ -49,7 +49,7 @@ describe('device.profile.js', () => {
         path: '/api/devices/1234',
       };
 
-      deviceProfile.call(client, { id: 1234 });
+      deviceProfile.call(client, { deviceId: 1234 });
 
       expect(baseRequestStub.calledWith(expectedRequestOpions)).to.be.true;
 

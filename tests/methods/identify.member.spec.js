@@ -7,7 +7,7 @@ describe('identify.member.js', () => {
 
   describe('identifyMember()', () => {
 
-    const EXPECTED_ERROR_MESSAGE = 'You must provide either an ID, an external ID or an email.';
+    const EXPECTED_ERROR_MESSAGE = 'You must provide either a member ID, an external ID or an email.';
 
     it('should throw an error when options given doesn\'t have either an id, email or external_email field', done => {
 
@@ -47,11 +47,11 @@ describe('identify.member.js', () => {
         method: 'POST',
         path: '/api/gamification/actions/identify-member',
         body: {
-          id: 1234,
+          memberId: 1234,
         },
       };
 
-      identifyMember.call(client, { id: 1234 });
+      identifyMember.call(client, { memberId: 1234 });
 
       expect(baseRequestStub.calledWith(expectedRequestOptions)).to.be.true;
       done();
@@ -86,10 +86,11 @@ describe('identify.member.js', () => {
         path: '/api/gamification/actions/identify-member',
         body: {
           external_id: 'qwerty', // jscs:disable
+          externalId: 'qwerty',
         },
       };
 
-      identifyMember.call(client, { external_id: 'qwerty' });
+      identifyMember.call(client, { externalId: 'qwerty' });
 
       expect(baseRequestStub.calledWith(expectedRequestOptions)).to.be.true;
       done();

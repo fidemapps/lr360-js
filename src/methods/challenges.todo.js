@@ -1,5 +1,6 @@
 const METHOD = 'GET';
-const PATH = '/api/members';
+const PATH_1 = '/api/members/';
+const PATH_2 = '/challenges/todo';
 const ERROR_MESSAGE = 'You must provide a member ID.';
 
 export default function (options, callback) {
@@ -15,7 +16,7 @@ export default function (options, callback) {
 
   return this.baseRequest({
     method: METHOD,
-    path: `${PATH}/${options.memberId}`,
+    path: `${PATH_1}${options.memberId}${PATH_2}`,
   }, callback);
 
 }

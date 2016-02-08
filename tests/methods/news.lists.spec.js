@@ -1,18 +1,18 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 import Client from '../../src/client/client';
-import memberProfile from '../../src/methods/member.profile';
+import getNewsLists from '../../src/methods/news.lists';
 
-describe('member.profile.js', () => {
+describe('news.lists.js', () => {
 
-  describe('memberProfile()', () => {
+  describe('getNewsLists()', () => {
 
-    const EXPECTED_ERROR_MESSAGE = 'You must provide a member ID.';
+    const EXPECTED_ERROR_MESSAGE = 'You must provide a news list ID.';
 
     it('should throw an error when no options and callback are given', done => {
 
       try {
-        memberProfile();
+        getNewsLists();
       }
       catch (error) {
 
@@ -28,7 +28,7 @@ describe('member.profile.js', () => {
 
       try {
         let options = {};
-        memberProfile(options);
+        getNewsLists(options);
       }
       catch (error) {
 
@@ -40,16 +40,33 @@ describe('member.profile.js', () => {
 
     });
 
-    it('should call baseRequest with expected values', done => {
+    it('should call baseRequest without request parameters when no memberId is passed', done => {
 
       let client = new Client();
       let baseRequestStub = sinon.stub(client, 'baseRequest', () => {});
       let expectedRequestOpions = {
         method: 'GET',
-        path: '/api/members/1234',
+        path: '/api/content/newslists/1234',
       };
 
-      memberProfile.call(client, { memberId: 1234 });
+      getNewsLists.call(client, { newsListId: 1234 });
+
+      expect(baseRequestStub.calledWith(expectedRequestOpions)).to.be.true;
+
+      done();
+
+    });
+
+    it('should call baseRequest with request parameters when memberId is passed', done => {
+
+      let client = new Client();
+      let baseRequestStub = sinon.stub(client, 'baseRequest', () => {});
+      let expectedRequestOpions = {
+        method: 'GET',
+        path: '/api/content/newslists/1234?member_id=9876',
+      };
+
+      getNewsLists.call(client, { newsListId: 1234, memberId: 9876 });
 
       expect(baseRequestStub.calledWith(expectedRequestOpions)).to.be.true;
 
@@ -62,7 +79,7 @@ describe('member.profile.js', () => {
       it('should send an error to callback when no options are given', done => {
 
         let options = null;
-        memberProfile(options, (error, data) => {
+        getNewsLists(options, (error, data) => {
 
           expect(error).to.exist;
           expect(data).to.not.exist;
@@ -77,7 +94,7 @@ describe('member.profile.js', () => {
       it('should send an error to callback when options parameter doesn\'t have required property', done => {
 
         let options = {};
-        memberProfile(options, (error, data) => {
+        getNewsLists(options, (error, data) => {
 
           expect(error).to.exist;
           expect(data).to.not.exist;

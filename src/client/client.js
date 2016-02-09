@@ -5,13 +5,38 @@ const HOSTNAME = 'services.fidemapps.com';
 
 export default class Client {
 
-  constructor(config) {
-    config = config || {};
-    this.config = assign({
-      hostname: config.hostname || HOSTNAME,
-      port: config.protocol === 'https' ? 443 : 80,
+  constructor() {
+
+    this.config = {
+      hostname: HOSTNAME,
+      port: 80,
       protocol: 'http',
-    }, config);
+      dev: false,
+    };
+
+  }
+
+  handleError(message, callback) {
+
+    message = message || 'N/A';
+    let error;
+
+    if (typeof message === 'string') {
+      error = new Error(message);
+    } else {
+      error = message;
+    }
+
+    if (callback && typeof callback === 'string') {
+      return callback(error);
+    }
+
+    if (!this.config.dev && console) {
+      return console.error(error.message);
+    }
+
+    throw error;
+
   }
 
 }

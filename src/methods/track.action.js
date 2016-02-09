@@ -1,16 +1,22 @@
+let assign = require('lodash.assign');
 const METHOD = 'POST';
 const PATH = '/api/gamification/actions';
-const ERROR_MESSAGE = 'You must provide the type of action to be tracked.';
+const MISSING_TYPE_ERROR_MESSAGE = 'You must provide the type of action to be tracked.';
+const WRONG_ARGUMENTS_ERROR_MESSAGE = 'You must provide the correct arguments to trackAction.';
 
-export default function (options, callback) {
+export default function () {
 
-  options = options || {};
+  let args = Array.prototype.slice.call(arguments); // arguments to array
+  let callback = typeof args[args.length - 1] === 'function' ? args[args.length - 1] : null;
+
+  if (!expectedArguments(args)) {
+    return this.handleError(WRONG_ARGUMENTS_ERROR_MESSAGE, callback);
+  }
+
+  let options = buildOptions(args);
+
   if (!hasRequiredProperty(options)) {
-    if (callback && typeof callback === 'function') {
-      return callback(new Error(ERROR_MESSAGE));
-    }
-
-    throw new Error(ERROR_MESSAGE);
+    return this.handleError(MISSING_TYPE_ERROR_MESSAGE, callback);
   }
 
   return this.baseRequest({
@@ -19,6 +25,55 @@ export default function (options, callback) {
     path: PATH,
   }, callback);
 
+}
+
+function expectedArguments(args) {
+
+  return (args.length === 1 && typeof args[0] === 'string') ||
+    (args.length === 1 && typeof args[0] === 'object') ||
+    (args.length === 2 && typeof args[0] === 'string' && typeof args[1] === 'function') ||
+    (args.length === 2 && typeof args[0] === 'object' && typeof args[1] === 'function') ||
+    (args.length === 2 && typeof args[0] === 'string' && typeof args[1] === 'object') ||
+    (args.length === 3 && typeof args[0] === 'string' && typeof args[1] === 'object' && typeof args[2] === 'function');
+
+}
+
+function buildOptions(args) {
+  let options;
+
+  switch (args.length) {
+
+    case 1:
+      options = fromOneArgument(args);
+      break;
+
+    case 2:
+
+      if (typeof args[1] === 'function') {
+        options = fromOneArgument(args);
+      }  else {
+        options = fromTwoArguments(args);
+      }
+
+      break;
+
+    default:
+      options = fromTwoArguments(args);
+  }
+
+  return options;
+}
+
+function fromOneArgument(args) {
+  if (typeof args[0] === 'string') {
+    return assign({}, { type: args[0] });
+  } else {
+    return args[0];
+  }
+}
+
+function fromTwoArguments(args) {
+  return assign({}, args[1], { type: args[0] });
 }
 
 function hasRequiredProperty(options) {

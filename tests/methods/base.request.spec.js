@@ -1,13 +1,14 @@
 let expect = require('chai').expect;
 import sinon from 'sinon';
 let superagent = require('superagent');
-import { getRequestOptions, baseRequest, addGeolocation } from '../../src/methods/base.request';
+import { baseRequest, addGeolocation } from '../../src/methods/base.request';
 import Client from '../../src/client/client';
 
 describe('base.request.js', () => {
 
   describe('baseRequest()', () => {
 
+    const ERROR_MESSAGE = 'You must provide a key and a path.';
     let superagentGetStub;
     let superagentRequest = {};
     let setSpy;
@@ -51,7 +52,7 @@ describe('base.request.js', () => {
 
     });
 
-    it('should check basic calls to superagent and its methods', done => {
+    it('should check basic calls to superagent and its methods when path and key are passed correctly', done => {
 
       let options = {
         method: 'GET',
@@ -59,7 +60,8 @@ describe('base.request.js', () => {
       };
       let expectedURL = 'http://services.fidemapps.com:80/custom/path';
 
-      let client = new Client({ key: 'ACCESS-KEY' });
+      let client = new Client();
+      client.setup({ key: 'ACCESS-KEY' });
 
       baseRequest.call(client, options, () => {
 
@@ -76,134 +78,94 @@ describe('base.request.js', () => {
 
     });
 
-    it('should throw error when key and callback are not given to function', done => {
+    it('should call handleError when key is not found on client', done => {
 
       let client = new Client();
+      let callback = () => {}; // jscs:disable
+      let handleErrorStub = sinon.stub(client, 'handleError', () => {});
 
-      try {
-        baseRequest.call(client, {});
-      }
-      catch (error) {
+      baseRequest.call(client, {}, callback);
 
-        expect(error).to.exist;
-        expect(error.message).to.equal('You must provide a key.');
-        done();
+      expect(handleErrorStub.calledWith(ERROR_MESSAGE, callback)).to.be.true;
 
-      }
+      done();
 
     });
 
-    it('should throw error when path and callback are not given to function', done => {
+    it('should call handleError when path is not found on options', done => {
 
-      let client = new Client({ key: 'ACCESS-KEY' });
+      let client = new Client();
+      let handleErrorStub = sinon.stub(client, 'handleError', () => {});
+      client.setup({ key: 'ACCESS-KEY' });
+      let callback = () => {}; // jscs:disable
 
-      try {
-        baseRequest.call(client, {});
-      }
-      catch (error) {
+      baseRequest.call(client, {}, callback);
 
-        expect(error).to.exist;
-        expect(error.message).to.equal('You must provide a path.');
-        done();
+      expect(handleErrorStub.calledWith(ERROR_MESSAGE, callback)).to.be.true;
 
-      }
+      done();
 
     });
 
-    it('should throw request error when no callback is given and request returns error', done => {
+    it('should call handleError when no callback is given and request returns error', done => {
 
-      let requestError = new Error('Error from request call');
+      let client = new Client();
+      client.setup({ key: 'ACCESS-KEY' });
+
       let options = {
         method: 'GET',
         path: '/custom/path',
       };
-      let expectedURL = 'http://services.fidemapps.com:80/custom/path';
 
-      let client = new Client({ key: 'ACCESS-KEY' });
+      let handleErrorStub = sinon.stub(client, 'handleError', () => {}); // jscs:disable
+      let requestError = new Error('Error from request call');
 
-      // overwrite superagent.end() behavior
+      // overwrite superagent.end() behavior to call back with error
       superagentRequest.end = callback => callback(requestError);
 
-      try {
-        baseRequest.call(client, options);
-      }
-      catch (error) {
+      baseRequest.call(client, options);
 
-        expect(superagentGetStub.calledWith(expectedURL)).to.be.true;
-        expect(error).to.exist;
-        expect(error.message).to.equal(requestError.message);
+      expect(handleErrorStub.calledWith(requestError)).to.be.true;
 
-        done();
-
-      }
+      done();
 
     });
 
-    it('should throw error when no callback is given and response returns statusCode 299', done => {
+    it('should call handleError when no callback is given and response returns statusCode 299', done => {
+
+      let client = new Client();
+      client.setup({ key: 'ACCESS-KEY' });
+
+      let options = {
+        method: 'GET',
+        path: '/custom/path',
+      };
 
       let response = {
         statusCode: 299,
-        body: { error: 'message' },
+        body: JSON.stringify({ error: 'message' }),
       };
-      let options = {
-        method: 'GET',
-        path: '/custom/path',
-      };
-      let expectedURL = 'http://services.fidemapps.com:80/custom/path';
 
-      let client = new Client({ key: 'ACCESS-KEY' });
-
-      // overwrite superagent.end() behavior
+      // overwrite superagent.end() behavior to call back with response with error code
       superagentRequest.end = callback => callback(null, response);
 
-      try {
-        baseRequest.call(client, options);
-      }
-      catch (error) {
+      // test
+      let handleErrorStub = sinon.stub(client, 'handleError', (error, callback) => {
 
-        expect(superagentGetStub.calledWith(expectedURL)).to.be.true;
+        expect(callback).to.not.exist;
         expect(error).to.exist;
         expect(error.message).to.equal('message');
         expect(error.statusCode).to.equal(299);
-        expect(error.body).to.eql(response.body);
-
+        expect(error.body).to.eql(JSON.parse(response.body));
         done();
 
-      }
+      });
+
+      baseRequest.call(client, options);
 
     });
 
     describe('callback(error, body)', () => {
-
-      it('should send error to callback when no parameters are given (missing path)', done => {
-
-        let client = new Client({ key: 'ACCESS-KEY' });
-
-        baseRequest.call(client, null, (error, body) => {
-
-          expect(error).to.exist;
-          expect(body).to.not.exist;
-          expect(error.message).to.equal('You must provide a path.');
-
-          done();
-        });
-
-      });
-
-      it('should send error to callback when no key is configured in client (missing key)', done => {
-
-        let client = new Client();
-
-        baseRequest.call(client, null, (error, body) => {
-
-          expect(error).to.exist;
-          expect(body).to.not.exist;
-          expect(error.message).to.equal('You must provide a key.');
-
-          done();
-        });
-
-      });
 
       it('should send error to callback when request call returns an error', done => {
 
@@ -216,7 +178,8 @@ describe('base.request.js', () => {
 
         superagentRequest.end = callback => callback(requestError);
 
-        let client = new Client({ key: 'ACCESS-KEY' });
+        let client = new Client();
+        client.setup({ key: 'ACCESS-KEY' });
 
         baseRequest.call(client, options, (error, body) => {
 
@@ -243,7 +206,8 @@ describe('base.request.js', () => {
 
         superagentRequest.end = callback => callback(null, response);
 
-        let client = new Client({ key: 'ACCESS-KEY' });
+        let client = new Client();
+        client.setup({ key: 'ACCESS-KEY' });
 
         baseRequest.call(client, options, (error, body) => {
 

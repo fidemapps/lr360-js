@@ -1,78 +1,122 @@
 let expect = require('chai').expect;
+import sinon from 'sinon';
 import Client from '../../src/client/client';
 
 describe('client.js', () => {
 
   describe('new Client()', () => {
 
-    it('should extend config correctly when no parameters are sent to the Client', done => {
+    it('should check that a new Client has the correct config set up', done => {
 
       let expectedConfig = {
         hostname: 'services.fidemapps.com',
         port: 80,
         protocol: 'http',
+        dev: false,
       };
 
       let client = new Client();
+
       expect(client.config).to.eql(expectedConfig);
+
       done();
 
     });
 
-    it('should extend config correctly with given secret and key', done => {
+  });
 
-      let config = {
-        secret: 'a',
-        key: 'b',
-      };
+  describe('handleError()', () => {
 
-      let expectedConfig = {
-        hostname: 'services.fidemapps.com',
-        port: 80,
-        protocol: 'http',
-        secret: config.secret,
-        key: config.key,
-      };
+    let logErrorStub;
 
-      let client = new Client(config);
-      expect(client.config).to.eql(expectedConfig);
+    beforeEach(done => {
+      logErrorStub = sinon.stub(console, 'error', () => {});
+      done();
+    });
+
+    afterEach(done => {
+      logErrorStub.restore();
+      done();
+    });
+
+    it('should log default error message if dev flag is false (e.g. running on production) and no message is passed', done => {
+
+      const DEFAULT_ERROR_MESSAGE = 'N/A';
+      let client = new Client();
+      client.config.dev = false;
+
+      client.handleError();
+
+      expect(logErrorStub.calledWith(DEFAULT_ERROR_MESSAGE)).to.be.true;
+
       done();
 
     });
 
-    it('should extend config correctly with given hostname', done => {
+    it('should throw passed error message if dev flag is true', done => {
 
-      let config = {
-        hostname: 'different.host.com',
-      };
+      const ERROR_MESSAGE_THROWN = 'Custom error message thrown';
+      let client = new Client();
+      client.config.dev = true;
 
-      let expectedConfig = {
-        hostname: config.hostname,
-        port: 80,
-        protocol: 'http',
-      };
+      try {
+        client.handleError(ERROR_MESSAGE_THROWN);
+      } catch (error) {
 
-      let client = new Client(config);
-      expect(client.config).to.eql(expectedConfig);
+        expect(logErrorStub.calledOnce).to.be.false;
+        expect(error).to.exist;
+        expect(error.message).to.equal(ERROR_MESSAGE_THROWN);
+        done();
+
+      }
+
+    });
+
+    it('should log passed error message if dev flag is false (e.g. running on production)', done => {
+
+      const ERROR_MESSAGE_LOGGED = 'Custom error message logged';
+      let client = new Client();
+      client.config.dev = false;
+
+      client.handleError(ERROR_MESSAGE_LOGGED);
+
+      expect(logErrorStub.calledWith(ERROR_MESSAGE_LOGGED)).to.be.true;
+
       done();
 
     });
 
-    it('extend use port 443 if given protocol https', done => {
+    it('should log custom error message if dev flag is false (e.g. running on production) and a custom error is passed', done => {
 
-      let config = {
-        protocol: 'https',
-      };
+      let customError = { message: 'custom error message' };
 
-      let expectedConfig = {
-        hostname: 'services.fidemapps.com',
-        port: 443,
-        protocol: config.protocol,
-      };
+      let client = new Client();
+      client.config.dev = false;
 
-      let client = new Client(config);
-      expect(client.config).to.eql(expectedConfig);
+      client.handleError(customError);
+
+      expect(logErrorStub.calledWith(customError.message)).to.be.true;
+
       done();
+
+    });
+
+    it('should throw passed error if dev flag is true', done => {
+
+      let customError = { message: 'custom error message' };
+      let client = new Client();
+      client.config.dev = true;
+
+      try {
+        client.handleError(customError);
+      } catch (error) {
+
+        expect(logErrorStub.calledOnce).to.be.false;
+        expect(error).to.eql(customError);
+
+        done();
+
+      }
 
     });
 

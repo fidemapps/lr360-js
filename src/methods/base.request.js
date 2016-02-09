@@ -2,18 +2,14 @@ var superagent = require('superagent');
 import RequestError from './request.error';
 let assign = require('lodash.assign');
 let merge = require('lodash.merge');
+const ERROR_MESSAGE = 'You must provide a key and a path.';
 
 export function baseRequest(options, callback) {
 
   options = options || {};
-  let message;
 
-  if (message = isMissingMandatoryFields(this.config, options)) {
-    if (callback && typeof callback === 'function') {
-      return callback(new Error(message));
-    }
-
-    throw new Error(message);
+  if (isMissingMandatoryFields(this.config, options)) {
+    return this.handleError(ERROR_MESSAGE, callback);
   }
 
   return addGeolocation(options, (options) => {
@@ -22,29 +18,33 @@ export function baseRequest(options, callback) {
     let url = formatUrl(assign({}, options, this.config));
 
     superagent[method](url)
-        .set('X-Fidem-AccessApiKey', this.config.key || null)
-        .set('Accept', 'application/json')
-        .set('Content-Type', 'application/json')
-        .withCredentials()
-        .send((options && options.body && JSON.stringify(options.body)) || null)
-            .end((err, res) => {
+      .set('X-Fidem-AccessApiKey', this.config.key || null)
+      .set('Accept', 'application/json')
+      .set('Content-Type', 'application/json')
+      .withCredentials()
+      .send((options && options.body && JSON.stringify(options.body)) || null)
+      .end((err, res) => {
 
-              let requestError;
-              if (res && res.statusCode >= 299) {
-                requestError = new RequestError(res.body, res.statusCode);
-              }
+        let requestError;
+        if (res && res.statusCode >= 299) {
+          requestError = new RequestError(res.body, res.statusCode);
+        }
 
-              if (callback && typeof callback === 'function') {
-                let callbackError = err || requestError || null;
-                let callbackBody = (res && res.body && JSON.parse(res.body)) || null;
-                return callback(callbackError, callbackBody);
-              }              else {
-                if (err || requestError) {
-                  throw err || requestError;
-                }
-              }
+        if (callback && typeof callback === 'function') {
 
-            });
+          let callbackError = err || requestError || null;
+          let callbackBody = (res && res.body && JSON.parse(res.body)) || null;
+          return callback(callbackError, callbackBody);
+
+        } else {
+
+          if (err || requestError) {
+            return this.handleError(err || requestError, callback);
+          }
+
+        }
+
+      });
 
   });
 
@@ -78,12 +78,8 @@ export function addGeolocation(options, callback) {
 }
 
 function isMissingMandatoryFields(config, options) {
-  if (!config.key) {
-    return 'You must provide a key.';
-  }
-
-  if (!options.path) {
-    return 'You must provide a path.';
+  if (!config.key || !options.path) {
+    return true;
   }
 
   return false;

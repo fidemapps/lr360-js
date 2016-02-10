@@ -1,25 +1,22 @@
+import Helper from '../helper/helper';
 const METHOD = 'GET';
 const PATH = '/api/devices';
-const ERROR_MESSAGE = 'You must provide a device ID.';
+const ERROR_MESSAGE_CALLBACK = 'You must provide a callback';
 
-export default function (options, callback) {
+export default function () {
 
-  options = options || {};
-  if (!hasRequiredProperty(options)) {
-    if (callback && typeof callback === 'function') {
-      return callback(new Error(ERROR_MESSAGE));
-    }
+  let args = Array.prototype.slice.call(arguments); // arguments to array
+  let callback = Helper.getCallback(args);
 
-    throw new Error(ERROR_MESSAGE);
+  if (!callback) {
+    return this.handleError(ERROR_MESSAGE_CALLBACK, callback);
   }
+
+  let deviceId = Helper.getDeviceId(args);
 
   return this.baseRequest({
     method: METHOD,
-    path: `${PATH}/${options.deviceId}`,
+    path: `${PATH}/${deviceId}`,
   }, callback);
 
-}
-
-function hasRequiredProperty(options) {
-  return !!options.deviceId;
 }

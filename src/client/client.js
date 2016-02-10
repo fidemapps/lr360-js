@@ -14,6 +14,8 @@ export default class Client {
       dev: false,
     };
 
+    this.memberId = null;
+
   }
 
   handleError(message, callback) {

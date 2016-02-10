@@ -3,91 +3,117 @@ import sinon from 'sinon';
 import Client from '../../src/client/client';
 import challengesTodo from '../../src/methods/challenges.todo';
 
-describe('challenges.done.js', () => {
+describe('challenges.js', () => {
 
-  describe('getMemberChallengesTodo()', () => {
+  describe('getMemberChallenges()', () => {
 
     const EXPECTED_ERROR_MESSAGE = 'You must provide a member ID.';
+    const ERROR_MESSAGE_CALLBACK = 'You must provide a callback';
 
-    it('should throw an error when no options and callback are given', done => {
-
-      try {
-        challengesTodo();
-      }
-      catch (error) {
-
-        expect(error).to.exist;
-        expect(error.message).to.equal(EXPECTED_ERROR_MESSAGE);
-        done();
-
-      }
-
-    });
-
-    it('should throw an error when options parameter doesn\'t have required property and callback is not given', done => {
-
-      try {
-        let options = {};
-        challengesTodo(options);
-      }
-      catch (error) {
-
-        expect(error).to.exist;
-        expect(error.message).to.equal(EXPECTED_ERROR_MESSAGE);
-        done();
-
-      }
-
-    });
-
-    it('should call baseRequest with expected values', done => {
+    it('should call handleError when called with no parameters', done => {
 
       let client = new Client();
-      let baseRequestStub = sinon.stub(client, 'baseRequest', () => {});
-      let expectedRequestOpions = {
-        method: 'GET',
-        path: '/api/members/1234/challenges/todo',
-      };
+      let handleErrorStub = sinon.stub(client, 'handleError', () => {});
 
-      challengesTodo.call(client, { memberId: 1234 });
+      challengesTodo.call(client);
 
-      expect(baseRequestStub.calledWith(expectedRequestOpions)).to.be.true;
+      expect(handleErrorStub.calledWith(ERROR_MESSAGE_CALLBACK)).to.be.true;
 
       done();
 
     });
 
-    describe('callback(error, data)', () => {
+    it('should call handleError when called with no callback', done => {
 
-      it('should send an error to callback when no options are given', done => {
+      let client = new Client();
+      client.memberId = 'memberIdFromClient';
+      let options = { memberId: 'memberIdFromOptions' };
+      let handleErrorStub = sinon.stub(client, 'handleError', () => {});
 
-        let options = null;
-        challengesTodo(options, (error, data) => {
+      challengesTodo.call(client, options);
 
-          expect(error).to.exist;
-          expect(data).to.not.exist;
-          expect(error.message).to.equal(EXPECTED_ERROR_MESSAGE);
+      expect(handleErrorStub.calledWith(ERROR_MESSAGE_CALLBACK)).to.be.true;
 
-          done();
+      done();
 
-        });
+    });
 
-      });
+    it('should call handleError when no memberId is found in client and no options are passed', done => {
 
-      it('should send an error to callback when options parameter doesn\'t have required property', done => {
+      let client = new Client();
+      let handleErrorStub = sinon.stub(client, 'handleError', () => {});
 
-        let options = {};
-        challengesTodo(options, (error, data) => {
+      challengesTodo.call(client, () => {});
 
-          expect(error).to.exist;
-          expect(data).to.not.exist;
-          expect(error.message).to.equal(EXPECTED_ERROR_MESSAGE);
+      expect(handleErrorStub.calledWith(EXPECTED_ERROR_MESSAGE)).to.be.true;
 
-          done();
+      done();
 
-        });
+    });
 
-      });
+    it('should call handleError when no memberId is found in client and options passed is missing memberId property', done => {
+
+      let client = new Client();
+      let options = {};
+      let handleErrorStub = sinon.stub(client, 'handleError', () => {});
+
+      challengesTodo.call(client, options, () => {});
+
+      expect(handleErrorStub.calledWith(EXPECTED_ERROR_MESSAGE)).to.be.true;
+
+      done();
+
+    });
+
+    it('should call baseRequest with memberId found in client and no options is passed', done => {
+
+      let client = new Client();
+      client.memberId = 'memberIdFromClient';
+      let baseRequestStub = sinon.stub(client, 'baseRequest', () => {});
+
+      challengesTodo.call(client, () => {});
+
+      expect(baseRequestStub.calledWith({
+        method: 'GET',
+        path: `/api/members/${client.memberId}/challenges/todo`,
+      })).to.be.true;
+
+      done();
+
+    });
+
+    it('should call baseRequest with memberId found in options passed and no memberId is in client', done => {
+
+      let client = new Client();
+      let options = { memberId: 'memberIdFromOptions' };
+      let baseRequestStub = sinon.stub(client, 'baseRequest', () => {});
+
+      challengesTodo.call(client, options, () => {});
+
+      expect(baseRequestStub.calledWith({
+        method: 'GET',
+        path: `/api/members/${options.memberId}/challenges/todo`,
+      })).to.be.true;
+
+      done();
+
+    });
+
+    it('should call baseRequest with memberId from options passed, overwriting memberId from client', done => {
+
+      let client = new Client();
+      client.memberId = 'memberIdFromClient';
+      let options = { memberId: 'memberIdFromOptions' };
+      let baseRequestStub = sinon.stub(client, 'baseRequest', () => {});
+
+      challengesTodo.call(client, options, () => {});
+
+      expect(baseRequestStub.calledWith({
+        method: 'GET',
+        path: `/api/members/${options.memberId}/challenges/todo`,
+      })).to.be.true;
+
+      done();
 
     });
 

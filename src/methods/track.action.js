@@ -1,4 +1,6 @@
 let assign = require('lodash.assign');
+import Helper from '../helper/helper';
+
 const METHOD = 'POST';
 const PATH = '/api/gamification/actions';
 const MISSING_TYPE_ERROR_MESSAGE = 'You must provide the type of action to be tracked.';
@@ -15,7 +17,7 @@ export default function () {
 
   let options = buildOptions(args);
 
-  if (!hasRequiredProperty(options)) {
+  if (!Helper.hasRequiredProperties('type', options)) {
     return this.handleError(MISSING_TYPE_ERROR_MESSAGE, callback);
   }
 
@@ -74,8 +76,4 @@ function fromOneArgument(args) {
 
 function fromTwoArguments(args) {
   return assign({}, args[1], { type: args[0] });
-}
-
-function hasRequiredProperty(options) {
-  return !!options.type;
 }

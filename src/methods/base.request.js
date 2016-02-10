@@ -1,14 +1,16 @@
+import Helper from '../helper/helper';
 var superagent = require('superagent');
 import RequestError from './request.error';
 let assign = require('lodash.assign');
 let merge = require('lodash.merge');
+
 const ERROR_MESSAGE = 'You must provide a key and a path.';
 
 export function baseRequest(options, callback) {
 
   options = options || {};
 
-  if (isMissingMandatoryFields(this.config, options)) {
+  if (!Helper.hasRequiredProperties('key', this.config) || !Helper.hasRequiredProperties('path', options)) {
     return this.handleError(ERROR_MESSAGE, callback);
   }
 
@@ -75,14 +77,6 @@ export function addGeolocation(options, callback) {
     window.navigator.geolocation.getCurrentPosition(success, error);
   }
 
-}
-
-function isMissingMandatoryFields(config, options) {
-  if (!config.key || !options.path) {
-    return true;
-  }
-
-  return false;
 }
 
 function formatUrl(url) {

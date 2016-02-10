@@ -9,33 +9,30 @@ describe('identify.member.js', () => {
 
     const EXPECTED_ERROR_MESSAGE = 'You must provide either a member ID, an external ID or an email.';
 
-    it('should throw an error when options given doesn\'t have either an id, email or external_email field', done => {
+    it('should call handleError when called with no parameters', done => {
 
-      try {
-        identifyMember({});
-      }
-      catch (error) {
+      let client = new Client();
+      let handleErrorStub = sinon.stub(client, 'handleError', () => {});
 
-        expect(error).to.exist;
-        expect(error.message).to.equal(EXPECTED_ERROR_MESSAGE);
-        done();
+      identifyMember.call(client);
 
-      }
+      expect(handleErrorStub.calledWith(EXPECTED_ERROR_MESSAGE)).to.be.true;
+
+      done();
 
     });
 
-    it('should throw an error when options given is null', done => {
+    it('should call handleError when called with a parameter that has no member ID, external ID or email', done => {
 
-      try {
-        identifyMember();
-      }
-      catch (error) {
+      let client = new Client();
+      let options = {};
+      let handleErrorStub = sinon.stub(client, 'handleError', () => {});
 
-        expect(error).to.exist;
-        expect(error.message).to.equal(EXPECTED_ERROR_MESSAGE);
-        done();
+      identifyMember.call(client, options);
 
-      }
+      expect(handleErrorStub.calledWith(EXPECTED_ERROR_MESSAGE)).to.be.true;
+
+      done();
 
     });
 
@@ -97,39 +94,21 @@ describe('identify.member.js', () => {
 
     });
 
-    describe('callback(error, data)', () => {
+    describe('callbackInterceptor()', () => {
 
-      it('should return error to callback when no options parameter is given', done => {
-
-        let client = new Client();
-        let options = null;
-
-        identifyMember.call(client, options, (error, data) => {
-
-          expect(error).to.exist;
-          expect(data).to.not.exist;
-          expect(error.message).to.equal(EXPECTED_ERROR_MESSAGE);
-
-          done();
-
-        });
-
-      });
-
-      it('should return error to callback when options given doesn\'t have either id, email or external_id properties', done => {
+      it('should set the memberId on the client after getting a successful response from server', done => {
 
         let client = new Client();
-        let options = {};
 
-        identifyMember.call(client, options, (error, data) => {
-
-          expect(error).to.exist;
-          expect(data).to.not.exist;
-          expect(error.message).to.equal(EXPECTED_ERROR_MESSAGE);
-
-          done();
-
+        sinon.stub(client, 'baseRequest', (request, callback) => {
+          return callback(null, { data: { id: 'returnedmemberid' } });
         });
+
+        identifyMember.call(client, { email: 'test@test.com' });
+
+        expect(client.memberId).to.equal('returnedmemberid');
+
+        done();
 
       });
 

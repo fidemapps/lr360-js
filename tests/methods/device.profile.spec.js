@@ -7,87 +7,65 @@ describe('device.profile.js', () => {
 
   describe('deviceProfile()', () => {
 
-    const EXPECTED_ERROR_MESSAGE = 'You must provide a device ID.';
+    const ERROR_MESSAGE_CALLBACK = 'You must provide a callback';
 
-    it('should throw an error when no options and callback are given', done => {
-
-      try {
-        deviceProfile();
-      }
-      catch (error) {
-
-        expect(error).to.exist;
-        expect(error.message).to.equal(EXPECTED_ERROR_MESSAGE);
-        done();
-
-      }
-
-    });
-
-    it('should throw an error when options parameter doesn\'t have required property and callback is not given', done => {
-
-      try {
-        let options = {};
-        deviceProfile(options);
-      }
-      catch (error) {
-
-        expect(error).to.exist;
-        expect(error.message).to.equal(EXPECTED_ERROR_MESSAGE);
-        done();
-
-      }
-
-    });
-
-    it('should call baseRequest with expected values', done => {
+    it('should call handleError when no callback is passed', done => {
 
       let client = new Client();
-      let baseRequestStub = sinon.stub(client, 'baseRequest', () => {});
-      let expectedRequestOpions = {
-        method: 'GET',
-        path: '/api/devices/1234',
-      };
+      let handleErrorStub = sinon.stub(client, 'handleError', () => {});
 
-      deviceProfile.call(client, { deviceId: 1234 });
+      deviceProfile.call(client);
 
-      expect(baseRequestStub.calledWith(expectedRequestOpions)).to.be.true;
+      expect(handleErrorStub.calledWith(ERROR_MESSAGE_CALLBACK)).to.be.true;
 
       done();
 
     });
 
-    describe('callback(error, data)', () => {
+    it('should call baseRequest with deviceId given', done => {
 
-      it('should send an error to callback when no options are given', done => {
+      let client = new Client();
+      let baseRequestStub = sinon.stub(client, 'baseRequest', () => {});
+      let options = { deviceId: 'deviceIdFromOptions' };
 
-        let options = null;
-        deviceProfile(options, (error, data) => {
+      deviceProfile.call(client, options, () => {});
 
-          expect(error).to.exist;
-          expect(data).to.not.exist;
-          expect(error.message).to.equal(EXPECTED_ERROR_MESSAGE);
+      expect(baseRequestStub.calledWith({
+        method: 'GET',
+        path: `/api/devices/${options.deviceId}`,
+      })).to.be.true;
 
-          done();
+      done();
 
-        });
+    });
 
-      });
+    it('should call baseRequest with me when no deviceId is given', done => {
 
-      it('should send an error to callback when options parameter doesn\'t have required property', done => {
+      let client = new Client();
+      let baseRequestStub = sinon.stub(client, 'baseRequest', () => {});
+      let options = {};
 
-        let options = {};
-        deviceProfile(options, (error, data) => {
+      deviceProfile.call(client, options, () => {});
 
-          expect(error).to.exist;
-          expect(data).to.not.exist;
-          expect(error.message).to.equal(EXPECTED_ERROR_MESSAGE);
+      expect(baseRequestStub.calledWith({
+        method: 'GET',
+        path: `/api/devices/me`,
+      })).to.be.true;
 
-          done();
+      done();
 
-        });
+    });
 
-      });
+    it('should call handleError when arguments passed are in wrong order', done => {
+
+      let client = new Client();
+      let handleErrorStub = sinon.stub(client, 'handleError', () => {});
+
+      deviceProfile.call(client, () => {}, 'wrong argument order');
+
+      expect(handleErrorStub.calledWith(ERROR_MESSAGE_CALLBACK)).to.be.true;
+
+      done();
 
     });
 

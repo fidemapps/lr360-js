@@ -1,4 +1,5 @@
 let assign = require('lodash.assign');
+import Helper from '../helper/helper';
 
 const METHOD = 'POST';
 const PATH = '/api/gamification/actions/identify-member';
@@ -8,26 +9,30 @@ export default function (options, callback) {
 
   options = options || {};
 
-  if (!hasOneOfRequiredProperties(options)) {
-    if (callback && typeof callback === 'function') {
-      return callback(new Error(ERROR_MESSAGE));
-    }
-
-    throw new Error(ERROR_MESSAGE);
+  if (!Helper.hasOneOfRequiredProperties(['memberId', 'external_id', 'email'], options)) {
+    this.handleError(ERROR_MESSAGE, callback);
   }
 
   options = formatExternalIdParameter(options);
+
+  // gets member id returned and sets it in the client context
+  let callbackInterceptor = (error, response) => {
+    if (response && response.data && response.data.id) {
+      this.memberId = response.data.id;
+    }
+
+    if (callback && typeof callback === 'function') {
+      return callback(error, response);
+    }
+
+  };
 
   return this.baseRequest({
     method: METHOD,
     body: options,
     path: PATH,
-  }, callback);
+  }, callbackInterceptor);
 
-}
-
-function hasOneOfRequiredProperties(options) {
-  return !!options.memberId || !!options.email || !!options.externalId;
 }
 
 function formatExternalIdParameter(options) {

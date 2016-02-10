@@ -1,13 +1,13 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 import Client from '../../src/client/client';
-import getPages from '../../src/methods/pages';
+import getNews from '../../src/methods/news';
 
-describe('pages.js', () => {
+describe('news.js', () => {
 
-  describe('getPages()', () => {
+  describe('getNews()', () => {
 
-    const EXPECTED_ERROR_MESSAGE = 'You must provide a page ID.';
+    const EXPECTED_ERROR_MESSAGE = 'You must provide a news list ID.';
     const ERROR_MESSAGE_CALLBACK = 'You must provide a callback';
 
     it('should call handleError when called with no parameters', done => {
@@ -15,7 +15,7 @@ describe('pages.js', () => {
       let client = new Client();
       let handleErrorStub = sinon.stub(client, 'handleError', () => {});
 
-      getPages.call(client);
+      getNews.call(client);
 
       expect(handleErrorStub.calledWith(ERROR_MESSAGE_CALLBACK)).to.be.true;
 
@@ -26,10 +26,10 @@ describe('pages.js', () => {
     it('should call handleError when called with no callback', done => {
 
       let client = new Client();
-      let options = { pageId: '1234' };
+      let options = { newsListId: '1234' };
       let handleErrorStub = sinon.stub(client, 'handleError', () => {});
 
-      getPages.call(client, options);
+      getNews.call(client, options);
 
       expect(handleErrorStub.calledWith(ERROR_MESSAGE_CALLBACK)).to.be.true;
 
@@ -37,13 +37,13 @@ describe('pages.js', () => {
 
     });
 
-    it('should call handleError when no page ID is passed', done => {
+    it('should call handleError when no news list ID is passed', done => {
 
       let client = new Client();
       let options = {};
       let handleErrorStub = sinon.stub(client, 'handleError', () => {});
 
-      getPages.call(client, options, () => {});
+      getNews.call(client, options, () => {});
 
       expect(handleErrorStub.calledWith(EXPECTED_ERROR_MESSAGE)).to.be.true;
 
@@ -57,10 +57,10 @@ describe('pages.js', () => {
       let baseRequestStub = sinon.stub(client, 'baseRequest', () => {});
       let expectedRequestOpions = {
         method: 'GET',
-        path: '/api/content/pages/1234',
+        path: '/api/content/newslists/1234',
       };
 
-      getPages.call(client, { pageId: 1234 }, () => {});
+      getNews.call(client, { newsListId: 1234 }, () => {});
 
       expect(baseRequestStub.calledWith(expectedRequestOpions)).to.be.true;
 
@@ -74,10 +74,10 @@ describe('pages.js', () => {
       let baseRequestStub = sinon.stub(client, 'baseRequest', () => {});
       let expectedRequestOpions = {
         method: 'GET',
-        path: '/api/content/pages/1234?member_id=9876',
+        path: '/api/content/newslists/1234?member_id=9876',
       };
 
-      getPages.call(client, { pageId: 1234, memberId: 9876 }, () => {});
+      getNews.call(client, { newsListId: 1234, memberId: 9876 }, () => {});
 
       expect(baseRequestStub.calledWith(expectedRequestOpions)).to.be.true;
 
@@ -92,10 +92,29 @@ describe('pages.js', () => {
       let baseRequestStub = sinon.stub(client, 'baseRequest', () => {});
       let expectedRequestOpions = {
         method: 'GET',
-        path: '/api/content/pages/1234?member_id=9876',
+        path: '/api/content/newslists/1234?member_id=9876',
       };
 
-      getPages.call(client, { pageId: 1234 }, () => {});
+      getNews.call(client, { newsListId: 1234 }, () => {});
+
+      expect(baseRequestStub.calledWith(expectedRequestOpions)).to.be.true;
+
+      done();
+
+    });
+
+    it('should call baseRequest with query parameters when a member ID is passed, overwriting member ID on client', done => {
+
+      let client = new Client();
+      client.memberId = 'memberIdFromClient';
+      let options = { memberId: 'memberIdFromOptions', newsListId: 1234 };
+      let baseRequestStub = sinon.stub(client, 'baseRequest', () => {});
+      let expectedRequestOpions = {
+        method: 'GET',
+        path: '/api/content/newslists/1234?member_id=memberIdFromOptions',
+      };
+
+      getNews.call(client, options, () => {});
 
       expect(baseRequestStub.calledWith(expectedRequestOpions)).to.be.true;
 

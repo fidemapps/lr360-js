@@ -1,6 +1,7 @@
 import Helper from '../helper/helper';
 const METHOD = 'GET';
-const PATH = '/api/devices';
+const PATH_ID = '/api/devices';
+const PATH_ME = '/api/device';
 const ERROR_MESSAGE_CALLBACK = 'You must provide a callback';
 
 export default function () {
@@ -16,7 +17,7 @@ export default function () {
 
   return this.baseRequest({
     method: METHOD,
-    path: `${PATH}/${deviceId}`,
+    path: deviceId === 'me' ? `${PATH_ME}/${deviceId}` : `${PATH_ID}/${deviceId}`,
   }, callback);
 
 }

@@ -18,7 +18,7 @@ describe('helper.js', () => {
     });
 
     it('should return callback', done => {
-      let sentCallback = () => {};
+      let sentCallback = () => {}; // jscs:disable
       let returnedCallback = Helper.getCallback(['something', sentCallback]);
       expect(returnedCallback).to.eql(sentCallback);
       done();

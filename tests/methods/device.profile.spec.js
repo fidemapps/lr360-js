@@ -49,7 +49,7 @@ describe('device.profile.js', () => {
 
       expect(baseRequestStub.calledWith({
         method: 'GET',
-        path: `/api/devices/me`,
+        path: `/api/device/me`,
       })).to.be.true;
 
       done();

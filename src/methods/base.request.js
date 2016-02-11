@@ -35,8 +35,7 @@ export function baseRequest(options, callback) {
         if (callback && typeof callback === 'function') {
 
           let callbackError = err || requestError || null;
-          let callbackBody = (res && res.body && JSON.parse(res.body)) || null;
-          return callback(callbackError, callbackBody);
+          return callback(callbackError, res);
 
         } else {
 
@@ -67,8 +66,11 @@ export function addGeolocation(options, callback) {
   }
 
   // don't change anything if request method is not POST or PUT
-  if (!options.method || ['put', 'post'].indexOf(options.method.toLowerCase()) === -1) {
+  // or if request path if not for trackAction (/api/gamification/actions)
+  if (!options.method || ['put', 'post'].indexOf(options.method.toLowerCase()) === -1 || options.path !== '/api/gamification/actions') {
+
     return callback(options);
+
   }
 
   if (!window.navigator || !window.navigator.geolocation) {

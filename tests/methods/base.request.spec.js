@@ -196,7 +196,7 @@ describe('base.request.js', () => {
 
         let response = {
           statusCode: 299,
-          body: JSON.stringify({ error: 'message' }),
+          body: { error: 'message' },
         };
         let options = {
           method: 'GET',
@@ -214,12 +214,13 @@ describe('base.request.js', () => {
           expect(superagentGetStub.calledWith(expectedURL)).to.be.true;
           expect(error).to.exist;
           expect(body).to.exist;
-          expect(body).to.eql(JSON.parse(response.body));
+          expect(body).to.eql(response);
           expect(error.message).to.equal('message');
           expect(error.statusCode).to.equal(299);
-          expect(error.body).to.eql(JSON.parse(response.body));
+          expect(error.body).to.eql(response.body);
 
           done();
+
         });
 
       });
@@ -239,9 +240,11 @@ describe('base.request.js', () => {
 
       let options = {
         method: 'POST',
+        path: '/api/gamification/actions',
       };
       let expectedOptions = {
         method: 'POST',
+        path: '/api/gamification/actions',
         body: {
           coordinates: null,
         },
@@ -261,9 +264,11 @@ describe('base.request.js', () => {
       window.navigator = {};
       let options = {
         method: 'POST',
+        path: '/api/gamification/actions',
       };
       let expectedOptions = {
         method: 'POST',
+        path: '/api/gamification/actions',
         body: {
           coordinates: null,
         },
@@ -287,9 +292,11 @@ describe('base.request.js', () => {
       };
       let options = {
         method: 'POST',
+        path: '/api/gamification/actions',
       };
       let expectedOptions = {
         method: 'POST',
+        path: '/api/gamification/actions',
         body: {
           coordinates: null,
         },
@@ -313,9 +320,11 @@ describe('base.request.js', () => {
       };
       let options = {
         method: 'POST',
+        path: '/api/gamification/actions',
       };
       let expectedOptions = {
         method: 'POST',
+        path: '/api/gamification/actions',
         body: {
           coordinates: { lat: 1234, long: 9876 },
         },

@@ -18,6 +18,10 @@
     "email": "ldoebbel@lunerouge360.com",
     "url": "https://github.com/fidemapps/lr360-js/issues"
   },
+  "engines" : {
+    "node" : "4.2.3",
+    "npm": "2.14.7",
+  },
   "scripts": {
     "preinstall": "npm set progress=false",
     "test": "jscs src/**/*.js && jscs tests/**/*.js && NODE_ENV=test karma start",

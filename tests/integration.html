@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Integration</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script type="application/javascript" src="https://code.angularjs.org/1.5.0/angular.min.js"></script>
+    <script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.3.0/lodash.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chai/3.5.0/chai.min.js"></script>
+
+    <style>
+        .container {
+            width: 1620px;
+        }
+    </style>
+</head>
+<body ng-app="integration">
+
+    <div class="container">
+
+        <h3>Integration</h3>
+
+        <div class="row" ng-controller="setup as setup">
+
+            <div class="col-md-12">
+                <p>{{setup.initialConfig}}</p>
+            </div>
+
+            <br>
+
+            <div class="row">
+
+                <div class="col-md-4">
+
+                    <p>
+                        <button ng-click="setup.test1()" type="button" class="btn btn-primary btn-block">lr360('setup', {});</button>
+                    </p>
+
+                    <p>Should throw error: 'You must provide a Key.'</p>
+
+                    <div class="alert alert-success" role="alert" ng-if="setup.expect1 === true">Success</div>
+                    <div class="alert alert-danger" role="alert" ng-if="setup.expect1 === false">Failed</div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <p>
+                        <button ng-click="setup.test2()" type="button" class="btn btn-primary btn-block">lr360('setup', { key: 'MOMO-ACCESSKEY' });</button>
+                    </p>
+
+                    <p>Should update config to:</p>
+                    <pre>{{ {hostname: "localhost",port: 3001,protocol: "http",dev: true,key: "MOMO-ACCESSKEY"} | json}}</pre>
+
+                    <div class="alert alert-success" role="alert" ng-if="setup.expect2 === true">Passed</div>
+                    <div class="alert alert-danger" role="alert" ng-if="setup.expect2 === false">Failed</div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="row" ng-controller="trackAction as trackAction">
+
+            <div class="col-md-4">
+
+                <p>
+                    <button ng-click="trackAction.test3()" type="button" class="btn btn-primary btn-block">
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
+                        <br>
+                        lr360('trackAction', 'test', callback);
+                    </button>
+                </p>
+
+                <p>Should return successful response</p>
+
+                <div class="alert alert-warning" role="alert" ng-if="trackAction.expect3 === null">Running...</div>
+                <div class="alert alert-success" role="alert" ng-if="trackAction.expect3 === true">Passed</div>
+                <div class="alert alert-danger" role="alert" ng-if="trackAction.expect3 === false">Failed</div>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <p>
+                    <button ng-click="trackAction.test4()" type="button" class="btn btn-primary btn-block">
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
+                        <br>
+                        lr360('trackAction', 'test', { data: 'additional data' }, callback);
+                    </button>
+                </p>
+
+                <p>Should return successful response</p>
+
+                <div class="alert alert-warning" role="alert" ng-if="trackAction.expect4 === null">Running...</div>
+                <div class="alert alert-success" role="alert" ng-if="trackAction.expect4 === true">Passed</div>
+                <div class="alert alert-danger" role="alert" ng-if="trackAction.expect4 === false">Failed</div>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <p>
+                    <button ng-click="trackAction.test5()" type="button" class="btn btn-primary btn-block">
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
+                        <br>
+                        lr360('trackAction', { type: 'test', data: 'additional data' }, callback);
+                    </button>
+                </p>
+
+                <p>Should return successful response</p>
+
+                <div class="alert alert-warning" role="alert" ng-if="trackAction.expect5 === null">Running...</div>
+                <div class="alert alert-success" role="alert" ng-if="trackAction.expect5 === true">Passed</div>
+                <div class="alert alert-danger" role="alert" ng-if="trackAction.expect5 === false">Failed</div>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <p>
+                    <button ng-click="trackAction.test6()" type="button" class="btn btn-primary btn-block">
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
+                        <br>
+                        lr360('trackAction', { data: 'additional data' }, callback);
+                    </button>
+                </p>
+
+                <p>Should throw error: 'You must provide the type of action to be tracked.'</p>
+
+                <div class="alert alert-warning" role="alert" ng-if="trackAction.expect6 === null">Running...</div>
+                <div class="alert alert-success" role="alert" ng-if="trackAction.expect6 === true">Passed</div>
+                <div class="alert alert-danger" role="alert" ng-if="trackAction.expect6 === false">Failed</div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script type="application/javascript">
+        (function (window, document, scriptType, scriptSrc, namespace) {
+            // set global variable
+            window[namespace] = window[namespace] || function () {
+                        (window[namespace].queue = window[namespace].queue || []).push(arguments)
+                    };
+            // load script asynchronously
+            window[namespace].l = 1 * new Date();
+            var scriptTag = document.createElement(scriptType);
+            var mfirstScript = document.getElementsByTagName(scriptType)[0];
+            scriptTag.async = 1;
+            scriptTag.src = scriptSrc;
+            mfirstScript.parentNode.insertBefore(scriptTag, mfirstScript)
+        })(window, document, 'script', '../dist/lr360.js', 'lr360');
+    </script>
+
+    <script type="application/javascript">
+        // minified version
+        /*
+        !function(e,n,t,r,s){e[s]=e[s]||function(){(e[s].queue=e[s].queue||[]).push(arguments)},e[s].l=1*new Date;var u=n.createElement(t),a=n.getElementsByTagName(t)[0];u.async=1,u.src=r,a.parentNode.insertBefore(u,a)}(window,document,"script","dist/lr360.js","lr360");
+        */
+    </script>
+
+    <script type="application/javascript">
+        var expect = chai.expect;
+
+        angular
+                .module('integration', [])
+                .controller('setup', function($scope, $timeout) {
+                    var vm = this;
+                    vm.initialConfig = 'Loading config...';
+
+                    $timeout(function() {
+                        lr360.client.config.dev = true;
+                        lr360.client.config.hostname = 'localhost';
+                        lr360.client.config.port = 3001;
+                        vm.initialConfig = _.assign({}, lr360.client.config);
+                    }, 500);
+
+                    vm.test1 = function() {
+                        vm.expect1 = false;
+
+                        try {
+                            lr360('setup', {});
+                        } catch (err) {
+                            expect(err.message).to.equal('You must provide a Key.');
+                            vm.expect1 = true;
+                        }
+                    };
+
+                    vm.test2 = function() {
+                        vm.expect2 = false;
+
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
+
+                        expect(lr360.client.config).to.eql({
+                            "hostname": "localhost",
+                            "port": 3001,
+                            "protocol": "http",
+                            "dev": true,
+                            "key": "MOMO-ACCESSKEY"
+                        });
+
+                        vm.expect2 = true;
+                    };
+
+                    return vm;
+                })
+                .controller('trackAction', function($scope) {
+                    var vm = this;
+
+                    vm.test3 = function() {
+                        vm.expect3 = null;
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
+
+                        lr360('trackAction', 'test', function(error, response) {
+                            $scope.$apply(function() {
+                                vm.expect3 = false;
+                                expect(error).to.not.exist;
+                                expect(response.body.status).to.equal('success');
+                                expect(response.body.data.id).to.exist;
+                                vm.expect3 = true;
+                            });
+                        });
+
+                    };
+
+                    vm.test4 = function() {
+                        vm.expect4 = null;
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
+
+                        lr360('trackAction', 'test', { data: 'additional data' }, function(error, response) {
+                            $scope.$apply(function() {
+                                vm.expect4 = false;
+                                expect(error).to.not.exist;
+                                expect(response.body.status).to.equal('success');
+                                expect(response.body.data.id).to.exist;
+                                vm.expect4 = true;
+                            });
+                        });
+
+                    };
+
+                    vm.test5 = function() {
+                        vm.expect5 = null;
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
+
+                        lr360('trackAction', { type: 'test', data: 'additional data' }, function(error, response) {
+                            $scope.$apply(function() {
+                                vm.expect5 = false;
+                                expect(error).to.not.exist;
+                                expect(response.body.status).to.equal('success');
+                                expect(response.body.data.id).to.exist;
+                                vm.expect5 = true;
+                            });
+                        });
+
+                    };
+
+                    vm.test6 = function() {
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
+
+                        try {
+                            lr360('trackAction', { data: 'additional data' });
+                        } catch (err) {
+                            vm.expect6 = false;
+                            expect(err.message).to.equal('You must provide the type of action to be tracked.');
+                            console.log(err);
+                            vm.expect6 = true;
+                        }
+
+                    };
+
+                    return vm;
+                });
+    </script>
+
+</body>
+</html>

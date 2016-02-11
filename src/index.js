@@ -1,18 +1,10 @@
 import Client from './client/client';
 
-window.lr360 = window.lr360 || {};
-window.lr360.queue = window.lr360.queue || [];
-
 export let client = new Client();
 
-function applyCallOnClient(args) {
-
-  args = Array.prototype.slice.call(args); // arguments to array
-  let method = args.shift(); // first element should be client[method]
-
-  client[method].apply(client, args);
-
-}
+window.lr360 = window.lr360 || {};
+window.lr360.queue = window.lr360.queue || [];
+window.lr360.client = client;
 
 export function emptyQueue() {
 
@@ -29,6 +21,15 @@ export function emptyQueue() {
 export function replaceQueuePush() {
 
   window.lr360.queue.push = applyCallOnClient;
+
+}
+
+function applyCallOnClient(args) {
+
+  args = Array.prototype.slice.call(args); // arguments to array
+  let method = args.shift(); // first element should be client[method]
+
+  client[method].apply(client, args);
 
 }
 

@@ -1,6 +1,7 @@
 import trackAction from './track.action';
 import setup from './setup';
 import identifyMember from './identify.member';
+import clearMember from './clear.member';
 import getMemberProfile from './member.profile';
 import getDeviceProfile from './device.profile';
 import getMemberChallenges from './challenges';
@@ -17,6 +18,7 @@ export const clientMethods = {
   trackAction: trackAction,
   baseRequest: baseRequest,
   identifyMember: identifyMember,
+  clearMember: clearMember,
   getMemberProfile: getMemberProfile,
   getDeviceProfile: getDeviceProfile,
   getMemberChallenges: getMemberChallenges,

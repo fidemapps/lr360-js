@@ -99,9 +99,9 @@ describe('identify.member.js', () => {
       it('should set the memberId on the client after getting a successful response from server', done => {
 
         let client = new Client();
-
+        client.memberId = null;
         sinon.stub(client, 'baseRequest', (request, callback) => {
-          return callback(null, { data: { id: 'returnedmemberid' } });
+          return callback(null, { body: { data: { id: 'returnedmemberid' } } });
         });
 
         identifyMember.call(client, { email: 'test@test.com' });

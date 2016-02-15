@@ -17,8 +17,8 @@ export default function (options, callback) {
 
   // gets member id returned and sets it in the client context
   let callbackInterceptor = (error, response) => {
-    if (response && response.data && response.data.id) {
-      this.memberId = response.data.id;
+    if (response && response.body && response.body.data && response.body.data.id) {
+      this.memberId = response.body.data.id;
     }
 
     if (callback && typeof callback === 'function') {

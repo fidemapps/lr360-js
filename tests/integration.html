@@ -163,7 +163,22 @@
             <test-directive
                     run-test="identifyMember.test6()"
                     expectation="identifyMember.expect6"
-                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360.client.memberId = 'montmorency-alice';<br>lr360('identifyMember', {}, callback);">
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br><br>lr360('identifyMember', { memberId: 'doesnotexist' }, callback);"
+                    error-description="Resource not found (404).">
+            </test-directive>
+
+        </div>
+
+        <hr>
+
+        <div class="row" ng-controller="clearMember as clearMember">
+
+            <h3>clearMember</h3>
+
+            <test-directive
+                    run-test="clearMember.test1()"
+                    expectation="clearMember.expect1"
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360.client.memberId = 'montmorency-alice';<br>lr360('clearMember', callback);">
             </test-directive>
 
         </div>
@@ -712,6 +727,7 @@
                 .controller('identifyMember', function($rootScope, $scope) {
                     var vm = this;
 
+                    // identify by memberid
                     vm.test1 = function() {
                         vm.expect1 = null;
                         lr360('setup', { key: 'MOMO-ACCESSKEY' });
@@ -722,13 +738,14 @@
                                 vm.expect1 = false;
                                 expect(error).to.not.exist;
                                 expect(response.body.status).to.equal('success');
-                                expect(response.body.data).to.eql({});
+                                expect(response.body.data).to.eql({ id: 'montmorency-alice' });
+                                expect(lr360.client.memberId).to.equal('montmorency-alice');
                                 vm.expect1 = true;
                             });
                         });
-
                     };
 
+                    // identify by email
                     vm.test2 = function() {
                         vm.expect2 = null;
                         lr360('setup', { key: 'MOMO-ACCESSKEY' });
@@ -739,30 +756,32 @@
                                 vm.expect2 = false;
                                 expect(error).to.not.exist;
                                 expect(response.body.status).to.equal('success');
-                                expect(response.body.data).to.eql({ email: 'member1@test.com' });
+                                expect(response.body.data).to.eql({ id: 'montmorency-alice' });
+                                expect(lr360.client.memberId).to.equal('montmorency-alice');
                                 vm.expect2 = true;
                             });
                         });
-
                     };
 
+                    // identify by external id
                     vm.test3 = function() {
                         vm.expect3 = null;
                         lr360('setup', { key: 'MOMO-ACCESSKEY' });
                         lr360.client.memberId = null;
 
-                        lr360('identifyMember', { externalId: '96874113' }, function(error, response) {
+                        lr360('identifyMember', { externalId: '59835015' }, function(error, response) {
                             $scope.$apply(function() {
                                 vm.expect3 = false;
                                 expect(error).to.not.exist;
                                 expect(response.body.status).to.equal('success');
-                                expect(response.body.data).to.eql({ external_id: '96874113' });
+                                expect(response.body.data).to.eql({ id: '4JAruTLueKl' });
+                                expect(lr360.client.memberId).to.equal('4JAruTLueKl');
                                 vm.expect3 = true;
                             });
                         });
-
                     };
 
+                    // error: must provide either id, email or external id
                     vm.test4 = function() {
                         vm.expect4 = null;
                         lr360('setup', { key: 'MOMO-ACCESSKEY' });
@@ -777,6 +796,7 @@
                         }
                     };
 
+                    // error: must provice a callback
                     vm.test5 = function() {
                         lr360.client.config.key = null;
 
@@ -787,21 +807,26 @@
                             expect(err.message).to.equal('You must provide a key and a path.');
                             vm.expect5 = true;
                         }
-
                     };
 
+                    // error: returns 404 resource not found
                     vm.test6 = function() {
-                        vm.expect6 = null;
-                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
-                        lr360.client.memberId = 'montmorency-alice';
+                      vm.expect6 = null;
+                      lr360('setup', { key: 'MOMO-ACCESSKEY' });
+                      lr360.client.memberId = null;
 
-                        try {
-                            lr360('identifyMember', {}, function () {});
-                        } catch (err) {
-                            vm.expect6 = false;
-                            expect(err.message).to.equal('You must provide either a member ID, an external ID or an email.');
-                            vm.expect6 = true;
-                        }
+                      lr360('identifyMember', { memberId: 'doesnbotexist' }, function(error, response) {
+                          $scope.$apply(function() {
+                              vm.expect6 = false;
+                              expect(error).to.exist;
+                              expect(error.message).to.equal('Not Found');
+                              expect(response.status).to.equal(404);
+                              expect(response.body.status).to.equal('error');
+                              expect(response.body.errors[0].code).to.equal('system.resource.not.found');
+                              expect(response.body.errors[0].title).to.equal('Resource not found');
+                              vm.expect6 = true;
+                          });
+                      });
                     };
 
                     // TODO: test memberId stored on client when response is fixed...
@@ -815,6 +840,33 @@
                     });
 
                     return vm;
+                })
+                .controller('clearMember', function($rootScope, $scope) {
+                  var vm = this;
+
+                  vm.test1 = function() {
+                      vm.expect1 = null;
+                      lr360('setup', { key: 'MOMO-ACCESSKEY' });
+                      lr360.client.memberId = 'montmorency-alice';
+
+                      lr360('clearMember', function(error, response) {
+                          $scope.$apply(function() {
+                              vm.expect1 = false;
+                              expect(error).to.not.exist;
+                              expect(response.body.status).to.equal('success');
+                              expect(response.body.data).to.eql({});
+                              expect(lr360.client.memberId).to.not.exist;
+                              vm.expect1 = true;
+                          });
+                      });
+
+                  };
+
+                  $rootScope.$on('RUN_ALL_TESTS', function() {
+                      vm.test1();
+                  });
+
+                  return vm;
                 })
                 .controller('getMemberProfile', function($rootScope, $scope) {
                     var vm = this;

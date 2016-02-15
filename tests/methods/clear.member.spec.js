@@ -1,0 +1,33 @@
+import { expect } from 'chai';
+import sinon from 'sinon';
+import Client from '../../src/client/client';
+import clearMember from '../../src/methods/clear.member';
+
+describe('clear.member.js', () => {
+
+  describe('clearMember()', () => {
+
+    it('should call baseRequest with passed callback', done => {
+
+      let client = new Client();
+      client.memberId = 'testmemberid';
+      let baseRequestStub = sinon.stub(client, 'baseRequest', (options, callback) => callback());
+      let expectedRequestOpions = {
+        method: 'DELETE',
+        path: '/api/gamification/actions/identify-member',
+        body: {},
+      };
+      let callback = () => {};
+
+      clearMember.call(client, callback);
+
+      expect(baseRequestStub.calledWith(expectedRequestOpions)).to.be.true;
+      expect(client.memberId).to.not.exist;
+
+      done();
+
+    });
+
+  });
+
+});

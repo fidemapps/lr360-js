@@ -2,7 +2,7 @@ import Helper from '../helper/helper';
 
 const METHOD = 'GET';
 const PATH = '/api/content/menus';
-const ERROR_MESSAGE_CALLBACK = 'You must provide a callback';
+const ERROR_MESSAGE_CALLBACK = 'You must provide a callback.';
 
 export default function () {
 

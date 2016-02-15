@@ -7,7 +7,7 @@ describe('device.profile.js', () => {
 
   describe('deviceProfile()', () => {
 
-    const ERROR_MESSAGE_CALLBACK = 'You must provide a callback';
+    const ERROR_MESSAGE_CALLBACK = 'You must provide a callback.';
 
     it('should call handleError when no callback is passed', done => {
 

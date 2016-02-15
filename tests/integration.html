@@ -22,148 +22,486 @@
 
     <div class="container">
 
-        <h3>Integration</h3>
+        <div class="row" ng-controller="main as main">
+
+            <h3>Initial config</h3>
+
+            <div class="col-md-12">
+                <p>{{main.initialConfig}}</p>
+            </div>
+
+            <div class="col-md-12">
+
+                <button ng-click="main.runAllTests()" type="button" class="btn btn-primary btn-block">Run All Tests</button>
+
+            </div>
+
+        </div>
+
+        <hr>
 
         <div class="row" ng-controller="setup as setup">
 
-            <div class="col-md-12">
-                <p>{{setup.initialConfig}}</p>
-            </div>
+            <h3>setup</h3>
 
-            <br>
+            <test-directive
+                    run-test="setup.test1()"
+                    expectation="setup.expect1"
+                    test-description="lr360('setup', {});"
+                    error-description="You must provide a Key.">
+            </test-directive>
 
-            <div class="row">
+            <div class="col-md-4">
 
-                <div class="col-md-4">
+                <p>
+                    <button ng-click="setup.test2()" type="button" class="btn btn-primary btn-block">lr360('setup', { key: 'MOMO-ACCESSKEY' });</button>
+                </p>
 
-                    <p>
-                        <button ng-click="setup.test1()" type="button" class="btn btn-primary btn-block">lr360('setup', {});</button>
-                    </p>
+                <p>Should <span class="label label-success">update</span> config to:</p>
+                <pre>{{ {hostname: "localhost",port: 3001,protocol: "http",dev: true,key: "MOMO-ACCESSKEY"} | json}}</pre>
 
-                    <p>Should throw error: 'You must provide a Key.'</p>
-
-                    <div class="alert alert-success" role="alert" ng-if="setup.expect1 === true">Success</div>
-                    <div class="alert alert-danger" role="alert" ng-if="setup.expect1 === false">Failed</div>
-
-                </div>
-
-                <div class="col-md-4">
-
-                    <p>
-                        <button ng-click="setup.test2()" type="button" class="btn btn-primary btn-block">lr360('setup', { key: 'MOMO-ACCESSKEY' });</button>
-                    </p>
-
-                    <p>Should update config to:</p>
-                    <pre>{{ {hostname: "localhost",port: 3001,protocol: "http",dev: true,key: "MOMO-ACCESSKEY"} | json}}</pre>
-
-                    <div class="alert alert-success" role="alert" ng-if="setup.expect2 === true">Passed</div>
-                    <div class="alert alert-danger" role="alert" ng-if="setup.expect2 === false">Failed</div>
-
-                </div>
+                <div class="alert alert-success" role="alert" ng-if="setup.expect2 === true">Passed</div>
+                <div class="alert alert-danger" role="alert" ng-if="setup.expect2 === false">Failed</div>
 
             </div>
+
+        </div>
+
+        <hr>
+
+        <div class="row" ng-controller="trackAction as trackAction">
+
+            <h3>trackAction</h3>
+
+            <test-directive
+                    run-test="trackAction.test3()"
+                    expectation="trackAction.expect3"
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360('trackAction', 'test', callback);">
+            </test-directive>
+
+            <test-directive
+                    run-test="trackAction.test4()"
+                    expectation="trackAction.expect4"
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360('trackAction', 'test', { data: 'additional data' }, callback);">
+            </test-directive>
+
+            <test-directive
+                    run-test="trackAction.test5()"
+                    expectation="trackAction.expect5"
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360('trackAction', { type: 'test', data: 'additional data' }, callback);">
+            </test-directive>
 
         </div>
 
         <div class="row" ng-controller="trackAction as trackAction">
 
-            <div class="col-md-4">
+            <test-directive
+                    run-test="trackAction.test6()"
+                    expectation="trackAction.expect6"
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360('trackAction', { data: 'additional data' }, callback);"
+                    error-description="You must provide the type of action to be tracked.">
+            </test-directive>
 
-                <p>
-                    <button ng-click="trackAction.test3()" type="button" class="btn btn-primary btn-block">
-                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
-                        <br>
-                        lr360('trackAction', 'test', callback);
-                    </button>
-                </p>
+            <test-directive
+                    run-test="trackAction.test7()"
+                    expectation="trackAction.expect7"
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360('trackAction', function() {});<br>lr360('trackAction', 'type', 'unexpected');<br>lr360('trackAction', { tyep: 'type' }, 'unexpected');<br>lr360('trackAction', 'type', { data: 'additional information' }, 'unexpected');"
+                    error-description="You must provide the correct arguments to trackAction.">
+            </test-directive>
 
-                <p>Should return successful response</p>
-
-                <div class="alert alert-warning" role="alert" ng-if="trackAction.expect3 === null">Running...</div>
-                <div class="alert alert-success" role="alert" ng-if="trackAction.expect3 === true">Passed</div>
-                <div class="alert alert-danger" role="alert" ng-if="trackAction.expect3 === false">Failed</div>
-
-            </div>
-
-            <div class="col-md-4">
-
-                <p>
-                    <button ng-click="trackAction.test4()" type="button" class="btn btn-primary btn-block">
-                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
-                        <br>
-                        lr360('trackAction', 'test', { data: 'additional data' }, callback);
-                    </button>
-                </p>
-
-                <p>Should return successful response</p>
-
-                <div class="alert alert-warning" role="alert" ng-if="trackAction.expect4 === null">Running...</div>
-                <div class="alert alert-success" role="alert" ng-if="trackAction.expect4 === true">Passed</div>
-                <div class="alert alert-danger" role="alert" ng-if="trackAction.expect4 === false">Failed</div>
-
-            </div>
-
-            <div class="col-md-4">
-
-                <p>
-                    <button ng-click="trackAction.test5()" type="button" class="btn btn-primary btn-block">
-                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
-                        <br>
-                        lr360('trackAction', { type: 'test', data: 'additional data' }, callback);
-                    </button>
-                </p>
-
-                <p>Should return successful response</p>
-
-                <div class="alert alert-warning" role="alert" ng-if="trackAction.expect5 === null">Running...</div>
-                <div class="alert alert-success" role="alert" ng-if="trackAction.expect5 === true">Passed</div>
-                <div class="alert alert-danger" role="alert" ng-if="trackAction.expect5 === false">Failed</div>
-
-            </div>
-
-            <div class="col-md-4">
-
-                <p>
-                    <button ng-click="trackAction.test6()" type="button" class="btn btn-primary btn-block">
-                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
-                        <br>
-                        lr360('trackAction', { data: 'additional data' }, callback);
-                    </button>
-                </p>
-
-                <p>Should throw error: 'You must provide the type of action to be tracked.'</p>
-
-                <div class="alert alert-warning" role="alert" ng-if="trackAction.expect6 === null">Running...</div>
-                <div class="alert alert-success" role="alert" ng-if="trackAction.expect6 === true">Passed</div>
-                <div class="alert alert-danger" role="alert" ng-if="trackAction.expect6 === false">Failed</div>
-
-            </div>
+            <test-directive
+                    run-test="trackAction.test8()"
+                    expectation="trackAction.expect8"
+                    test-description="lr360.client.config.key = null;<br>lr360('trackAction', 'test');"
+                    error-description="You must provide a key and a path.">
+            </test-directive>
 
         </div>
+
+        <hr>
+
+        <div class="row" ng-controller="identifyMember as identifyMember">
+
+            <h3>identifyMember</h3>
+
+            <test-directive
+                    run-test="identifyMember.test1()"
+                    expectation="identifyMember.expect1"
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360('identifyMember', { memberId: 'montmorency-alice' }, callback);">
+            </test-directive>
+
+            <test-directive
+                    run-test="identifyMember.test2()"
+                    expectation="identifyMember.expect2"
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360('identifyMember', { email: 'member1@test.com' }, callback);">
+            </test-directive>
+
+            <test-directive
+                    run-test="identifyMember.test3()"
+                    expectation="identifyMember.expect3"
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360('identifyMember', { externalId: '96874113' }, callback);">
+            </test-directive>
+
+        </div>
+
+        <div class="row" ng-controller="identifyMember as identifyMember">
+
+            <test-directive
+                    run-test="identifyMember.test4()"
+                    expectation="identifyMember.expect4"
+                    test-description="lr360.client.memberId = null;<br>lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360('identifyMember', { }, callback);"
+                    error-description="You must provide either a member ID, an external ID or an email.">
+            </test-directive>
+
+            <test-directive
+                    run-test="identifyMember.test5()"
+                    expectation="identifyMember.expect5"
+                    test-description="lr360.client.config.key = null;<br>lr360('identifyMember', { memberId: 'montmorency-alice' });"
+                    error-description="You must provide a key and a path.">
+            </test-directive>
+
+            <test-directive
+                    run-test="identifyMember.test6()"
+                    expectation="identifyMember.expect6"
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360.client.memberId = 'montmorency-alice';<br>lr360('identifyMember', {}, callback);">
+            </test-directive>
+
+        </div>
+
+        <hr>
+
+        <div class="row" ng-controller="getMemberProfile as getMemberProfile">
+
+            <h3>getMemberProfile</h3>
+
+            <test-directive
+                    run-test="getMemberProfile.test1()"
+                    expectation="getMemberProfile.expect1"
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360.client.memberId = null;<br>lr360('getMemberProfile', { memberId: 'montmorency-alice' });"
+                    error-description="You must provide a callback.">
+            </test-directive>
+
+            <test-directive
+                    run-test="getMemberProfile.test2()"
+                    expectation="getMemberProfile.expect2"
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360.client.memberId = 'montmorency-alice';<br>lr360('getMemberProfile', callback);">
+            </test-directive>
+
+            <test-directive
+                    run-test="getMemberProfile.test3()"
+                    expectation="getMemberProfile.expect3"
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360.client.memberId = null;<br>lr360('getMemberProfile', callback);"
+                    error-description="You must provide a member ID.">
+            </test-directive>
+
+        </div>
+
+        <hr>
+
+        <div class="row" ng-controller="getDeviceProfile as getDeviceProfile">
+
+            <h3>getDeviceProfile</h3>
+
+            <test-directive
+                    run-test="getDeviceProfile.test1()"
+                    expectation="getDeviceProfile.expect1"
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360('getDeviceProfile', { }, callback);">
+            </test-directive>
+
+            <test-directive
+                    run-test="getDeviceProfile.test2()"
+                    expectation="getDeviceProfile.expect2"
+                    test-description="lr360('setup', { key: 'CIRQUE-ACCESSKEY' });<br>lr360('getDeviceProfile', { deviceId: 'EJ3tF2_te' }, callback);">
+            </test-directive>
+
+            <test-directive
+                    run-test="getDeviceProfile.test3()"
+                    expectation="getDeviceProfile.expect3"
+                    test-description="lr360('setup', { key: 'CIRQUE-ACCESSKEY' });<br>lr360('getDeviceProfile', { deviceId: 'EJ3tF2_te' });"
+                    error-description="You must provide a callback.">
+            </test-directive>
+
+        </div>
+
+        <hr>
+
+        <div class="row" ng-controller="getMemberChallenges as getMemberChallenges">
+
+            <h3>getMemberChallenges</h3>
+
+            <test-directive
+                    run-test="getMemberChallenges.test1()"
+                    expectation="getMemberChallenges.expect1"
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360.client.memberId = null;<br>lr360('getMemberChallenges', { memberId: 'montmorency-alice' }, callback);">
+            </test-directive>
+
+            <test-directive
+                    run-test="getMemberChallenges.test2()"
+                    expectation="getMemberChallenges.expect2"
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360.client.memberId = 'montmorency-alice';<br>lr360('getMemberChallenges', { }, callback);;">
+            </test-directive>
+
+            <test-directive
+                    run-test="getMemberChallenges.test3()"
+                    expectation="getMemberChallenges.expect3"
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360.client.memberId = 'montmorency-alice';<br>lr360('getMemberChallenges', callback);">
+            </test-directive>
+
+        </div>
+
+        <div class="row" ng-controller="getMemberChallenges as getMemberChallenges">
+
+            <test-directive
+                    run-test="getMemberChallenges.test4()"
+                    expectation="getMemberChallenges.expect4"
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360.client.memberId = 'montmorency-alice';<br>lr360('getMemberChallenges', { memberId: 'montmorency-alice' });"
+                    error-description="You must provide a callback.">
+            </test-directive>
+
+        </div>
+
+        <hr>
+
+        <div class="row" ng-controller="getMemberChallengesDone as getMemberChallengesDone">
+
+            <h3>getMemberChallengesDone</h3>
+
+            <test-directive
+                    run-test="getMemberChallengesDone.test1()"
+                    expectation="getMemberChallengesDone.expect1"
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360.client.memberId = null;<br>lr360('getMemberChallengesDone', { memberId: 'montmorency-alice' }, callback);">
+            </test-directive>
+
+            <test-directive
+                    run-test="getMemberChallengesDone.test2()"
+                    expectation="getMemberChallengesDone.expect2"
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360.client.memberId = 'montmorency-alice';<br>lr360('getMemberChallengesDone', { }, callback);;">
+            </test-directive>
+
+            <test-directive
+                    run-test="getMemberChallengesDone.test3()"
+                    expectation="getMemberChallengesDone.expect3"
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360.client.memberId = 'montmorency-alice';<br>lr360('getMemberChallengesDone', callback);">
+            </test-directive>
+
+        </div>
+
+        <div class="row" ng-controller="getMemberChallengesDone as getMemberChallengesDone">
+
+            <test-directive
+                    run-test="getMemberChallengesDone.test4()"
+                    expectation="getMemberChallengesDone.expect4"
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360.client.memberId = 'montmorency-alice';<br>lr360('getMemberChallenges', { memberId: 'montmorency-alice' });"
+                    error-description="You must provide a callback.">
+            </test-directive>
+
+        </div>
+
+        <hr>
+
+        <div class="row" ng-controller="getMemberChallengesTodo as getMemberChallengesTodo">
+
+            <h3>getMemberChallengesTodo</h3>
+
+            <test-directive
+                    run-test="getMemberChallengesTodo.test1()"
+                    expectation="getMemberChallengesTodo.expect1"
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360.client.memberId = null;<br>lr360('getMemberChallengesTodo', { memberId: 'montmorency-alice' }, callback);">
+            </test-directive>
+
+            <test-directive
+                    run-test="getMemberChallengesTodo.test2()"
+                    expectation="getMemberChallengesTodo.expect2"
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360.client.memberId = 'montmorency-alice';<br>lr360('getMemberChallengesTodo', { }, callback);;">
+            </test-directive>
+
+            <test-directive
+                    run-test="getMemberChallengesTodo.test3()"
+                    expectation="getMemberChallengesTodo.expect3"
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360.client.memberId = 'montmorency-alice';<br>lr360('getMemberChallengesTodo', callback);">
+            </test-directive>
+
+        </div>
+
+        <div class="row" ng-controller="getMemberChallengesTodo as getMemberChallengesTodo">
+
+            <test-directive
+                    run-test="getMemberChallengesTodo.test4()"
+                    expectation="getMemberChallengesTodo.expect4"
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360.client.memberId = 'montmorency-alice';<br>lr360('getMemberChallenges', { memberId: 'montmorency-alice' });"
+                    error-description="You must provide a callback.">
+            </test-directive>
+
+        </div>
+
+        <hr>
+
+        <div class="row" ng-controller="getMenus as getMenus">
+
+            <h3>getMenus</h3>
+
+            <test-directive
+                    run-test="getMenus.test1()"
+                    expectation="getMenus.expect1"
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360.client.memberId = null;<br>lr360('getMenus', { memberId: 'montmorency-alice' }, callback);">
+            </test-directive>
+
+            <test-directive
+                    run-test="getMenus.test2()"
+                    expectation="getMenus.expect2"
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360.client.memberId = 'montmorency-alice';<br>lr360('getMenus', { }, callback);;">
+            </test-directive>
+
+            <test-directive
+                    run-test="getMenus.test3()"
+                    expectation="getMenus.expect3"
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360.client.memberId = 'montmorency-alice';<br>lr360('getMenus', callback);">
+            </test-directive>
+
+        </div>
+
+        <div class="row" ng-controller="getMenus as getMenus">
+
+            <test-directive
+                    run-test="getMenus.test4()"
+                    expectation="getMenus.expect4"
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360.client.memberId = 'montmorency-alice';<br>lr360('getMenus', { memberId: 'montmorency-alice' });"
+                    error-description="You must provide a callback.">
+            </test-directive>
+
+        </div>
+
+        <hr>
+
+        <div class="row" ng-controller="getContests as getContests">
+
+            <h3>getContests</h3>
+
+            <test-directive
+                    run-test="getContests.test1()"
+                    expectation="getContests.expect1"
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360.client.memberId = null;<br>lr360('getContests', { memberId: 'montmorency-alice' }, callback);">
+            </test-directive>
+
+            <test-directive
+                    run-test="getContests.test2()"
+                    expectation="getContests.expect2"
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360.client.memberId = 'montmorency-alice';<br>lr360('getContests', { }, callback);;">
+            </test-directive>
+
+            <test-directive
+                    run-test="getContests.test3()"
+                    expectation="getContests.expect3"
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360.client.memberId = 'montmorency-alice';<br>lr360('getContests', callback);">
+            </test-directive>
+
+        </div>
+
+        <div class="row" ng-controller="getContests as getContests">
+
+            <test-directive
+                    run-test="getContests.test4()"
+                    expectation="getContests.expect4"
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360.client.memberId = 'montmorency-alice';<br>lr360('getContests', { memberId: 'montmorency-alice' });"
+                    error-description="You must provide a callback.">
+            </test-directive>
+
+        </div>
+
+        <hr>
+
+        <div class="row" ng-controller="getNews as getNews">
+
+            <h3>getNews</h3>
+
+            <test-directive
+                    run-test="getNews.test1()"
+                    expectation="getNews.expect1"
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360.client.memberId = null;<br>lr360('getNews', { memberId: 'montmorency-alice', newsListId: 'momo-newslist-sports' }, callback);">
+            </test-directive>
+
+            <test-directive
+                    run-test="getNews.test2()"
+                    expectation="getNews.expect2"
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360.client.memberId = 'montmorency-alice';<br>lr360('getNews', { newsListId: 'momo-newslist-sports' }, callback);;">
+            </test-directive>
+
+            <test-directive
+                    run-test="getNews.test3()"
+                    expectation="getNews.expect3"
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360.client.memberId = null;<br>lr360('getNews', { newsListId: 'momo-newslist-sports' }, callback);">
+            </test-directive>
+
+        </div>
+
+        <div class="row" ng-controller="getNews as getNews">
+
+            <test-directive
+                    run-test="getNews.test4()"
+                    expectation="getNews.expect4"
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360.client.memberId = null;<br>lr360('getNews', { newsListId: 'momo-newslist-sports' });"
+                    error-description="You must provide a callback.">
+            </test-directive>
+
+            <test-directive
+                    run-test="getNews.test5()"
+                    expectation="getNews.expect5"
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360.client.memberId = null;<br>lr360('getNews', { memberId: 'montmorency-alice' }, callback);"
+                    error-description="You must provide a news list ID.">
+            </test-directive>
+
+        </div>
+
+        <hr>
+
+        <div class="row" ng-controller="getPages as getPages">
+
+            <h3>getPages</h3>
+
+            <test-directive
+                    run-test="getPages.test1()"
+                    expectation="getPages.expect1"
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360.client.memberId = null;<br>lr360('getPages', { memberId: 'montmorency-alice', pageId: 'momo-program-311.A0' }, callback);">
+            </test-directive>
+
+            <test-directive
+                    run-test="getPages.test2()"
+                    expectation="getPages.expect2"
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360.client.memberId = 'montmorency-alice';<br>lr360('getPages', { pageId: 'momo-program-311.A0' }, callback);;">
+            </test-directive>
+
+            <test-directive
+                    run-test="getPages.test3()"
+                    expectation="getPages.expect3"
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360.client.memberId = null;<br>lr360('getPages', { pageId: 'momo-program-311.A0' }, callback);">
+            </test-directive>
+
+        </div>
+
+        <div class="row" ng-controller="getPages as getPages">
+
+            <test-directive
+                    run-test="getPages.test4()"
+                    expectation="getPages.expect4"
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360.client.memberId = null;<br>lr360('getPages', { pageId: 'momo-program-311.A0' });"
+                    error-description="You must provide a callback.">
+            </test-directive>
+
+            <test-directive
+                    run-test="getPages.test5()"
+                    expectation="getPages.expect5"
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360.client.memberId = null;<br>lr360('getPages', { memberId: 'montmorency-alice' }, callback);"
+                    error-description="You must provide a news list ID.">
+            </test-directive>
+
+        </div>
+
+        <hr>
 
     </div>
 
     <script type="application/javascript">
-        (function (window, document, scriptType, scriptSrc, namespace) {
-            // set global variable
-            window[namespace] = window[namespace] || function () {
-                        (window[namespace].queue = window[namespace].queue || []).push(arguments)
-                    };
-            // load script asynchronously
-            window[namespace].l = 1 * new Date();
-            var scriptTag = document.createElement(scriptType);
-            var mfirstScript = document.getElementsByTagName(scriptType)[0];
-            scriptTag.async = 1;
-            scriptTag.src = scriptSrc;
-            mfirstScript.parentNode.insertBefore(scriptTag, mfirstScript)
-        })(window, document, 'script', '../dist/lr360.js', 'lr360');
-    </script>
-
-    <script type="application/javascript">
-        // minified version
-        /*
-        !function(e,n,t,r,s){e[s]=e[s]||function(){(e[s].queue=e[s].queue||[]).push(arguments)},e[s].l=1*new Date;var u=n.createElement(t),a=n.getElementsByTagName(t)[0];u.async=1,u.src=r,a.parentNode.insertBefore(u,a)}(window,document,"script","dist/lr360.js","lr360");
-        */
+        !function(e,n,t,r,s){e[s]=e[s]||function(){(e[s].queue=e[s].queue||[]).push(arguments)},e[s].l=1*new Date;var u=n.createElement(t),a=n.getElementsByTagName(t)[0];u.async=1,u.src=r,a.parentNode.insertBefore(u,a)}(window,document,"script","../dist/lr360.js","lr360");
     </script>
 
     <script type="application/javascript">
@@ -171,8 +509,33 @@
 
         angular
                 .module('integration', [])
-                .controller('setup', function($scope, $timeout) {
+                .directive('testDirective', function() {
+                    return {
+                        scope: {
+                            runTest: '&',
+                            testDescription: '@',
+                            errorDescription: '@',
+                            expectation: '='
+                        },
+                        controller: function($scope, $sce) {
+                            $scope.testDescriptionHtml = $sce.trustAsHtml($scope.testDescription);
+                        },
+                        template:
+                        `<div class="col-md-4">
+                            <p>
+                                <button ng-click="runTest()" type="button" class="btn btn-primary btn-block" ng-bind-html="testDescriptionHtml"></button>
+                            </p>
+                            <p ng-if="!errorDescription">Should return <span class="label label-success">successful</span> response.</p>
+                            <p ng-if="errorDescription">Should throw <span class="label label-danger">error</span> '{{errorDescription}}'</p>
+                            <div class="alert alert-warning" role="alert" ng-if="expectation === null">Running</div>
+                            <div class="alert alert-success" role="alert" ng-if="expectation === true">Success</div>
+                            <div class="alert alert-danger" role="alert" ng-if="expectation === false">Failed</div>
+                        </div>`
+                    };
+                })
+                .controller('main', function($rootScope, $timeout) {
                     var vm = this;
+
                     vm.initialConfig = 'Loading config...';
 
                     $timeout(function() {
@@ -181,6 +544,15 @@
                         lr360.client.config.port = 3001;
                         vm.initialConfig = _.assign({}, lr360.client.config);
                     }, 500);
+
+                    vm.runAllTests = function() {
+                        $rootScope.$broadcast('RUN_ALL_TESTS');
+                    };
+
+                    return vm;
+                })
+                .controller('setup', function($rootScope) {
+                    var vm = this;
 
                     vm.test1 = function() {
                         vm.expect1 = false;
@@ -209,9 +581,14 @@
                         vm.expect2 = true;
                     };
 
+                    $rootScope.$on('RUN_ALL_TESTS', function() {
+                        vm.test1();
+                        vm.test2();
+                    });
+
                     return vm;
                 })
-                .controller('trackAction', function($scope) {
+                .controller('trackAction', function($rootScope, $scope, $timeout) {
                     var vm = this;
 
                     vm.test3 = function() {
@@ -270,11 +647,810 @@
                         } catch (err) {
                             vm.expect6 = false;
                             expect(err.message).to.equal('You must provide the type of action to be tracked.');
-                            console.log(err);
                             vm.expect6 = true;
                         }
 
                     };
+
+                    vm.test7 = function() {
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
+                        vm.expect7 = false;
+
+                        try {
+                            lr360('trackAction', function() {});
+                        } catch (err) {
+                            expect(err.message).to.equal('You must provide the correct arguments to trackAction.');
+                        }
+
+                        try {
+                            lr360('trackAction', 'type', 'unexpected');
+                        } catch (err) {
+                            expect(err.message).to.equal('You must provide the correct arguments to trackAction.');
+                        }
+
+                        try {
+                            lr360('trackAction', { tyep: 'type' }, 'unexpected');
+                        } catch (err) {
+                            expect(err.message).to.equal('You must provide the correct arguments to trackAction.');
+                        }
+
+                        try {
+                            lr360('trackAction', 'type', { data: 'additional information' }, 'unexpected');
+                        } catch (err) {
+                            expect(err.message).to.equal('You must provide the correct arguments to trackAction.');
+                        }
+
+                        vm.expect7 = true;
+                    };
+
+                    vm.test8 = function() {
+                        lr360.client.config.key = null;
+
+                        try {
+                            lr360('trackAction', 'test');
+                        } catch (err) {
+                            vm.expect8 = false;
+                            expect(err.message).to.equal('You must provide a key and a path.');
+                            vm.expect8 = true;
+                        }
+
+                    };
+
+                    $rootScope.$on('RUN_ALL_TESTS', function() {
+                        $timeout(function() {
+                            vm.test3();
+                            vm.test4();
+                            vm.test5();
+                        }, 2000);
+                        vm.test6();
+                        vm.test7();
+                        vm.test8();
+                    });
+
+                    return vm;
+                })
+                .controller('identifyMember', function($rootScope, $scope) {
+                    var vm = this;
+
+                    vm.test1 = function() {
+                        vm.expect1 = null;
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
+                        lr360.client.memberId = null;
+
+                        lr360('identifyMember', { memberId: 'montmorency-alice' }, function(error, response) {
+                            $scope.$apply(function() {
+                                vm.expect1 = false;
+                                expect(error).to.not.exist;
+                                expect(response.body.status).to.equal('success');
+                                expect(response.body.data).to.eql({});
+                                vm.expect1 = true;
+                            });
+                        });
+
+                    };
+
+                    vm.test2 = function() {
+                        vm.expect2 = null;
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
+                        lr360.client.memberId = null;
+
+                        lr360('identifyMember', { email: 'member1@test.com' }, function(error, response) {
+                            $scope.$apply(function() {
+                                vm.expect2 = false;
+                                expect(error).to.not.exist;
+                                expect(response.body.status).to.equal('success');
+                                expect(response.body.data).to.eql({ email: 'member1@test.com' });
+                                vm.expect2 = true;
+                            });
+                        });
+
+                    };
+
+                    vm.test3 = function() {
+                        vm.expect3 = null;
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
+                        lr360.client.memberId = null;
+
+                        lr360('identifyMember', { externalId: '96874113' }, function(error, response) {
+                            $scope.$apply(function() {
+                                vm.expect3 = false;
+                                expect(error).to.not.exist;
+                                expect(response.body.status).to.equal('success');
+                                expect(response.body.data).to.eql({ external_id: '96874113' });
+                                vm.expect3 = true;
+                            });
+                        });
+
+                    };
+
+                    vm.test4 = function() {
+                        vm.expect4 = null;
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
+                        lr360.client.memberId = null;
+
+                        try {
+                            lr360('identifyMember', {}, function () {});
+                        } catch (err) {
+                            vm.expect4 = false;
+                            expect(err.message).to.equal('You must provide either a member ID, an external ID or an email.');
+                            vm.expect4 = true;
+                        }
+                    };
+
+                    vm.test5 = function() {
+                        lr360.client.config.key = null;
+
+                        try {
+                            lr360('identifyMember', { memberId: 'montmorency-alice' });
+                        } catch (err) {
+                            vm.expect5 = false;
+                            expect(err.message).to.equal('You must provide a key and a path.');
+                            vm.expect5 = true;
+                        }
+
+                    };
+
+                    vm.test6 = function() {
+                        vm.expect6 = null;
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
+                        lr360.client.memberId = 'montmorency-alice';
+
+                        try {
+                            lr360('identifyMember', {}, function () {});
+                        } catch (err) {
+                            vm.expect6 = false;
+                            expect(err.message).to.equal('You must provide either a member ID, an external ID or an email.');
+                            vm.expect6 = true;
+                        }
+                    };
+
+                    // TODO: test memberId stored on client when response is fixed...
+
+                    $rootScope.$on('RUN_ALL_TESTS', function() {
+                        vm.test5();
+                        vm.test1();
+                        vm.test2();
+                        vm.test3();
+                        vm.test4();
+                    });
+
+                    return vm;
+                })
+                .controller('getMemberProfile', function($rootScope, $scope) {
+                    var vm = this;
+
+                    vm.test1 = function() {
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
+                        lr360.client.memberId = null;
+
+                        try {
+                            vm.expect1 = false;
+                            lr360('getMemberProfile', { memberId: 'montmorency-alice' });
+                        } catch (err) {
+                            expect(err).to.exist;
+                            expect(err.message).to.equal('You must provide a callback.');
+                            vm.expect1 = true;
+                        }
+
+                    };
+
+                    vm.test2 = function() {
+                        vm.expect2 = null;
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
+                        lr360.client.memberId = 'montmorency-alice';
+
+                        lr360('getMemberProfile', function(error, response) {
+                            $scope.$apply(function() {
+                                vm.expect2 = false;
+                                expect(error).to.not.exist;
+                                expect(response.body.status).to.equal('success');
+                                vm.expect2 = true;
+                            });
+                        });
+
+                    };
+
+                    vm.test3 = function() {
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
+                        lr360.client.memberId = null;
+
+                        try {
+                            vm.expect3 = false;
+                            lr360('getMemberProfile', {}, function(error, response) {});
+                        } catch (error) {
+                            expect(error).to.exist;
+                            expect(error.message).to.equal('You must provide a member ID.');
+                            vm.expect3 = true;
+                        }
+
+                    };
+
+                    $rootScope.$on('RUN_ALL_TESTS', function() {
+                        vm.test1();
+                        vm.test2();
+                        vm.test3();
+                    });
+
+                    return vm;
+                })
+                .controller('getDeviceProfile', function($rootScope, $scope) {
+                    var vm = this;
+
+                    vm.test1 = function() {
+                        vm.expect1 = null;
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
+
+                        lr360('getDeviceProfile', {}, function(error, response) {
+                            $scope.$apply(function() {
+                                vm.expect1 = false;
+                                expect(error).to.not.exist;
+                                expect(response.body.status).to.equal('success');
+                                vm.expect1 = true;
+                            });
+                        });
+                    };
+
+                    vm.test2 = function() {
+                        vm.expect2 = null;
+                        lr360('setup', { key: 'CIRQUE-ACCESSKEY' });
+
+                        lr360('getDeviceProfile', { deviceId: '41DR5hdFl' }, function(error, response) {
+                            $scope.$apply(function() {
+                                vm.expect2 = false;
+                                expect(error).to.not.exist;
+                                expect(response.body.status).to.equal('success');
+                                vm.expect2 = true;
+                            });
+                        });
+
+                    };
+
+                    vm.test3 = function() {
+                        lr360('setup', { key: 'CIRQUE-ACCESSKEY' });
+
+                        try{
+                            vm.expect3 = false;
+                            lr360('getDeviceProfile', { deviceId: '41DR5hdFl' });
+                        } catch (error) {
+                            expect(error).to.exist;
+                            expect(error.message).to.equal('You must provide a callback.');
+                            vm.expect3 = true;
+                        }
+
+                    };
+
+                    $rootScope.$on('RUN_ALL_TESTS', function() {
+                        vm.test1();
+                        vm.test2();
+                        vm.test3();
+                    });
+
+                    return vm;
+                })
+                .controller('getMemberChallenges', function($rootScope, $scope) {
+                    var vm = this;
+
+                    vm.test1 = function() {
+                        vm.expect1 = null;
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
+                        lr360.client.memberId = null;
+
+                        lr360('getMemberChallenges', { memberId: 'montmorency-alice' }, function(error, response) {
+                            $scope.$apply(function() {
+                                vm.expect1 = false;
+                                expect(error).to.not.exist;
+                                expect(response.body.status).to.equal('success');
+                                vm.expect1 = true;
+                            });
+                        });
+                    };
+
+                    vm.test2 = function() {
+                        vm.expect2 = null;
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
+                        lr360.client.memberId = 'montmorency-alice';
+
+                        lr360('getMemberChallenges', { }, function(error, response) {
+                            $scope.$apply(function() {
+                                vm.expect2 = false;
+                                expect(error).to.not.exist;
+                                expect(response.body.status).to.equal('success');
+                                vm.expect2 = true;
+                            });
+                        });
+                    };
+
+                    vm.test3 = function() {
+                        vm.expect3 = null;
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
+                        lr360.client.memberId = 'montmorency-alice';
+
+                        lr360('getMemberChallenges', function(error, response) {
+                            $scope.$apply(function() {
+                                vm.expect3 = false;
+                                expect(error).to.not.exist;
+                                expect(response.body.status).to.equal('success');
+                                vm.expect3 = true;
+                            });
+                        });
+                    };
+
+                    vm.test4 = function() {
+                        lr360('setup', { key: 'CIRQUE-ACCESSKEY' });
+                        lr360.client.memberId = 'montmorency-alice';
+
+                        try {
+                            vm.expect4 = false;
+                            lr360('getMemberChallenges', { memberId: 'montmorency-alice' });
+                        } catch (error) {
+                            expect(error).to.exist;
+                            expect(error.message).to.equal('You must provide a callback.');
+                            vm.expect4 = true;
+                        }
+                    };
+
+                    $rootScope.$on('RUN_ALL_TESTS', function() {
+                        vm.test1();
+                        vm.test2();
+                        vm.test3();
+                        vm.test4();
+                    });
+
+                    return vm;
+                })
+                .controller('getMemberChallengesDone', function($rootScope, $scope) {
+                    var vm = this;
+
+                    vm.test1 = function() {
+                        vm.expect1 = null;
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
+                        lr360.client.memberId = null;
+
+                        lr360('getMemberChallengesDone', { memberId: 'montmorency-alice' }, function(error, response) {
+                            $scope.$apply(function() {
+                                vm.expect1 = false;
+                                expect(error).to.not.exist;
+                                expect(response.body.status).to.equal('success');
+                                vm.expect1 = true;
+                            });
+                        });
+                    };
+
+                    vm.test2 = function() {
+                        vm.expect2 = null;
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
+                        lr360.client.memberId = 'montmorency-alice';
+
+                        lr360('getMemberChallengesDone', { }, function(error, response) {
+                            $scope.$apply(function() {
+                                vm.expect2 = false;
+                                expect(error).to.not.exist;
+                                expect(response.body.status).to.equal('success');
+                                vm.expect2 = true;
+                            });
+                        });
+                    };
+
+                    vm.test3 = function() {
+                        vm.expect3 = null;
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
+                        lr360.client.memberId = 'montmorency-alice';
+
+                        lr360('getMemberChallengesDone', function(error, response) {
+                            $scope.$apply(function() {
+                                vm.expect3 = false;
+                                expect(error).to.not.exist;
+                                expect(response.body.status).to.equal('success');
+                                vm.expect3 = true;
+                            });
+                        });
+                    };
+
+                    vm.test4 = function() {
+                        lr360('setup', { key: 'CIRQUE-ACCESSKEY' });
+                        lr360.client.memberId = 'montmorency-alice';
+
+                        try {
+                            vm.expect4 = false;
+                            lr360('getMemberChallengesDone', { memberId: 'montmorency-alice' });
+                        } catch (error) {
+                            expect(error).to.exist;
+                            expect(error.message).to.equal('You must provide a callback.');
+                            vm.expect4 = true;
+                        }
+                    };
+
+                    $rootScope.$on('RUN_ALL_TESTS', function() {
+                        vm.test1();
+                        vm.test2();
+                        vm.test3();
+                        vm.test4();
+                    });
+
+                    return vm;
+                })
+                .controller('getMemberChallengesTodo', function($rootScope, $scope) {
+                    var vm = this;
+
+                    vm.test1 = function() {
+                        vm.expect1 = null;
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
+                        lr360.client.memberId = null;
+
+                        lr360('getMemberChallengesTodo', { memberId: 'montmorency-alice' }, function(error, response) {
+                            $scope.$apply(function() {
+                                vm.expect1 = false;
+                                expect(error).to.not.exist;
+                                expect(response.body.status).to.equal('success');
+                                vm.expect1 = true;
+                            });
+                        });
+                    };
+
+                    vm.test2 = function() {
+                        vm.expect2 = null;
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
+                        lr360.client.memberId = 'montmorency-alice';
+
+                        lr360('getMemberChallengesTodo', { }, function(error, response) {
+                            $scope.$apply(function() {
+                                vm.expect2 = false;
+                                expect(error).to.not.exist;
+                                expect(response.body.status).to.equal('success');
+                                vm.expect2 = true;
+                            });
+                        });
+                    };
+
+                    vm.test3 = function() {
+                        vm.expect3 = null;
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
+                        lr360.client.memberId = 'montmorency-alice';
+
+                        lr360('getMemberChallengesTodo', function(error, response) {
+                            $scope.$apply(function() {
+                                vm.expect3 = false;
+                                expect(error).to.not.exist;
+                                expect(response.body.status).to.equal('success');
+                                vm.expect3 = true;
+                            });
+                        });
+                    };
+
+                    vm.test4 = function() {
+                        lr360('setup', { key: 'CIRQUE-ACCESSKEY' });
+                        lr360.client.memberId = 'montmorency-alice';
+
+                        try {
+                            vm.expect4 = false;
+                            lr360('getMemberChallengesTodo', { memberId: 'montmorency-alice' });
+                        } catch (error) {
+                            expect(error).to.exist;
+                            expect(error.message).to.equal('You must provide a callback.');
+                            vm.expect4 = true;
+                        }
+                    };
+
+                    $rootScope.$on('RUN_ALL_TESTS', function() {
+                        vm.test1();
+                        vm.test2();
+                        vm.test3();
+                        vm.test4();
+                    });
+
+                    return vm;
+                })
+                .controller('getMenus', function($rootScope, $scope) {
+                    var vm = this;
+
+                    vm.test1 = function() {
+                        vm.expect1 = null;
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
+                        lr360.client.memberId = null;
+
+                        lr360('getMenus', { memberId: 'montmorency-alice' }, function(error, response) {
+                            $scope.$apply(function() {
+                                vm.expect1 = false;
+                                expect(error).to.not.exist;
+                                expect(response.body.status).to.equal('success');
+                                vm.expect1 = true;
+                            });
+                        });
+                    };
+
+                    vm.test2 = function() {
+                        vm.expect2 = null;
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
+                        lr360.client.memberId = 'montmorency-alice';
+
+                        lr360('getMenus', { }, function(error, response) {
+                            $scope.$apply(function() {
+                                vm.expect2 = false;
+                                expect(error).to.not.exist;
+                                expect(response.body.status).to.equal('success');
+                                vm.expect2 = true;
+                            });
+                        });
+                    };
+
+                    vm.test3 = function() {
+                        vm.expect3 = null;
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
+                        lr360.client.memberId = 'montmorency-alice';
+
+                        lr360('getMenus', function(error, response) {
+                            $scope.$apply(function() {
+                                vm.expect3 = false;
+                                expect(error).to.not.exist;
+                                expect(response.body.status).to.equal('success');
+                                vm.expect3 = true;
+                            });
+                        });
+                    };
+
+                    vm.test4 = function() {
+                        lr360('setup', { key: 'CIRQUE-ACCESSKEY' });
+                        lr360.client.memberId = 'montmorency-alice';
+
+                        try {
+                            vm.expect4 = false;
+                            lr360('getMenus', { memberId: 'montmorency-alice' });
+                        } catch (error) {
+                            expect(error).to.exist;
+                            expect(error.message).to.equal('You must provide a callback.');
+                            vm.expect4 = true;
+                        }
+                    };
+
+                    $rootScope.$on('RUN_ALL_TESTS', function() {
+                        vm.test1();
+                        vm.test2();
+                        vm.test3();
+                        vm.test4();
+                    });
+
+                    return vm;
+                })
+                .controller('getContests', function($rootScope, $scope) {
+                    var vm = this;
+
+                    vm.test1 = function() {
+                        vm.expect1 = null;
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
+                        lr360.client.memberId = null;
+
+                        lr360('getContests', { memberId: 'montmorency-alice' }, function(error, response) {
+                            $scope.$apply(function() {
+                                vm.expect1 = false;
+                                expect(error).to.not.exist;
+                                expect(response.body.status).to.equal('success');
+                                vm.expect1 = true;
+                            });
+                        });
+                    };
+
+                    vm.test2 = function() {
+                        vm.expect2 = null;
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
+                        lr360.client.memberId = 'montmorency-alice';
+
+                        lr360('getContests', { }, function(error, response) {
+                            $scope.$apply(function() {
+                                vm.expect2 = false;
+                                expect(error).to.not.exist;
+                                expect(response.body.status).to.equal('success');
+                                vm.expect2 = true;
+                            });
+                        });
+                    };
+
+                    vm.test3 = function() {
+                        vm.expect3 = null;
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
+                        lr360.client.memberId = 'montmorency-alice';
+
+                        lr360('getContests', function(error, response) {
+                            $scope.$apply(function() {
+                                vm.expect3 = false;
+                                expect(error).to.not.exist;
+                                expect(response.body.status).to.equal('success');
+                                vm.expect3 = true;
+                            });
+                        });
+                    };
+
+                    vm.test4 = function() {
+                        lr360('setup', { key: 'CIRQUE-ACCESSKEY' });
+                        lr360.client.memberId = 'montmorency-alice';
+
+                        try {
+                            vm.expect4 = false;
+                            lr360('getContests', { memberId: 'montmorency-alice' });
+                        } catch (error) {
+                            expect(error).to.exist;
+                            expect(error.message).to.equal('You must provide a callback.');
+                            vm.expect4 = true;
+                        }
+                    };
+
+                    $rootScope.$on('RUN_ALL_TESTS', function() {
+                        vm.test1();
+                        vm.test2();
+                        vm.test3();
+                        vm.test4();
+                    });
+
+                    return vm;
+                })
+                .controller('getNews', function($rootScope, $scope) {
+                    var vm = this;
+
+                    vm.test1 = function() {
+                        vm.expect1 = null;
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
+                        lr360.client.memberId = null;
+
+                        lr360('getNews', { memberId: 'montmorency-alice', newsListId: 'momo-newslist-sports' }, function(error, response) {
+                            $scope.$apply(function() {
+                                vm.expect1 = false;
+                                expect(error).to.not.exist;
+                                expect(response.body.status).to.equal('success');
+                                vm.expect1 = true;
+                            });
+                        });
+                    };
+
+                    vm.test2 = function() {
+                        vm.expect2 = null;
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
+                        lr360.client.memberId = 'montmorency-alice';
+
+                        lr360('getNews', { newsListId: 'momo-newslist-sports' }, function(error, response) {
+                            $scope.$apply(function() {
+                                vm.expect2 = false;
+                                expect(error).to.not.exist;
+                                expect(response.body.status).to.equal('success');
+                                vm.expect2 = true;
+                            });
+                        });
+                    };
+
+                    vm.test3 = function() {
+                        vm.expect3 = null;
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
+                        lr360.client.memberId = null;
+
+                        lr360('getNews', { newsListId: 'momo-newslist-sports' }, function(error, response) {
+                            $scope.$apply(function() {
+                                vm.expect3 = false;
+                                expect(error).to.not.exist;
+                                expect(response.body.status).to.equal('success');
+                                vm.expect3 = true;
+                            });
+                        });
+                    };
+
+                    vm.test4 = function() {
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
+                        lr360.client.memberId = null;
+
+                        try {
+                            vm.expect4 = false;
+                            lr360('getNews', { newsListId: 'momo-newslist-sports' });
+                        } catch (error) {
+                            expect(error).to.exist;
+                            expect(error.message).to.equal('You must provide a callback.');
+                            vm.expect4 = true;
+                        }
+                    };
+
+                    vm.test5 = function() {
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
+                        lr360.client.memberId = null;
+
+                        try {
+                            vm.expect5 = false;
+                            lr360('getNews', { memberId: 'montmorency-alice' }, function() {});
+                        } catch (error) {
+                            expect(error).to.exist;
+                            expect(error.message).to.equal('You must provide a news list ID.');
+                            vm.expect5 = true;
+                        }
+                    };
+
+                    $rootScope.$on('RUN_ALL_TESTS', function() {
+                        vm.test1();
+                        vm.test2();
+                        vm.test3();
+                        vm.test4();
+                        vm.test5();
+                    });
+
+                    return vm;
+                })
+                .controller('getPages', function($rootScope, $scope) {
+                    var vm = this;
+
+                    vm.test1 = function() {
+                        vm.expect1 = null;
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
+                        lr360.client.memberId = null;
+
+                        lr360('getPages', { memberId: 'montmorency-alice', pageId: 'momo-program-311.A0' }, function(error, response) {
+                            $scope.$apply(function() {
+                                vm.expect1 = false;
+                                expect(error).to.not.exist;
+                                expect(response.body.status).to.equal('success');
+                                vm.expect1 = true;
+                            });
+                        });
+                    };
+
+                    vm.test2 = function() {
+                        vm.expect2 = null;
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
+                        lr360.client.memberId = 'montmorency-alice';
+
+                        lr360('getPages', { pageId: 'momo-program-311.A0' }, function(error, response) {
+                            $scope.$apply(function() {
+                                vm.expect2 = false;
+                                expect(error).to.not.exist;
+                                expect(response.body.status).to.equal('success');
+                                vm.expect2 = true;
+                            });
+                        });
+                    };
+
+                    vm.test3 = function() {
+                        vm.expect3 = null;
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
+                        lr360.client.memberId = null;
+
+                        lr360('getPages', { pageId: 'momo-program-311.A0' }, function(error, response) {
+                            $scope.$apply(function() {
+                                vm.expect3 = false;
+                                expect(error).to.not.exist;
+                                expect(response.body.status).to.equal('success');
+                                vm.expect3 = true;
+                            });
+                        });
+                    };
+
+                    vm.test4 = function() {
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
+                        lr360.client.memberId = null;
+
+                        try {
+                            vm.expect4 = false;
+                            lr360('getPages', { pageId: 'momo-program-311.A0' });
+                        } catch (error) {
+                            expect(error).to.exist;
+                            expect(error.message).to.equal('You must provide a callback.');
+                            vm.expect4 = true;
+                        }
+                    };
+
+                    vm.test5 = function() {
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
+                        lr360.client.memberId = null;
+
+                        try {
+                            vm.expect5 = false;
+                            lr360('getPages', { memberId: 'montmorency-alice' }, function() {});
+                        } catch (error) {
+                            expect(error).to.exist;
+                            expect(error.message).to.equal('You must provide a page ID.');
+                            vm.expect5 = true;
+                        }
+                    };
+
+                    $rootScope.$on('RUN_ALL_TESTS', function() {
+                        vm.test1();
+                        vm.test2();
+                        vm.test3();
+                        vm.test4();
+                        vm.test5();
+                    });
 
                     return vm;
                 });

@@ -7,7 +7,7 @@ describe('contents.js', () => {
 
   describe('getContest()', () => {
 
-    const ERROR_MESSAGE_CALLBACK = 'You must provide a callback';
+    const ERROR_MESSAGE_CALLBACK = 'You must provide a callback.';
 
     it('should call handleError when called with no parameters', done => {
 

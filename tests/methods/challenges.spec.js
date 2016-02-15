@@ -8,7 +8,7 @@ describe('challenges.js', () => {
   describe('getMemberChallenges()', () => {
 
     const EXPECTED_ERROR_MESSAGE = 'You must provide a member ID.';
-    const ERROR_MESSAGE_CALLBACK = 'You must provide a callback';
+    const ERROR_MESSAGE_CALLBACK = 'You must provide a callback.';
 
     it('should call handleError when called with no parameters', done => {
 

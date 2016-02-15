@@ -3,7 +3,7 @@ import Helper from '../helper/helper';
 const METHOD = 'GET';
 const PATH = '/api/content/pages';
 const ERROR_MESSAGE = 'You must provide a page ID.';
-const ERROR_MESSAGE_CALLBACK = 'You must provide a callback';
+const ERROR_MESSAGE_CALLBACK = 'You must provide a callback.';
 
 export default function (options, callback) {
 

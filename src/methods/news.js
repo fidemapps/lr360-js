@@ -3,7 +3,7 @@ import Helper from '../helper/helper';
 const METHOD = 'GET';
 const PATH = '/api/content/newslists';
 const ERROR_MESSAGE = 'You must provide a news list ID.';
-const ERROR_MESSAGE_CALLBACK = 'You must provide a callback';
+const ERROR_MESSAGE_CALLBACK = 'You must provide a callback.';
 
 export default function (options, callback) {
 

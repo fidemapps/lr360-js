@@ -9,7 +9,7 @@ export default function (options, callback) {
 
   options = options || {};
 
-  if (!Helper.hasOneOfRequiredProperties(['memberId', 'external_id', 'email'], options)) {
+  if (!Helper.hasOneOfRequiredProperties(['memberId', 'externalId', 'email'], options)) {
     this.handleError(ERROR_MESSAGE, callback);
   }
 

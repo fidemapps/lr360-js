@@ -4,7 +4,7 @@ const METHOD = 'GET';
 const PATH_1 = '/api/members/';
 const PATH_2 = '/challenges';
 const ERROR_MESSAGE = 'You must provide a member ID.';
-const ERROR_MESSAGE_CALLBACK = 'You must provide a callback';
+const ERROR_MESSAGE_CALLBACK = 'You must provide a callback.';
 
 export default function () {
 

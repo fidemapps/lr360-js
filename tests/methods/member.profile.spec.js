@@ -8,7 +8,7 @@ describe('member.profile.js', () => {
   describe('memberProfile()', () => {
 
     const ERROR_MESSAGE = 'You must provide a member ID.';
-    const ERROR_MESSAGE_CALLBACK = 'You must provide a callback';
+    const ERROR_MESSAGE_CALLBACK = 'You must provide a callback.';
 
     it('should call handleError if no parameters are passed', done => {
 

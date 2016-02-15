@@ -3,12 +3,12 @@ import sinon from 'sinon';
 import Client from '../../src/client/client';
 import challengesDone from '../../src/methods/challenges.done';
 
-describe('challenges.js', () => {
+describe('challenges.done.js', () => {
 
-  describe('getMemberChallenges()', () => {
+  describe('getMemberChallengesDone()', () => {
 
     const EXPECTED_ERROR_MESSAGE = 'You must provide a member ID.';
-    const ERROR_MESSAGE_CALLBACK = 'You must provide a callback';
+    const ERROR_MESSAGE_CALLBACK = 'You must provide a callback.';
 
     it('should call handleError when called with no parameters', done => {
 

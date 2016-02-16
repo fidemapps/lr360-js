@@ -60,7 +60,7 @@ export default class Helper {
     let qs = '';
 
     if (memberId && (typeof memberId === 'string' || typeof memberId === 'number')) {
-      qs = `?member_id=${memberId}`;
+      qs = `?memberId=${memberId}`;
     }
 
     return qs;

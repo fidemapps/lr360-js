@@ -149,15 +149,15 @@ describe('helper.js', () => {
       done();
     });
 
-    it('should return a valid query string with member_id property (string)', done => {
+    it('should return a valid query string with memberId property (string)', done => {
       let qs = Helper.getQueryParams('testid');
-      expect(qs).to.equal('?member_id=testid');
+      expect(qs).to.equal('?memberId=testid');
       done();
     });
 
-    it('should return a valid query string with member_id property (number)', done => {
+    it('should return a valid query string with memberId property (number)', done => {
       let qs = Helper.getQueryParams(1234);
-      expect(qs).to.equal('?member_id=1234');
+      expect(qs).to.equal('?memberId=1234');
       done();
     });
 

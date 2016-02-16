@@ -80,7 +80,7 @@ describe('contents.js', () => {
       let baseRequestStub = sinon.stub(client, 'baseRequest', () => {});
       let expectedRequestOpions = {
         method: 'GET',
-        path: '/api/contests?member_id=memberIdFromClient',
+        path: '/api/contests?memberId=memberIdFromClient',
       };
 
       getContests.call(client, options, () => {});
@@ -98,7 +98,7 @@ describe('contents.js', () => {
       let baseRequestStub = sinon.stub(client, 'baseRequest', () => {});
       let expectedRequestOpions = {
         method: 'GET',
-        path: '/api/contests?member_id=memberIdFromOptions',
+        path: '/api/contests?memberId=memberIdFromOptions',
       };
 
       getContests.call(client, options, () => {});
@@ -117,7 +117,7 @@ describe('contents.js', () => {
       let baseRequestStub = sinon.stub(client, 'baseRequest', () => {});
       let expectedRequestOpions = {
         method: 'GET',
-        path: '/api/contests?member_id=memberIdFromOptions',
+        path: '/api/contests?memberId=memberIdFromOptions',
       };
 
       getContests.call(client, options, () => {});

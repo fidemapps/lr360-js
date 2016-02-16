@@ -74,7 +74,7 @@ describe('pages.js', () => {
       let baseRequestStub = sinon.stub(client, 'baseRequest', () => {});
       let expectedRequestOpions = {
         method: 'GET',
-        path: '/api/content/pages/1234?member_id=9876',
+        path: '/api/content/pages/1234?memberId=9876',
       };
 
       getPages.call(client, { pageId: 1234, memberId: 9876 }, () => {});
@@ -92,7 +92,7 @@ describe('pages.js', () => {
       let baseRequestStub = sinon.stub(client, 'baseRequest', () => {});
       let expectedRequestOpions = {
         method: 'GET',
-        path: '/api/content/pages/1234?member_id=9876',
+        path: '/api/content/pages/1234?memberId=9876',
       };
 
       getPages.call(client, { pageId: 1234 }, () => {});

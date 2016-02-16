@@ -74,7 +74,7 @@ describe('news.js', () => {
       let baseRequestStub = sinon.stub(client, 'baseRequest', () => {});
       let expectedRequestOpions = {
         method: 'GET',
-        path: '/api/content/newslists/1234?member_id=9876',
+        path: '/api/content/newslists/1234?memberId=9876',
       };
 
       getNews.call(client, { newsListId: 1234, memberId: 9876 }, () => {});
@@ -92,7 +92,7 @@ describe('news.js', () => {
       let baseRequestStub = sinon.stub(client, 'baseRequest', () => {});
       let expectedRequestOpions = {
         method: 'GET',
-        path: '/api/content/newslists/1234?member_id=9876',
+        path: '/api/content/newslists/1234?memberId=9876',
       };
 
       getNews.call(client, { newsListId: 1234 }, () => {});
@@ -111,7 +111,7 @@ describe('news.js', () => {
       let baseRequestStub = sinon.stub(client, 'baseRequest', () => {});
       let expectedRequestOpions = {
         method: 'GET',
-        path: '/api/content/newslists/1234?member_id=memberIdFromOptions',
+        path: '/api/content/newslists/1234?memberId=memberIdFromOptions',
       };
 
       getNews.call(client, options, () => {});

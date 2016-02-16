@@ -80,7 +80,7 @@ describe('menus.js', () => {
       let baseRequestStub = sinon.stub(client, 'baseRequest', () => {});
       let expectedRequestOpions = {
         method: 'GET',
-        path: '/api/content/menus?member_id=memberIdFromClient',
+        path: '/api/content/menus?memberId=memberIdFromClient',
       };
 
       getMenus.call(client, options, () => {});
@@ -98,7 +98,7 @@ describe('menus.js', () => {
       let baseRequestStub = sinon.stub(client, 'baseRequest', () => {});
       let expectedRequestOpions = {
         method: 'GET',
-        path: '/api/content/menus?member_id=memberIdFromOptions',
+        path: '/api/content/menus?memberId=memberIdFromOptions',
       };
 
       getMenus.call(client, options, () => {});
@@ -117,7 +117,7 @@ describe('menus.js', () => {
       let baseRequestStub = sinon.stub(client, 'baseRequest', () => {});
       let expectedRequestOpions = {
         method: 'GET',
-        path: '/api/content/menus?member_id=memberIdFromOptions',
+        path: '/api/content/menus?memberId=memberIdFromOptions',
       };
 
       getMenus.call(client, options, () => {});

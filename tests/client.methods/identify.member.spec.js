@@ -1,7 +1,7 @@
 import Client from '../../src/client/client';
 import { expect } from 'chai';
 import request from 'browser-request';
-import identifyMember from '../../src/methods/identify.member';
+import identifyMember from '../../src/client.methods/identify.member.js';
 
 describe('identify.member.js', () => {
 

@@ -1,4 +1,5 @@
 import Helper from '../helper/helper';
+
 const METHOD = 'GET';
 const PATH_ID = '/api/devices';
 const PATH_ME = '/api/device';

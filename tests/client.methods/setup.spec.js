@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import Client from '../../src/client/client';
-import setup from '../../src/methods/setup';
+import setup from '../../src/client.methods/setup';
 
 describe('setup.js', () => {
 

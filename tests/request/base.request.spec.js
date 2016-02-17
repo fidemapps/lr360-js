@@ -1,7 +1,7 @@
 let expect = require('chai').expect;
 import sinon from 'sinon';
 let superagent = require('superagent');
-import { baseRequest, addGeolocation } from '../../src/methods/base.request';
+import { baseRequest, addGeolocation } from '../../src/request/base.request.js';
 import Client from '../../src/client/client';
 
 describe('base.request.js', () => {

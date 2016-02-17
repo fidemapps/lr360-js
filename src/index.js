@@ -1,10 +1,17 @@
 import Client from './client/client';
+import { httpMethods } from './http.methods/index';
+let assign = require('lodash.assign');
 
 export let client = new Client();
 
 window.lr360 = window.lr360 || {};
 window.lr360.queue = window.lr360.queue || [];
 window.lr360.client = client;
+
+window.lr360.get = httpMethods.get;
+window.lr360.post = httpMethods.post;
+window.lr360.put = httpMethods.put;
+window.lr360.delete = httpMethods.delete;
 
 export function emptyQueue() {
 

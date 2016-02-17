@@ -1,5 +1,5 @@
 let assign = require('lodash.assign');
-import { clientMethods } from '../methods/index';
+import { clientMethods } from '../client.methods/index';
 
 const HOSTNAME = 'services.fidemapps.com';
 

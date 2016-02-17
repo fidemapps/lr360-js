@@ -1,11 +1,11 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 import Client from '../../src/client/client';
-import getContests from '../../src/methods/contests';
+import getMenus from '../../src/client.methods/menus';
 
-describe('contents.js', () => {
+describe('menus.js', () => {
 
-  describe('getContest()', () => {
+  describe('getMenus()', () => {
 
     const ERROR_MESSAGE_CALLBACK = 'You must provide a callback.';
 
@@ -14,7 +14,7 @@ describe('contents.js', () => {
       let client = new Client();
       let handleErrorStub = sinon.stub(client, 'handleError', () => {});
 
-      getContests.call(client);
+      getMenus.call(client);
 
       expect(handleErrorStub.calledWith(ERROR_MESSAGE_CALLBACK)).to.be.true;
 
@@ -29,7 +29,7 @@ describe('contents.js', () => {
       let options = { memberId: 'memberIdFromOptions' };
       let handleErrorStub = sinon.stub(client, 'handleError', () => {});
 
-      getContests.call(client, options);
+      getMenus.call(client, options);
 
       expect(handleErrorStub.calledWith(ERROR_MESSAGE_CALLBACK)).to.be.true;
 
@@ -44,10 +44,10 @@ describe('contents.js', () => {
       let baseRequestStub = sinon.stub(client, 'baseRequest', () => {});
       let expectedRequestOpions = {
         method: 'GET',
-        path: '/api/contests',
+        path: '/api/content/menus',
       };
 
-      getContests.call(client, options, () => {});
+      getMenus.call(client, options, () => {});
 
       expect(baseRequestStub.calledWith(expectedRequestOpions)).to.be.true;
 
@@ -62,10 +62,10 @@ describe('contents.js', () => {
       let baseRequestStub = sinon.stub(client, 'baseRequest', () => {});
       let expectedRequestOpions = {
         method: 'GET',
-        path: '/api/contests',
+        path: '/api/content/menus',
       };
 
-      getContests.call(client, options, () => {});
+      getMenus.call(client, options, () => {});
 
       expect(baseRequestStub.calledWith(expectedRequestOpions)).to.be.true;
 
@@ -80,10 +80,10 @@ describe('contents.js', () => {
       let baseRequestStub = sinon.stub(client, 'baseRequest', () => {});
       let expectedRequestOpions = {
         method: 'GET',
-        path: '/api/contests?memberId=memberIdFromClient',
+        path: '/api/content/menus?memberId=memberIdFromClient',
       };
 
-      getContests.call(client, options, () => {});
+      getMenus.call(client, options, () => {});
 
       expect(baseRequestStub.calledWith(expectedRequestOpions)).to.be.true;
 
@@ -98,10 +98,10 @@ describe('contents.js', () => {
       let baseRequestStub = sinon.stub(client, 'baseRequest', () => {});
       let expectedRequestOpions = {
         method: 'GET',
-        path: '/api/contests?memberId=memberIdFromOptions',
+        path: '/api/content/menus?memberId=memberIdFromOptions',
       };
 
-      getContests.call(client, options, () => {});
+      getMenus.call(client, options, () => {});
 
       expect(baseRequestStub.calledWith(expectedRequestOpions)).to.be.true;
 
@@ -117,10 +117,10 @@ describe('contents.js', () => {
       let baseRequestStub = sinon.stub(client, 'baseRequest', () => {});
       let expectedRequestOpions = {
         method: 'GET',
-        path: '/api/contests?memberId=memberIdFromOptions',
+        path: '/api/content/menus?memberId=memberIdFromOptions',
       };
 
-      getContests.call(client, options, () => {});
+      getMenus.call(client, options, () => {});
 
       expect(baseRequestStub.calledWith(expectedRequestOpions)).to.be.true;
 

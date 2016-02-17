@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 import Client from '../../src/client/client';
-import clearMember from '../../src/methods/clear.member';
+import clearMember from '../../src/client.methods/clear.member.js';
 
 describe('clear.member.js', () => {
 

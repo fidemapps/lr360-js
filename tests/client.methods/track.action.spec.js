@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import Client from '../../src/client/client';
 import sinon from 'sinon';
 let assign = require('lodash.assign');
-import trackAction from '../../src/methods/track.action';
+import trackAction from '../../src/client.methods/track.action.js';
 
 describe('track.action.js', () => {
 

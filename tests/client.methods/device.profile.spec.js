@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 import Client from '../../src/client/client';
-import deviceProfile from '../../src/methods/device.profile';
+import deviceProfile from '../../src/client.methods/device.profile.js';
 
 describe('device.profile.js', () => {
 

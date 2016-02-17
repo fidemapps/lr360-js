@@ -1,13 +1,12 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 import Client from '../../src/client/client';
-import getNews from '../../src/methods/news';
+import getContests from '../../src/client.methods/contests';
 
-describe('news.js', () => {
+describe('contents.js', () => {
 
-  describe('getNews()', () => {
+  describe('getContest()', () => {
 
-    const EXPECTED_ERROR_MESSAGE = 'You must provide a news list ID.';
     const ERROR_MESSAGE_CALLBACK = 'You must provide a callback.';
 
     it('should call handleError when called with no parameters', done => {
@@ -15,7 +14,7 @@ describe('news.js', () => {
       let client = new Client();
       let handleErrorStub = sinon.stub(client, 'handleError', () => {});
 
-      getNews.call(client);
+      getContests.call(client);
 
       expect(handleErrorStub.calledWith(ERROR_MESSAGE_CALLBACK)).to.be.true;
 
@@ -26,10 +25,11 @@ describe('news.js', () => {
     it('should call handleError when called with no callback', done => {
 
       let client = new Client();
-      let options = { newsListId: '1234' };
+      client.memberId = 'memberIdFromClient';
+      let options = { memberId: 'memberIdFromOptions' };
       let handleErrorStub = sinon.stub(client, 'handleError', () => {});
 
-      getNews.call(client, options);
+      getContests.call(client, options);
 
       expect(handleErrorStub.calledWith(ERROR_MESSAGE_CALLBACK)).to.be.true;
 
@@ -37,30 +37,35 @@ describe('news.js', () => {
 
     });
 
-    it('should call handleError when no news list ID is passed', done => {
+    it('should call baseRequest without query parameters when no options are passed', done => {
+
+      let client = new Client();
+      let options = null;
+      let baseRequestStub = sinon.stub(client, 'baseRequest', () => {});
+      let expectedRequestOpions = {
+        method: 'GET',
+        path: '/api/contests',
+      };
+
+      getContests.call(client, options, () => {});
+
+      expect(baseRequestStub.calledWith(expectedRequestOpions)).to.be.true;
+
+      done();
+
+    });
+
+    it('should call baseRequest without query parameters when no member ID is passed in options', done => {
 
       let client = new Client();
       let options = {};
-      let handleErrorStub = sinon.stub(client, 'handleError', () => {});
-
-      getNews.call(client, options, () => {});
-
-      expect(handleErrorStub.calledWith(EXPECTED_ERROR_MESSAGE)).to.be.true;
-
-      done();
-
-    });
-
-    it('should call baseRequest without request parameters when no memberId is passed', done => {
-
-      let client = new Client();
       let baseRequestStub = sinon.stub(client, 'baseRequest', () => {});
       let expectedRequestOpions = {
         method: 'GET',
-        path: '/api/content/newslists/1234',
+        path: '/api/contests',
       };
 
-      getNews.call(client, { newsListId: 1234 }, () => {});
+      getContests.call(client, options, () => {});
 
       expect(baseRequestStub.calledWith(expectedRequestOpions)).to.be.true;
 
@@ -68,16 +73,17 @@ describe('news.js', () => {
 
     });
 
-    it('should call baseRequest with request parameters when memberId is passed', done => {
+    it('should call baseRequest with query parameters when a ID is found on client', done => {
 
       let client = new Client();
+      let options = { memberId: 'memberIdFromClient' };
       let baseRequestStub = sinon.stub(client, 'baseRequest', () => {});
       let expectedRequestOpions = {
         method: 'GET',
-        path: '/api/content/newslists/1234?memberId=9876',
+        path: '/api/contests?memberId=memberIdFromClient',
       };
 
-      getNews.call(client, { newsListId: 1234, memberId: 9876 }, () => {});
+      getContests.call(client, options, () => {});
 
       expect(baseRequestStub.calledWith(expectedRequestOpions)).to.be.true;
 
@@ -85,17 +91,17 @@ describe('news.js', () => {
 
     });
 
-    it('should call baseRequest with request parameters when memberId is found on client', done => {
+    it('should call baseRequest with query parameters when a ID is passed', done => {
 
       let client = new Client();
-      client.memberId = 9876;
+      let options = { memberId: 'memberIdFromOptions' };
       let baseRequestStub = sinon.stub(client, 'baseRequest', () => {});
       let expectedRequestOpions = {
         method: 'GET',
-        path: '/api/content/newslists/1234?memberId=9876',
+        path: '/api/contests?memberId=memberIdFromOptions',
       };
 
-      getNews.call(client, { newsListId: 1234 }, () => {});
+      getContests.call(client, options, () => {});
 
       expect(baseRequestStub.calledWith(expectedRequestOpions)).to.be.true;
 
@@ -107,14 +113,14 @@ describe('news.js', () => {
 
       let client = new Client();
       client.memberId = 'memberIdFromClient';
-      let options = { memberId: 'memberIdFromOptions', newsListId: 1234 };
+      let options = { memberId: 'memberIdFromOptions' };
       let baseRequestStub = sinon.stub(client, 'baseRequest', () => {});
       let expectedRequestOpions = {
         method: 'GET',
-        path: '/api/content/newslists/1234?memberId=memberIdFromOptions',
+        path: '/api/contests?memberId=memberIdFromOptions',
       };
 
-      getNews.call(client, options, () => {});
+      getContests.call(client, options, () => {});
 
       expect(baseRequestStub.calledWith(expectedRequestOpions)).to.be.true;
 

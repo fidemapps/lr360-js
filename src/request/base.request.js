@@ -1,6 +1,6 @@
 import Helper from '../helper/helper';
 var superagent = require('superagent');
-import RequestError from './request.error';
+import RequestError from '../client.methods/request.error.js';
 let assign = require('lodash.assign');
 let merge = require('lodash.merge');
 

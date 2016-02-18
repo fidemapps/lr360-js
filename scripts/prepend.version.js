@@ -3,7 +3,7 @@
 let prependFile = require('prepend-file');
 let filename = './dist/lr360.js';
 let version = require('../package.json').version;
-let build = process.env.BUILD_NUMBER || '';  // process.argv[2] || '';
+let build = process.env.BUILD_NUMBER || 'master';
 
 let data = `/* version ${version}-${build} */`;
 

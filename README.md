@@ -55,7 +55,7 @@ Track an action. The following options are supported:
 
 * `[data:object]` any additional information you would like to save with the action 
 
-### lr360('getMemberProfile', \[options\], callback);
+### lr360('getMemberProfile', \[options:object\], callback);
 
 Load a member profile. The following options is supported:
 
@@ -64,7 +64,7 @@ Load a member profile. The following options is supported:
 If options object is not provided, the profile loaded will belong to the current session's member. 
 If no options object is provided and `lr360('identifyMember', options, callback);` has not been previously called, an error will be returned.
 
-### lr360('getDeviceProfile', \[options\], callback);
+### lr360('getDeviceProfile', \[options:object\], callback);
 
 Load a device profile. The following option is supported:
 
@@ -72,7 +72,7 @@ Load a device profile. The following option is supported:
 
 If options object is not provided, the profile loaded will belong to the current session's device.
 
-### lr360('getMemberChallenges', \[options\], callback);
+### lr360('getMemberChallenges', \[options:object\], callback);
 
 Load member's challenges. The following option is supported:
 
@@ -81,7 +81,7 @@ Load member's challenges. The following option is supported:
 If options object is not provided, the challenges loaded will belong to the current session's member. 
 If no options object is provided and `lr360('identifyMember', options, callback);` has not been previously called, an error will be returned.
 
-### lr360('getMemberChallengesDone', \[options\], callback);
+### lr360('getMemberChallengesDone', \[options:object\], callback);
 
 Load member's done challenges. The following option is supported:
 
@@ -99,7 +99,7 @@ Load member's challenges to do. The following option is supported:
 If options object is not provided, the challenges loaded will belong to the current session's member. 
 If no options object is provided and `lr360('identifyMember', options, callback);` has not been previously called, an error will be returned.
 
-### lr360('getMenus', \[options\], callback);
+### lr360('getMenus', \[options:object\], callback);
 
 Load all menus available to member. The following option is supported:
 
@@ -107,7 +107,7 @@ Load all menus available to member. The following option is supported:
 
 If no options object is provided and `lr360('identifyMember', options, callback);` has not been previously called, only public menus will be loaded.
 
-### lr360('getPages', options, callback);
+### lr360('getPages', options:object, callback);
 
 Load page contents available to member. The following options are supported:
 
@@ -116,7 +116,7 @@ Load page contents available to member. The following options are supported:
 
 If no memberId in options object is provided and `lr360('identifyMember', options, callback);` has not been previously called, only public pages will be loaded.
 
-### lr360('getNews', options, callback);
+### lr360('getNews', options:object, callback);
 
 Load news available to member. The following options are supported:
 
@@ -125,7 +125,7 @@ Load news available to member. The following options are supported:
 
 If no memberId in options object is provided and `lr360('identifyMember', options, callback);` has not been previously called, only public news will be loaded.
 
-### lr360('getContests', \[options\], callback);
+### lr360('getContests', \[options:object\], callback);
 
 Load all contests available to member. The following option is supported:
 

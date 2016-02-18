@@ -133,7 +133,7 @@ Load all contests available to member. The following option is supported:
 
 If no memberId in options object is provided and `lr360('identifyMember', options, callback);` has not been previously called, only public contests will be loaded.
 
-# Advanced uses
+# Advanced usage
 
 Http methods are exposed directly on the lr360 object to make direct calls to known endpoints.
 
@@ -144,3 +144,11 @@ Http methods are exposed directly on the lr360 object to make direct calls to kn
 ### lr360.put(endpoint:string, body:object, callback);
 
 ### lr360.delete(endpoint:string, callback);
+
+# Integration tests
+
+* Modify your computer's host file and add: `127.0.0.1       test.lr360`
+* Add the domain `test.lr360:3333` to the account to be tested.
+* Run the command `npm run test-integration`
+* Open browser and point to `http://test.lr360:3333/tests/integration.html`
+

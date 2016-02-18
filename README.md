@@ -133,3 +133,14 @@ Load all contests available to member. The following option is supported:
 
 If no memberId in options object is provided and `lr360('identifyMember', options, callback);` has not been previously called, only public contests will be loaded.
 
+# Advanced uses
+
+Http methods are exposed directly on the lr360 object to make direct calls to known endpoints.
+
+### lr360.get(endpoint:string, callback);
+
+### lr360.post(endpoint:string, body:object, callback);
+
+### lr360.put(endpoint:string, body:object, callback);
+
+### lr360.delete(endpoint:string, callback);

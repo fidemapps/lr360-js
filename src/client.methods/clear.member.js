@@ -16,7 +16,6 @@ export default function () {
   return this.baseRequest({
     method: METHOD,
     path: `${PATH}`,
-    body: {},
   }, interceptor);
 
 }

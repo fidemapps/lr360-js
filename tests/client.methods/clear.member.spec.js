@@ -15,7 +15,6 @@ describe('clear.member.js', () => {
       let expectedRequestOpions = {
         method: 'DELETE',
         path: '/api/gamification/actions/identify-member',
-        body: {},
       };
       let callback = () => {};
 

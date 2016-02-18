@@ -68,7 +68,6 @@ describe('base.request.js', () => {
         expect(superagentGetStub.calledWith(expectedURL)).to.be.true;
         expect(setSpy.withArgs('X-Fidem-AccessApiKey', 'ACCESS-KEY').calledOnce).to.be.true;
         expect(setSpy.withArgs('Accept', 'application/json').calledOnce).to.be.true;
-        expect(setSpy.withArgs('Content-Type', 'application/json').calledOnce).to.be.true;
         expect(withCredentialsSpy.calledOnce).to.be.true;
         expect(sendSpy.withArgs(null).calledOnce).to.be.true;
 

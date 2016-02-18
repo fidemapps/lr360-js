@@ -19,10 +19,15 @@ export function baseRequest(options, callback) {
     let method = options.method.toLowerCase();
     let url = formatUrl(assign({}, options, this.config));
 
-    superagent[method](url)
+    let request = superagent[method](url)
       .set('X-Fidem-AccessApiKey', this.config.key || null)
-      .set('Accept', 'application/json')
-      .set('Content-Type', 'application/json')
+      .set('Accept', 'application/json');
+
+    if (['post', 'put'].indexOf(method) !== -1) {
+      request.set('Content-Type', 'application/json');
+    }
+
+    request
       .withCredentials()
       .send((options && options.body && JSON.stringify(options.body)) || null)
       .end((err, res) => {

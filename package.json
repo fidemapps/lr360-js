@@ -8,15 +8,15 @@
     "rouge",
     "lr360"
   ],
-  "author": "Luis Doebbel <ldoebbel@lunerouge360.com>",
+  "author": "Lune Rouge 360 <info@lunerouge360.com>",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git@github.com:fidemapps/lr360-js.git"
+    "url": "git@github.com:lr360/lr360-js.git"
   },
   "bugs": {
-    "email": "ldoebbel@lunerouge360.com",
-    "url": "https://github.com/fidemapps/lr360-js/issues"
+    "email": "support@lunerouge360.com",
+    "url": "https://github.com/lr360/lr360-js/issues"
   },
   "engines": {
     "node": "4.2.3",

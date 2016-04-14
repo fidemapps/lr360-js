@@ -28,6 +28,7 @@ describe('setup.js', () => {
       hostname: 'services.fidemapps.com',
       port: 80,
       protocol: 'http',
+      geolocation: true,
       dev: false,
     };
 
@@ -36,6 +37,7 @@ describe('setup.js', () => {
       port: 81,
       protocol: 'https',
       key: 'ACCESS-KEY',
+      geolocation: false,
       dev: true,
     };
 
@@ -48,6 +50,7 @@ describe('setup.js', () => {
       port: 81,
       protocol: 'https',
       key: 'ACCESS-KEY',
+      geolocation: false,
       dev: true,
     });
 

@@ -240,10 +240,12 @@ describe('base.request.js', () => {
       let options = {
         method: 'POST',
         path: '/api/gamification/actions',
+        geolocation: true,
       };
       let expectedOptions = {
         method: 'POST',
         path: '/api/gamification/actions',
+        geolocation: true,
         body: {
           coordinates: null,
         },
@@ -264,10 +266,12 @@ describe('base.request.js', () => {
       let options = {
         method: 'POST',
         path: '/api/gamification/actions',
+        geolocation: true,
       };
       let expectedOptions = {
         method: 'POST',
         path: '/api/gamification/actions',
+        geolocation: true,
         body: {
           coordinates: null,
         },
@@ -292,13 +296,42 @@ describe('base.request.js', () => {
       let options = {
         method: 'POST',
         path: '/api/gamification/actions',
+        geolocation: true,
       };
       let expectedOptions = {
         method: 'POST',
         path: '/api/gamification/actions',
+        geolocation: true,
         body: {
           coordinates: null,
         },
+      };
+
+      addGeolocation(options, augmentedOptions => {
+
+        expect(augmentedOptions).to.eql(expectedOptions);
+        done();
+
+      });
+
+    });
+
+    it('should return options with coordinates null when geolocation option given is false', done => {
+
+      window.navigator = {
+        geolocation: {
+          getCurrentPosition: (success, error) => success({coords: {latitude: 1234, longitude: 9876}}),
+        },
+      };
+      let options = {
+        method: 'POST',
+        path: '/api/gamification/actions',
+        geolocation: false
+      };
+      let expectedOptions = {
+        method: 'POST',
+        path: '/api/gamification/actions',
+        geolocation: false,
       };
 
       addGeolocation(options, augmentedOptions => {
@@ -320,10 +353,12 @@ describe('base.request.js', () => {
       let options = {
         method: 'POST',
         path: '/api/gamification/actions',
+        geolocation: true,
       };
       let expectedOptions = {
         method: 'POST',
         path: '/api/gamification/actions',
+        geolocation: true,
         body: {
           coordinates: { lat: 1234, long: 9876 },
         },

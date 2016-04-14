@@ -9,6 +9,7 @@ const ERROR_MESSAGE = 'You must provide a key and a path.';
 export function baseRequest(options, callback) {
 
   options = options || {};
+  options = assign({}, {geolocation: this.config.geolocation}, options);
 
   if (!Helper.hasRequiredProperties('key', this.config) || !Helper.hasRequiredProperties('path', options)) {
     return this.handleError(ERROR_MESSAGE, callback);
@@ -72,7 +73,7 @@ export function addGeolocation(options, callback) {
 
   // don't change anything if request method is not POST or PUT
   // or if request path if not for trackAction (/api/gamification/actions)
-  if (!options.method || ['put', 'post'].indexOf(options.method.toLowerCase()) === -1 || options.path !== '/api/gamification/actions') {
+  if (geolocationNotApplicable(options)) {
 
     return callback(options);
 
@@ -84,6 +85,11 @@ export function addGeolocation(options, callback) {
     window.navigator.geolocation.getCurrentPosition(success, error);
   }
 
+}
+
+function geolocationNotApplicable(options) {
+  return !options.method || ['put', 'post'].indexOf(options.method.toLowerCase()) === -1 ||
+    options.path !== '/api/gamification/actions' || !options.geolocation;
 }
 
 function formatUrl(url) {

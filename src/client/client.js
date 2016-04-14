@@ -11,6 +11,7 @@ export default class Client {
       hostname: HOSTNAME,
       port: 80,
       protocol: 'http',
+      geolocation: true,
       dev: false,
     };
 

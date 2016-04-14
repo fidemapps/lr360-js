@@ -12,6 +12,7 @@ describe('client.js', () => {
         hostname: 'services.fidemapps.com',
         port: 80,
         protocol: 'http',
+        geolocation: true,
         dev: false,
       };
 

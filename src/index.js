@@ -1,6 +1,5 @@
 import Client from './client/client';
 import { httpMethods } from './http.methods/index';
-let assign = require('lodash.assign');
 
 export let client = new Client();
 

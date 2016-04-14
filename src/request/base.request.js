@@ -9,7 +9,7 @@ const ERROR_MESSAGE = 'You must provide a key and a path.';
 export function baseRequest(options, callback) {
 
   options = options || {};
-  options = assign({}, {geolocation: this.config.geolocation}, options);
+  options = assign({}, { geolocation: this.config.geolocation }, options);
 
   if (!Helper.hasRequiredProperties('key', this.config) || !Helper.hasRequiredProperties('path', options)) {
     return this.handleError(ERROR_MESSAGE, callback);

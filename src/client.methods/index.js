@@ -11,6 +11,8 @@ import getMenus from './menus';
 import getPages from './pages';
 import getNews from './news';
 import getContests from './contests';
+import getMemberTags from './member.tags';
+import getDeviceTags from './device.tags';
 import { baseRequest } from '../request/base.request.js';
 
 export const clientMethods = {
@@ -28,4 +30,6 @@ export const clientMethods = {
   getPages: getPages,
   getNews: getNews,
   getContests: getContests,
+  getMemberTags: getMemberTags,
+  getDeviceTags: getDeviceTags,
 };

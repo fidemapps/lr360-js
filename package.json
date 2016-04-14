@@ -27,7 +27,7 @@
     "test": "jscs src/**/*.js && jscs tests/**/*.js && NODE_ENV=test karma start",
     "test-coverage": "NODE_ENV=test karma start --coverage",
     "test-integration": "http-server ./ -p 3333",
-    "build": "browserify -t babelify src/index.js | uglifyjs -cm > dist/lr360.js",
+    "build": "browserify src/index.js -t [ babelify ] --outfile dist/lr360.js && uglifyjs dist/lr360.js --compress --source-map dist/lr360.map.js --output dist/lr360.js",
     "postbuild": "node ./scripts/prepend.version.js",
     "watch": "watchify -t babelify src/index.js -o 'uglifyjs -cm > dist/lr360.js'"
   },

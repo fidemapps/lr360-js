@@ -1,5 +1,5 @@
 let assign = require('lodash.assign');
-import { clientMethods } from '../client.methods/index';
+import {clientMethods} from '../client.methods/index';
 
 const HOSTNAME = 'api.fidem360.com';
 
@@ -9,8 +9,8 @@ export default class Client {
 
     this.config = {
       hostname: HOSTNAME,
-      port: 80,
-      protocol: 'http',
+      port: 443,
+      protocol: 'https',
       geolocation: true,
       dev: false,
     };

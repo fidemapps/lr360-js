@@ -139,7 +139,7 @@
             <test-directive
                     run-test="identifyMember.test3()"
                     expectation="identifyMember.expect3"
-                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360('identifyMember', { externalId: '96874113' }, callback);">
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360('identifyMember', { externalId: 'MBR-200412322' }, callback);">
             </test-directive>
 
         </div>
@@ -557,6 +557,7 @@
                         lr360.client.config.dev = true;
                         lr360.client.config.hostname = 'localhost';
                         lr360.client.config.port = 3001;
+                        lr360.client.config.protocol = 'http';
                         vm.initialConfig = _.assign({}, lr360.client.config);
                     }, 500);
 
@@ -590,6 +591,7 @@
                             "port": 3001,
                             "protocol": "http",
                             "dev": true,
+                            "geolocation": true,
                             "key": "MOMO-ACCESSKEY"
                         });
 
@@ -769,13 +771,13 @@
                         lr360('setup', { key: 'MOMO-ACCESSKEY' });
                         lr360.client.memberId = null;
 
-                        lr360('identifyMember', { externalId: '59835015' }, function(error, response) {
+                        lr360('identifyMember', { externalId: 'MBR-200412322' }, function(error, response) {
                             $scope.$apply(function() {
                                 vm.expect3 = false;
                                 expect(error).to.not.exist;
                                 expect(response.body.status).to.equal('success');
-                                expect(response.body.data).to.eql({ id: '4JAruTLueKl' });
-                                expect(lr360.client.memberId).to.equal('4JAruTLueKl');
+                                expect(response.body.data).to.eql({ id: 'montmorency-francyne' });
+                                expect(lr360.client.memberId).to.equal('montmorency-francyne');
                                 vm.expect3 = true;
                             });
                         });

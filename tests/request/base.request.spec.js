@@ -1,7 +1,7 @@
 let expect = require('chai').expect;
 import sinon from 'sinon';
 let superagent = require('superagent');
-import { baseRequest, addGeolocation } from '../../src/request/base.request.js';
+import {baseRequest, addGeolocation} from '../../src/request/base.request.js';
 import Client from '../../src/client/client';
 
 describe('base.request.js', () => {
@@ -27,8 +27,8 @@ describe('base.request.js', () => {
       delete window.navigator;
       window.navigator = {
         geolocation: {
-          getCurrentPosition: (success, error) => success({ coords: { latitude: 1234, longitude: 9876 } }),
-        },
+          getCurrentPosition: (success, error) => success({ coords: { latitude: 1234, longitude: 9876 } })
+        }
       };
 
       setSpy = sinon.spy(superagentRequest, 'set');
@@ -56,9 +56,9 @@ describe('base.request.js', () => {
 
       let options = {
         method: 'GET',
-        path: '/custom/path',
+        path: '/custom/path'
       };
-      let expectedURL = 'http://services.fidemapps.com:80/custom/path';
+      let expectedURL = 'https://api.fidem360.com:443/custom/path';
 
       let client = new Client();
       client.setup({ key: 'ACCESS-KEY' });
@@ -80,8 +80,10 @@ describe('base.request.js', () => {
     it('should call handleError when key is not found on client', done => {
 
       let client = new Client();
-      let callback = () => {}; // jscs:disable
-      let handleErrorStub = sinon.stub(client, 'handleError', () => {});
+      let callback = () => {
+      }; // jscs:disable
+      let handleErrorStub = sinon.stub(client, 'handleError', () => {
+      });
 
       baseRequest.call(client, {}, callback);
 
@@ -94,9 +96,11 @@ describe('base.request.js', () => {
     it('should call handleError when path is not found on options', done => {
 
       let client = new Client();
-      let handleErrorStub = sinon.stub(client, 'handleError', () => {});
+      let handleErrorStub = sinon.stub(client, 'handleError', () => {
+      });
       client.setup({ key: 'ACCESS-KEY' });
-      let callback = () => {}; // jscs:disable
+      let callback = () => {
+      }; // jscs:disable
 
       baseRequest.call(client, {}, callback);
 
@@ -113,10 +117,11 @@ describe('base.request.js', () => {
 
       let options = {
         method: 'GET',
-        path: '/custom/path',
+        path: '/custom/path'
       };
 
-      let handleErrorStub = sinon.stub(client, 'handleError', () => {}); // jscs:disable
+      let handleErrorStub = sinon.stub(client, 'handleError', () => {
+      }); // jscs:disable
       let requestError = new Error('Error from request call');
 
       // overwrite superagent.end() behavior to call back with error
@@ -137,12 +142,12 @@ describe('base.request.js', () => {
 
       let options = {
         method: 'GET',
-        path: '/custom/path',
+        path: '/custom/path'
       };
 
       let response = {
         statusCode: 299,
-        body: JSON.stringify({ error: 'message' }),
+        body: JSON.stringify({ error: 'message' })
       };
 
       // overwrite superagent.end() behavior to call back with response with error code
@@ -171,9 +176,9 @@ describe('base.request.js', () => {
         let requestError = new Error('Error from request call');
         let options = {
           method: 'GET',
-          path: '/custom/path',
+          path: '/custom/path'
         };
-        let expectedURL = `http://services.fidemapps.com:80${options.path}`;
+        let expectedURL = `https://api.fidem360.com:443${options.path}`;
 
         superagentRequest.end = callback => callback(requestError);
 
@@ -195,13 +200,13 @@ describe('base.request.js', () => {
 
         let response = {
           statusCode: 299,
-          body: { error: 'message' },
+          body: { error: 'message' }
         };
         let options = {
           method: 'GET',
-          path: '/custom/path',
+          path: '/custom/path'
         };
-        let expectedURL = `http://services.fidemapps.com:80${options.path}`;
+        let expectedURL = `https://api.fidem360.com:443${options.path}`;
 
         superagentRequest.end = callback => callback(null, response);
 
@@ -240,15 +245,15 @@ describe('base.request.js', () => {
       let options = {
         method: 'POST',
         path: '/api/gamification/actions',
-        geolocation: true,
+        geolocation: true
       };
       let expectedOptions = {
         method: 'POST',
         path: '/api/gamification/actions',
         geolocation: true,
         body: {
-          coordinates: null,
-        },
+          coordinates: null
+        }
       };
 
       addGeolocation(options, augmentedOptions => {
@@ -266,15 +271,15 @@ describe('base.request.js', () => {
       let options = {
         method: 'POST',
         path: '/api/gamification/actions',
-        geolocation: true,
+        geolocation: true
       };
       let expectedOptions = {
         method: 'POST',
         path: '/api/gamification/actions',
         geolocation: true,
         body: {
-          coordinates: null,
-        },
+          coordinates: null
+        }
       };
 
       addGeolocation(options, augmentedOptions => {
@@ -290,21 +295,21 @@ describe('base.request.js', () => {
 
       window.navigator = {
         geolocation: {
-          getCurrentPosition: (success, error) => error(),
-        },
+          getCurrentPosition: (success, error) => error()
+        }
       };
       let options = {
         method: 'POST',
         path: '/api/gamification/actions',
-        geolocation: true,
+        geolocation: true
       };
       let expectedOptions = {
         method: 'POST',
         path: '/api/gamification/actions',
         geolocation: true,
         body: {
-          coordinates: null,
-        },
+          coordinates: null
+        }
       };
 
       addGeolocation(options, augmentedOptions => {
@@ -320,8 +325,8 @@ describe('base.request.js', () => {
 
       window.navigator = {
         geolocation: {
-          getCurrentPosition: (success, error) => success({coords: {latitude: 1234, longitude: 9876}}),
-        },
+          getCurrentPosition: (success, error) => success({ coords: { latitude: 1234, longitude: 9876 } })
+        }
       };
       let options = {
         method: 'POST',
@@ -331,7 +336,7 @@ describe('base.request.js', () => {
       let expectedOptions = {
         method: 'POST',
         path: '/api/gamification/actions',
-        geolocation: false,
+        geolocation: false
       };
 
       addGeolocation(options, augmentedOptions => {
@@ -347,21 +352,21 @@ describe('base.request.js', () => {
 
       window.navigator = {
         geolocation: {
-          getCurrentPosition: (success, error) => success({ coords: { latitude: 1234, longitude: 9876 } }),
-        },
+          getCurrentPosition: (success, error) => success({ coords: { latitude: 1234, longitude: 9876 } })
+        }
       };
       let options = {
         method: 'POST',
         path: '/api/gamification/actions',
-        geolocation: true,
+        geolocation: true
       };
       let expectedOptions = {
         method: 'POST',
         path: '/api/gamification/actions',
         geolocation: true,
         body: {
-          coordinates: { lat: 1234, long: 9876 },
-        },
+          coordinates: { lat: 1234, long: 9876 }
+        }
       };
 
       addGeolocation(options, augmentedOptions => {

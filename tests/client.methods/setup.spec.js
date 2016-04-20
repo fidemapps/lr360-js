@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import {expect} from 'chai';
 import Client from '../../src/client/client';
 import setup from '../../src/client.methods/setup';
 
@@ -25,9 +25,9 @@ describe('setup.js', () => {
   it('should overwrite config settings for the client with given parameter', done => {
 
     let expectedDefaultConfig = {
-      hostname: 'services.fidemapps.com',
-      port: 80,
-      protocol: 'http',
+      hostname: 'api.fidem360.com',
+      port: 443,
+      protocol: 'https',
       geolocation: true,
       dev: false,
     };
@@ -51,7 +51,7 @@ describe('setup.js', () => {
       protocol: 'https',
       key: 'ACCESS-KEY',
       geolocation: false,
-      dev: true,
+      dev: true
     });
 
     expect(client.config).to.eql(expectedFinalConfig);

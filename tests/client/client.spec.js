@@ -9,11 +9,11 @@ describe('client.js', () => {
     it('should check that a new Client has the correct config set up', done => {
 
       let expectedConfig = {
-        hostname: 'services.fidemapps.com',
-        port: 80,
-        protocol: 'http',
+        hostname: 'api.fidem360.com',
+        port: 443,
+        protocol: 'https',
         geolocation: true,
-        dev: false,
+        dev: false
       };
 
       let client = new Client();
@@ -31,7 +31,8 @@ describe('client.js', () => {
     let logErrorStub;
 
     beforeEach(done => {
-      logErrorStub = sinon.stub(console, 'error', () => {});
+      logErrorStub = sinon.stub(console, 'error', () => {
+      });
       done();
     });
 

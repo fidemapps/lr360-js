@@ -29,6 +29,8 @@ Client configuration. It should be the first command called after script is load
 * `protocol:http|https` ( **default: 'https'** ) The protocol to access the API
 * `port:number` ( **default: 443** ) The port number to access the API
 
+For testing, you can use the host **'demo-api.fidem360.com'**, if you have a demo account created.
+
 ### lr360('identifyMember', options:object, [callback]);
 
 Member lookup. If found, binds the current session to that member (useful to action tracking). One of the following 3 options **must be provided**:

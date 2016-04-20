@@ -10,7 +10,7 @@ Include the following script snippet in your website:
     !function(e,n,t,r,s){e[s]=e[s]||function(){(e[s].queue=e[s].queue||[]).push(arguments)},e[s].l=1*new Date;var u=n.createElement(t),a=n.getElementsByTagName(t)[0];u.async=1,u.src=r,a.parentNode.insertBefore(u,a)}(window,document,"script","//cdn.lr360.io/api/lr360.js","lr360");
 
     lr360('setup', {key: 'XXXXX'}); // API access key
-    lr360('identifyMember', {email: 'XXXXX'}); // email, memberId or externalId
+    lr360('identifyMember', {email: 'XXXXX'}); // email, memberId or externalId, if a member is currently active
 </script>
 ```
 
@@ -25,6 +25,9 @@ Client configuration. It should be the first command called after script is load
 
 * `key:string` ( **mandatory** ) your API access key
 * `dev:true|false` working environment. If true the library will throw errors, if false it will log them in the console
+* `host:string` ( **default: 'api.fidem360.com'** ) The host name to access the API
+* `protocol:http|https` ( **default: 'https'** ) The protocol to access the API
+* `port:number` ( **default: 443** ) The port number to access the API
 
 ### lr360('identifyMember', options:object, [callback]);
 

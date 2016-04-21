@@ -226,13 +226,13 @@
             <test-directive
                     run-test="getDeviceProfile.test2()"
                     expectation="getDeviceProfile.expect2"
-                    test-description="lr360('setup', { key: 'CIRQUE-ACCESSKEY' });<br>lr360('getDeviceProfile', { deviceId: 'EJ3tF2_te' }, callback);">
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360('getDeviceProfile', { deviceId: 'montmorency-device-1' }, callback);">
             </test-directive>
 
             <test-directive
                     run-test="getDeviceProfile.test3()"
                     expectation="getDeviceProfile.expect3"
-                    test-description="lr360('setup', { key: 'CIRQUE-ACCESSKEY' });<br>lr360('getDeviceProfile', { deviceId: 'EJ3tF2_te' });"
+                    test-description="lr360('setup', { key: 'CIRQUE-ACCESSKEY' });<br>lr360('getDeviceProfile', { deviceId: 'montmorency-device-1' });"
                     error-description="You must provide a callback.">
             </test-directive>
 
@@ -839,6 +839,7 @@
                         vm.test2();
                         vm.test3();
                         vm.test4();
+                        vm.test6();
                     });
 
                     return vm;
@@ -946,9 +947,9 @@
 
                     vm.test2 = function() {
                         vm.expect2 = null;
-                        lr360('setup', { key: 'CIRQUE-ACCESSKEY' });
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
 
-                        lr360('getDeviceProfile', { deviceId: '41DR5hdFl' }, function(error, response) {
+                        lr360('getDeviceProfile', { deviceId: 'montmorency-device-1' }, function(error, response) {
                             $scope.$apply(function() {
                                 vm.expect2 = false;
                                 expect(error).to.not.exist;
@@ -960,11 +961,11 @@
                     };
 
                     vm.test3 = function() {
-                        lr360('setup', { key: 'CIRQUE-ACCESSKEY' });
+                        lr360('setup', { key: 'MOMO-ACCESSKEY' });
 
                         try{
                             vm.expect3 = false;
-                            lr360('getDeviceProfile', { deviceId: '41DR5hdFl' });
+                            lr360('getDeviceProfile', { deviceId: 'montmorency-device-1' });
                         } catch (error) {
                             expect(error).to.exist;
                             expect(error.message).to.equal('You must provide a callback.');

@@ -24,8 +24,9 @@ Callbacks follow node convention `callback(error, response) { ... }`
 Client configuration. It should be the first command called after script is loaded. The following options are supported:
 
 * `key:string` ( **mandatory** ) your API access key
-* `dev:true|false` working environment. If true the library will throw errors, if false it will log them in the console
-* `host:string` ( **default: 'api.fidem360.com'** ) The host name to access the API
+* `dev:true|false` ( **default: false** ) Working environment. If true the library will throw errors, if false it will log them in the console
+* `geolocation:true|false` ( **default: true** ) The host name to access the API
+* `hostname:string` ( **default: 'api.fidem360.com'** ) The host name to access the API
 * `protocol:http|https` ( **default: 'https'** ) The protocol to access the API
 * `port:number` ( **default: 443** ) The port number to access the API
 

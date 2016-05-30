@@ -556,7 +556,7 @@
                     $timeout(function() {
                         lr360.client.config.dev = true;
                         lr360.client.config.hostname = 'localhost';
-                        lr360.client.config.port = 3001;
+                        lr360.client.config.port = 9000;
                         lr360.client.config.protocol = 'http';
                         vm.initialConfig = _.assign({}, lr360.client.config);
                     }, 500);
@@ -588,7 +588,7 @@
 
                         expect(lr360.client.config).to.eql({
                             "hostname": "localhost",
-                            "port": 3001,
+                            "port": 9000,
                             "protocol": "http",
                             "dev": true,
                             "geolocation": true,

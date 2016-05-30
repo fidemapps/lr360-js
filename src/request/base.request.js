@@ -21,7 +21,7 @@ export function baseRequest(options, callback) {
     let url = formatUrl(assign({}, options, this.config));
 
     let request = superagent[method](url)
-      .set('X-Fidem-AccessApiKey', this.config.key || null)
+      .set('Authorization', 'LR360-ACCESS-KEY Access-Key=' + (this.config.key || null))
       .set('Accept', 'application/json');
 
     if (['post', 'put'].indexOf(method) !== -1) {

@@ -66,7 +66,7 @@ describe('base.request.js', () => {
       baseRequest.call(client, options, () => {
 
         expect(superagentGetStub.calledWith(expectedURL)).to.be.true;
-        expect(setSpy.withArgs('X-Fidem-AccessApiKey', 'ACCESS-KEY').calledOnce).to.be.true;
+        expect(setSpy.withArgs('Authorization', 'LR360-ACCESS-KEY Access-Key=ACCESS-KEY').calledOnce).to.be.true;
         expect(setSpy.withArgs('Accept', 'application/json').calledOnce).to.be.true;
         expect(withCredentialsSpy.calledOnce).to.be.true;
         expect(sendSpy.withArgs(null).calledOnce).to.be.true;

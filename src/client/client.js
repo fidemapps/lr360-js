@@ -1,7 +1,9 @@
+'use strict';
+
 let assign = require('lodash.assign');
 import {clientMethods} from '../client.methods/index';
 
-const HOSTNAME = 'api.fidem360.com';
+const HOSTNAME = 'api.lr360.io';
 
 export default class Client {
 

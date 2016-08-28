@@ -58,7 +58,7 @@ describe('base.request.js', () => {
         method: 'GET',
         path: '/custom/path'
       };
-      let expectedURL = 'https://api.fidem360.com:443/custom/path';
+      let expectedURL = 'https://api.lr360.io:443/custom/path';
 
       let client = new Client();
       client.setup({ key: 'ACCESS-KEY' });
@@ -178,7 +178,7 @@ describe('base.request.js', () => {
           method: 'GET',
           path: '/custom/path'
         };
-        let expectedURL = `https://api.fidem360.com:443${options.path}`;
+        let expectedURL = `https://api.lr360.io:443${options.path}`;
 
         superagentRequest.end = callback => callback(requestError);
 
@@ -206,7 +206,7 @@ describe('base.request.js', () => {
           method: 'GET',
           path: '/custom/path'
         };
-        let expectedURL = `https://api.fidem360.com:443${options.path}`;
+        let expectedURL = `https://api.lr360.io:443${options.path}`;
 
         superagentRequest.end = callback => callback(null, response);
 

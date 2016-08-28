@@ -1,3 +1,5 @@
+'use strict';
+
 const METHOD = 'PUT';
 const ERROR_MESSAGE_ENDPOINT = 'You must provide a endpoint.';
 const ERROR_MESSAGE_BODY = 'You must provide a request body.';

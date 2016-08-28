@@ -1,3 +1,5 @@
+'use strict';
+
 import Helper from '../helper/helper';
 let assign = require('lodash.assign');
 

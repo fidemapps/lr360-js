@@ -1,3 +1,5 @@
+'use strict';
+
 import Client from '../../src/client/client';
 import { expect } from 'chai';
 import request from 'browser-request';

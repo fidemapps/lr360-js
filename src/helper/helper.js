@@ -1,4 +1,4 @@
-let assign = require('lodash.assign');
+'use strict';
 
 export default class Helper {
 

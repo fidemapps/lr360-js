@@ -1,7 +1,7 @@
 {
   "name": "lr360-js",
   "version": "0.1.0",
-  "description": "Node module to access Lune Rouge 360 API.",
+  "description": "Node and web module to access Lune Rouge 360 API.",
   "keywords": [
     "lune rouge 360",
     "lune",
@@ -24,12 +24,13 @@
   },
   "scripts": {
     "preinstall": "npm set progress=false",
-    "test": "jscs src/**/*.js && jscs tests/**/*.js && NODE_ENV=test karma start",
-    "test-coverage": "NODE_ENV=test karma start --coverage",
+    "test": "jscs src/**/*.js && jscs tests/**/*.js && env NODE_ENV=test karma start",
+    "test-windows": "env NODE_ENV=test karma start",
+    "test-coverage": "env NODE_ENV=test karma start --coverage",
     "test-integration": "http-server ./ -p 3333",
-    "build": "browserify src/index.js -t [ babelify ] --outfile dist/lr360.js && uglifyjs dist/lr360.js --compress --source-map dist/lr360.map.js --output dist/lr360.js",
+    "build": "browserify src/index.js -t [ babelify ] --outfile dist/lr360.js && uglifyjs dist/lr360.js --compress --source-map dist/lr360.map.js --output dist/lr360-min.js",
     "postbuild": "node ./scripts/prepend.version.js",
-    "watch": "watchify -t babelify src/index.js -o 'uglifyjs -cm > dist/lr360.js'"
+    "watch": "watchify -t babelify src/index.js -o 'uglifyjs -cm > dist/lr360-min.js'"
   },
   "licence": "MIT",
   "dependencies": {

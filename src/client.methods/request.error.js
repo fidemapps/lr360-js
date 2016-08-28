@@ -1,3 +1,5 @@
+'use strict';
+
 export default class RequestError extends Error {
 
     constructor(body, statusCode) {

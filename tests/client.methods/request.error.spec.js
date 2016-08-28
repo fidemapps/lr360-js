@@ -1,3 +1,5 @@
+'use strict';
+
 let expect = require('chai').expect;
 import RequestError from '../../src/client.methods/request.error.js';
 

@@ -1,3 +1,5 @@
+'use strict';
+
 import Helper from '../helper/helper';
 
 const METHOD = 'GET';

@@ -1,3 +1,5 @@
+'use strict';
+
 import trackAction from './track.action.js';
 import setup from './setup';
 import identifyMember from './identify.member.js';

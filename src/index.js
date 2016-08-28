@@ -1,3 +1,5 @@
+'use strict';
+
 import Client from './client/client';
 import { httpMethods } from './http.methods/index';
 

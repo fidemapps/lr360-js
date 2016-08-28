@@ -25,7 +25,7 @@ Client configuration. It should be the first command called after script is load
 
 * `key:string` ( **mandatory** ) your API access key
 * `dev:true|false` working environment. If true the library will throw errors, if false it will log them in the console
-* `host:string` ( **default: 'api.fidem360.com'** ) The host name to access the API
+* `host:string` ( **default: 'api.lr360.io'** ) The host name to access the API
 * `protocol:http|https` ( **default: 'https'** ) The protocol to access the API
 * `port:number` ( **default: 443** ) The port number to access the API
 

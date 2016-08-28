@@ -1,3 +1,5 @@
+'use strict';
+
 import Helper from '../helper/helper';
 var superagent = require('superagent');
 import RequestError from '../client.methods/request.error.js';

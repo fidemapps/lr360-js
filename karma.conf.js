@@ -38,7 +38,7 @@ module.exports = function (config) {
     files: [
         'src/**/*.js',
         'tests/**/*.js',
-        'dist/lr360.js',
+        'dist/lr360-min.js',
     ],
     preprocessors: {
       'src/**/*.js': ['browserify'],

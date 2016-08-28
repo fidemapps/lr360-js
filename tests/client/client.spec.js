@@ -1,3 +1,5 @@
+'use strict';
+
 let expect = require('chai').expect;
 import sinon from 'sinon';
 import Client from '../../src/client/client';
@@ -9,7 +11,7 @@ describe('client.js', () => {
     it('should check that a new Client has the correct config set up', done => {
 
       let expectedConfig = {
-        hostname: 'api.fidem360.com',
+        hostname: 'api.lr360.io',
         port: 443,
         protocol: 'https',
         geolocation: true,

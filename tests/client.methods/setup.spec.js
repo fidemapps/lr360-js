@@ -1,3 +1,5 @@
+'use strict';
+
 import {expect} from 'chai';
 import Client from '../../src/client/client';
 import setup from '../../src/client.methods/setup';
@@ -25,7 +27,7 @@ describe('setup.js', () => {
   it('should overwrite config settings for the client with given parameter', done => {
 
     let expectedDefaultConfig = {
-      hostname: 'api.fidem360.com',
+      hostname: 'api.lr360.io',
       port: 443,
       protocol: 'https',
       geolocation: true,
@@ -43,6 +45,8 @@ describe('setup.js', () => {
 
     let client = new Client();
 
+    console.log(client.config);
+    console.log(expectedDefaultConfig);
     expect(client.config).to.eql(expectedDefaultConfig);
 
     setup.call(client, {

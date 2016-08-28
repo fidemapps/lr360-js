@@ -1,3 +1,5 @@
+'use strict';
+
 const METHOD = 'GET';
 const ERROR_MESSAGE_ENDPOINT = 'You must provide a endpoint.';
 const ERROR_MESSAGE_CALLBACK = 'You must provide a callback.';

@@ -1,3 +1,5 @@
+'use strict';
+
 import { expect } from 'chai';
 import sinon from 'sinon';
 import Client from '../../src/client/client';

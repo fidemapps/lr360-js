@@ -34,7 +34,7 @@ For testing, you can use the host **'demo-api.fidem360.com'**, if you have a dem
 
 ### lr360('identifyMember', options:object, [callback]);
 
-Member lookup. If found, binds the current session to that member (useful to action tracking). One of the following 3 options **must be provided**:
+Member lookup. If found, binds the current session to that member (useful to action tracking). One of the following 2 options **must be provided**:
 
 * `memberId:string` 
 * `externalId:string` 

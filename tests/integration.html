@@ -88,7 +88,7 @@
             <test-directive
                     run-test="trackAction.test5()"
                     expectation="trackAction.expect5"
-                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360('trackAction', { type: 'test', data: 'additional data' }, callback);">
+                    test-description="lr360('setup', { key: 'MOMO-ACCESSKEY' });<br>lr360('trackAction', { type: 'test', data: 'additional data', tags: ['tag:tag1', 'tag:tag2'] }, callback);">
             </test-directive>
 
         </div>
@@ -644,7 +644,7 @@
                         vm.expect5 = null;
                         lr360('setup', { key: 'MOMO-ACCESSKEY' });
 
-                        lr360('trackAction', { type: 'test', data: 'additional data' }, function(error, response) {
+                        lr360('trackAction', { type: 'test', data: 'additional data', tags: ['tag:tag1', 'tag:tag2'] }, function(error, response) {
                             $scope.$apply(function() {
                                 vm.expect5 = false;
                                 expect(error).to.not.exist;

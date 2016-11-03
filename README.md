@@ -52,13 +52,13 @@ Track an action.
 Track an action. The following options are supported:
 
 * `type:string` ( **mandatory** )the action type  
-* `[data:object]` any additional information you would like to save with the action 
+* `[data:object, tags:array]` any additional information you would like to save with the action 
 
 ### lr360('trackAction', type:string, options:object, \[callback\]);
 
 Track an action. The following options are supported:
 
-* `[data:object]` any additional information you would like to save with the action 
+* `[data:object, tags:array]` any additional information you would like to save with the action 
 
 ### lr360('getMemberProfile', \[options:object\], callback);
 

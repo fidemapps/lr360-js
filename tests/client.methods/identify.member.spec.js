@@ -7,7 +7,7 @@ describe('identify.member.js', () => {
 
   describe('identifyMember()', () => {
 
-    const EXPECTED_ERROR_MESSAGE = 'You must provide either a member ID, an external ID or an email.';
+    const EXPECTED_ERROR_MESSAGE = 'You must provide either a member ID or an external ID.';
 
     it('should call handleError when called with no parameters', done => {
 
@@ -22,7 +22,7 @@ describe('identify.member.js', () => {
 
     });
 
-    it('should call handleError when called with a parameter that has no member ID, external ID or email', done => {
+    it('should call handleError when called with a parameter that has no member ID or external ID', done => {
 
       let client = new Client();
       let options = {};
@@ -44,30 +44,11 @@ describe('identify.member.js', () => {
         method: 'POST',
         path: '/api/gamification/actions/identify-member',
         body: {
-          memberId: 1234,
+          member_id: 1234, // jscs:disable
         },
       };
 
-      identifyMember.call(client, { memberId: 1234 });
-
-      expect(baseRequestStub.calledWith(expectedRequestOptions)).to.be.true;
-      done();
-
-    });
-
-    it('should call baseRequest with given email in body', done => {
-
-      let client = new Client();
-      let baseRequestStub = sinon.stub(client, 'baseRequest', () => {});
-      let expectedRequestOptions = {
-        method: 'POST',
-        path: '/api/gamification/actions/identify-member',
-        body: {
-          email: 'test@test.com',
-        },
-      };
-
-      identifyMember.call(client, { email: 'test@test.com' });
+      identifyMember.call(client, { member_id: 1234 });
 
       expect(baseRequestStub.calledWith(expectedRequestOptions)).to.be.true;
       done();
@@ -83,11 +64,10 @@ describe('identify.member.js', () => {
         path: '/api/gamification/actions/identify-member',
         body: {
           external_id: 'qwerty', // jscs:disable
-          externalId: 'qwerty',
         },
       };
 
-      identifyMember.call(client, { externalId: 'qwerty' });
+      identifyMember.call(client, { external_id: 'qwerty' });
 
       expect(baseRequestStub.calledWith(expectedRequestOptions)).to.be.true;
       done();

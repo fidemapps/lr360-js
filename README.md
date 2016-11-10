@@ -10,7 +10,7 @@ Include the following script snippet in your website:
     !function(e,n,t,r,s){e[s]=e[s]||function(){(e[s].queue=e[s].queue||[]).push(arguments)},e[s].l=1*new Date;var u=n.createElement(t),a=n.getElementsByTagName(t)[0];u.async=1,u.src=r,a.parentNode.insertBefore(u,a)}(window,document,"script","//cdn.lr360.io/api/lr360.js","lr360");
 
     lr360('setup', {key: 'XXXXX'}); // API access key
-    lr360('identifyMember', {externalId: 'XXXXX'}); // memberId or externalId, if a member is currently active
+    lr360('identifyMember', {external_id: 'XXXXX'}); // member_id or external_id, you can also add the auto_create flag to true, if you want to automatically create a member in the plateform
 </script>
 ```
 
@@ -34,10 +34,12 @@ For testing, you can use the host **'demo-api.fidem360.com'**, if you have a dem
 
 ### lr360('identifyMember', options:object, [callback]);
 
-Member lookup. If found, binds the current session to that member (useful to action tracking). One of the following 2 options **must be provided**:
+Optional option: `auto_create:boolean`. Only works with external_id, if doesn't find the member in the plateform, it will created it if the flag is true.
 
-* `memberId:string` 
-* `externalId:string` 
+Member lookup or creation if `auto_create` is true. If found/create, binds the current session to that member (useful to action tracking). One of the following 2 options **must be provided**:
+
+* `member_id:string` 
+* `external_id:string`
 
 ### lr360('clearMember', \[callback\]);
 

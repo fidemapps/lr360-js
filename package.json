@@ -1,6 +1,6 @@
 {
   "name": "lr360-js",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Node module to access Lune Rouge 360 API.",
   "keywords": [
     "lune rouge 360",

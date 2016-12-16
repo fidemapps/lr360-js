@@ -25,7 +25,7 @@ Client configuration. It should be the first command called after script is load
 
 * `key:string` ( **mandatory** ) your API access key
 * `dev:true|false` ( **default: false** ) Working environment. If true the library will throw errors, if false it will log them in the console
-* `geolocation:true|false` ( **default: true** ) The host name to access the API
+* `geolocation:true|false` ( **default: true** ) Activate or not the geolocation to get the coordinates when calling trackAction.
 * `hostname:string` ( **default: 'api.lr360.io'** ) The host name to access the API
 * `protocol:http|https` ( **default: 'https'** ) The protocol to access the API
 * `port:number` ( **default: 443** ) The port number to access the API

@@ -41,6 +41,10 @@ Member lookup or creation if `auto_create` is true. If found/create, binds the c
 * `member_id:string` 
 * `external_id:string`
 
+Callback response within `response.body.data`
+
+* `id:string` Corresponds to member identifier
+
 ### lr360('clearMember', \[callback\]);
 
 Unbinds the current session to the member.
@@ -49,6 +53,12 @@ Unbinds the current session to the member.
 
 Track an action.
 
+Callback response within `response.body.data`
+
+* `id:string` Corresponds to action identifier
+* `member_id:string` Corresponds to member identifier
+* `device_id:string` Corresponds to device identifier
+
 ### lr360('trackAction', options:object, \[callback\]);
 
 Track an action. The following options are supported:
@@ -56,11 +66,23 @@ Track an action. The following options are supported:
 * `type:string` ( **mandatory** )the action type  
 * `[data:object, tags:array]` any additional information you would like to save with the action 
 
+Callback response within `response.body.data`
+
+* `id:string` Corresponds to action identifier
+* `member_id:string` Corresponds to member identifier
+* `device_id:string` Corresponds to device identifier
+
 ### lr360('trackAction', type:string, options:object, \[callback\]);
 
 Track an action. The following options are supported:
 
 * `[data:object, tags:array]` any additional information you would like to save with the action 
+
+Callback response within `response.body.data`
+
+* `id:string` Corresponds to action identifier
+* `member_id:string` Corresponds to member identifier
+* `device_id:string` Corresponds to device identifier
 
 ### lr360('getMemberProfile', \[options:object\], callback);
 
@@ -158,4 +180,3 @@ Http methods are exposed directly on the lr360 object to make direct calls to kn
 * Add the domain `test.lr360:3333` to the account to be tested.
 * Run the command `npm run test-integration`
 * Open browser and point to `http://test.lr360:3333/tests/integration.html`
-

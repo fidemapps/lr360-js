@@ -36,7 +36,7 @@ For testing, you can use the host **'demo-api.fidem360.com'**, if you have a dem
 
 Optional option: `auto_create:boolean`. Only works with external_id, if doesn't find the member in the plateform, it will created it if the flag is true.
 
-Member lookup or creation if `auto_create` is true. If found/create, binds the current session to that member (useful to action tracking). One of the following 2 options **must be provided**:
+Member lookup or creation if `auto_create` is true. If found/create, binds the current session to that member (useful to action tracking). One of the following 2 options can be provided:
 
 * `member_id:string` 
 * `external_id:string`

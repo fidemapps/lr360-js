@@ -1,5 +1,4 @@
 let assign = require('lodash.assign');
-import Helper from '../helper/helper';
 
 const METHOD = 'POST';
 const PATH = '/api/gamification/actions/identify-member';

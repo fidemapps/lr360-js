@@ -2,6 +2,7 @@
   "name": "lr360-js",
   "version": "0.1.3",
   "description": "Node module to access Lune Rouge 360 API.",
+  "license": "MIT",
   "keywords": [
     "lune rouge 360",
     "lune",
@@ -23,7 +24,6 @@
     "npm": "2.14.7"
   },
   "scripts": {
-    "preinstall": "npm set progress=false",
     "test": "jscs src/**/*.js && jscs tests/**/*.js && NODE_ENV=test karma start",
     "test-coverage": "NODE_ENV=test karma start --coverage",
     "test-integration": "http-server ./ -p 3333",
